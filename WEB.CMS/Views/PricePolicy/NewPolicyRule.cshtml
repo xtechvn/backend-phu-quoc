@@ -1,0 +1,34 @@
+﻿@{
+    Layout = null;
+}
+@{ 
+    int lvl = (int)ViewBag.level;
+    int service_type = (int)ViewBag.service_type;
+}
+
+<div class="mb10 add_new_block" data-value="-1" data-serviceid="@service_type">
+    <div class="tag-input-price price_detail_input ">
+        <input type="text" class="form-control price_detail_input price_detail_input_profit" data-mode-new="0" value="0">
+        <div class="tag  price_detail_input_price_unit ">
+            <a class="active price_detail_unit_active price_detail_event_changeprice_unit price_detail_unit_vnd"
+               data-percent="0" data-unitid="2" href="javascript:;">VND</a>
+            <a class=" price_detail_event_changeprice_unit price_detail_unit_percent"
+               data-vnd="0" data-unitid="1" href="javascript:;">%</a>
+        </div>
+    </div>
+    - Từ:
+    <div class="tag-input-date">
+        <input class="form-control date datefilter price_detail_input price_detail_input_fromdate init_fromdate" type="text" name="price_detail_date_add_new" value="01/01/2022 00:00">
+    </div>
+    đến
+    <div class="tag-input-date">
+        <input class="form-control date datefilter price_detail_input price_detail_input_todate init_todate" type="text" name="price_detail_date_add_new" value="01/01/2022 00:00">
+    </div>
+    <span class="controler show  ml-2 price_detail_input_button">
+        <a href="javascript:;" class="btn-default update_price_detail_add_new" data-lvl="@lvl">Thêm mới</a>
+        <a href="javascript:;" class="ml-1 blue cancel_edit_price_detail_add_new">Hủy</a>
+    </span>
+    <script>
+        _pricepolicymanagement.NewPolicyRuleInit();
+    </script>
+</div>

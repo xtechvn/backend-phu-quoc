@@ -1,0 +1,51 @@
+﻿@{
+    Layout = null;
+}
+@using Entities.ViewModels.OrderManual
+@model List<OrderWSExcelSuccessModel>
+
+@if (Model != null && Model.Count > 0)
+{
+    var ready_checked = false;
+    if (ViewBag.CheckedAll != null) ready_checked = (bool)ViewBag.CheckedAll;
+    <div class="green p-3 rounded mb20">
+        Tải lên đơn hàng thành công
+    </div>
+    <div class="table-responsive table-default table-gray table-modal mb20" style="max-height:500px;">
+        <table class="table table-nowrap">
+            <thead>
+                <tr>
+
+                    <th>Mã đơn hàng</th>
+                    <th>Tổng giá trị đơn</th>
+                    <th>Số Conf No.</th>
+                    <th>Số phòng</th>
+                    <th>Số Serial</th>
+                    <th>Ngày sử dụng</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td class="used_date"><strong style="color:blue;"><a href="/Order/@item.order_id">@item.order_no</a></strong></td>
+                        <td class="amount">@item.amount.ToString("N0")</td>
+                        <td class="conf_no">@item.conf_no</td>
+                        <td class="room_no">@item.room_no</td>
+                        <td class="serial_no">@item.serial_no</td>
+                        <td class="date">@item.used_date.ToString("dd/MM/yyyy")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="text-right">Tổng cộng:  @Model.Count bản ghi </div>
+}
+else
+{
+    <div class="red p-3 rounded mb20">
+        Tệp tin rỗng / Dữ liệu tải lên không chính xác, vui lòng kiểm tra lại, tải lại tệp tin hoặc liên hệ IT hoặc liên hệ IT
+    </div>
+}

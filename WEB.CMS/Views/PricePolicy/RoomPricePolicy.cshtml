@@ -1,0 +1,343 @@
+﻿@{
+    Layout = null;
+}
+
+
+@model Entities.ViewModels.PricePolicy.HotelPricePolicyDetailViewModel
+@{
+    int service_type = (int)ViewBag.service_type;
+
+}
+
+<style>
+    .stop-scrolling {
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .collapse {
+        display: none;
+    }
+
+    .level_1 .level_2 .level_3 .level_4 {
+        padding-top: 0 !important;
+        margin-top: 10px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .level_2 {
+        padding-left: 15px !important;
+    }
+
+    .level_3 {
+        padding-left: 15px !important;
+        font-size: 13px !important;
+    }
+
+    .level_4 {
+        padding-left: 15px !important;
+        font-size: 13px !important;
+    }
+
+    .price_detail_input_button a {
+        height: 20px;
+        line-height: 20px;
+        font-size: 12px;
+        padding: 0 8px;
+    }
+
+    .content-panel {
+        width: 100% !important;
+    }
+
+    .provider_input_suggestion {
+        width: 1025px;
+        max-height: 400px !important;
+        overflow: scroll;
+        overflow-x: hidden;
+        z-index: 99;
+        background-color: #fafafa;
+        border-right: 2px solid black;
+        border-bottom: 2px solid black;
+    }
+
+    .select_provider_by_option {
+        padding-left: 10px;
+    }
+
+    .no_display {
+        display: none;
+    }
+
+    .white-popup {
+        max-width: 1200px !important;
+    }
+
+    .scroll-popup {
+        max-height: 70vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 10px;
+        margin-right: -10px;
+    }
+
+    .tag-input-date .form-control {
+        width: 130px !important;
+    }
+
+    .highlight_on_mouseover:hover {
+        background-color: #e1e9f5;
+        cursor: pointer;
+    }
+
+    .price_detail_input {
+        width: 160px !important;
+    }
+
+    .provider_input {
+        font-size: 14px !important;
+    }
+
+    .daterangepicker {
+        z-index: 1100 !important;
+    }
+</style>
+<div class="scroll-popup">
+    @{ if (Model.CampaignDetail.Id > 0)
+        {
+        <div class="form-group">
+            <label class="lbl">Mã chiến dịch</label>
+            <div class="wrap_input">
+                <input type="text" class="form-control" disabled id="campaign_code" data-campaign-id="@(Model.CampaignDetail != null ? Model.CampaignDetail.Id.ToString() : "-1")" value="@(Model.CampaignDetail == null ? "" : Model.CampaignDetail.CampaignCode)">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="lbl">Loại khách hàng</label>
+            <div class="wrap_input">
+                <select class="form-control" id="client_type_id" disabled="disabled">
+                    @foreach (var customer_type in Model.CustomerTypeList)
+                        {
+                            if (Model.CampaignDetail.ClientTypeId == customer_type.CodeValue)
+                            {
+                    <option value="@customer_type.CodeValue" selected="selected">@customer_type.Description</option>
+                            }
+                            else
+                            {
+                    <option value="@customer_type.CodeValue">@customer_type.Description</option>
+
+                            }
+
+                        }
+
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="lbl">Nhà cung cấp</label>
+            <div class="wrap_input">
+                <div class="search-wrapper provider_input_block" style="width: 100% !important;">
+                    <input type="text" class="form-control provider_input" id="provider_input" data-providerid="@(Model.ListPricePolicy.Count > 0 ? Model.ListPricePolicy[0].ProductService.ProviderId : "")" value="@(Model.ListPricePolicy.Count > 0 ? Model.ListPricePolicy[0].ProductService.ProviderName : "") ">
+                    <button type="reset" class="btn_reset reset_provider_input">×</button>
+                    <button class="dropdown-toggle dropbtn open_provider_suggestion"></button>
+                    <ul class="dropdown-menu show  provider_input_suggestion" style="display:none;">
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="lbl mt0">Loại hợp đồng</label>
+            <div class="wrap_input flex">
+                <label class="radio radio-block">
+                    <input type="radio" name="contract_type" value="1" @(Model.CampaignDetail != null && Model.CampaignDetail.ContractType == 1 ? "checked=\"checked\"" : "")>
+                    <span class="checkmark"></span>
+                    Allotment
+                </label>
+                <label class="radio radio-block ml-4">
+                    <input type="radio" name="contract_type" value="2" @(Model.CampaignDetail != null && Model.CampaignDetail.ContractType == 2 ? "checked=\"checked\"" : "")>
+                    <span class="checkmark"></span>
+                    Hợp đồng
+                </label>
+            </div>
+        </div>
+        <div class="form-group hidden_when_contract">
+            <label class="lbl">Hiệu lực từ ngày</label>
+            <div class="wrap_input">
+                <div class="row">
+                    <div class="col-md-5">
+                        <input id="campaign_from_date" class="form-control date datefilter campaign_from_date" type="text" name="campaign_date_range" value="@((Model.CampaignDetail.FromDate==null ||Model.CampaignDetail.FromDate==DateTime.MinValue)?(new DateTime(DateTime.Now.Year,01,01,00,00,00)).ToString("dd/MM/yyyy HH:mm"):((DateTime)Model.CampaignDetail.FromDate).ToString("dd/MM/yyyy HH:mm"))">
+                    </div>
+                    <div class="col-md-7 flex">
+                        <div class="col-3" style="margin-top: 6px;">Đến</div>
+                        <div class="col-9" style="padding: 0;">
+                            <input id="campaign_to_date" class="form-control date datefilter campaign_to_date" type="text" name="campaign_date_range" value="@((Model.CampaignDetail.ToDate==null ||Model.CampaignDetail.ToDate==DateTime.MinValue)?(new DateTime(DateTime.Now.Year+1,01,01,00,00,00)).ToString("dd/MM/yyyy HH:mm"):((DateTime)Model.CampaignDetail.ToDate).ToString("dd/MM/yyyy HH:mm"))">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="lbl">Mô tả</label>
+            <div class="wrap_input">
+                <input type="text" class="form-control" id="campaign_description" value="@(Model.CampaignDetail!=null?Model.CampaignDetail.Description:"")">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="lbl mt0">Trạng thái</label>
+            <div class="wrap_input flex">
+                <label class="radio radio-block">
+                    <input type="radio" name="campaign_status" value="0" @(Model.CampaignDetail != null && Model.CampaignDetail.Status == 0 ? "checked=\"checked\"" : "")>
+                    <span class="checkmark"></span>
+                    Kích hoạt
+                </label>
+                <label class="radio radio-block ml-4">
+                    <input type="radio" name="campaign_status" value="1" @(Model.CampaignDetail != null && Model.CampaignDetail.Status == 1 ? "checked=\"checked\"" : "")>
+                    <span class="checkmark"></span>
+                    Khóa tạm dừng
+                </label>
+            </div>
+        </div>
+        <div class="expand-collapsible mb20 form-group policy_block">
+            <div class="title-collapsible">
+                <div class="title">Chính sách giá</div>
+
+                <div class="control">
+                    <a href="javascript:;" class="expand_all">Mở rộng</a>
+                    <a href="javascript:;" class="collapse_all active">Thu gọn</a>
+                </div>
+            </div>
+            <div id="box_list_price_policy" class="content-panel">
+                <img src="~/images/icons/loading.gif" style=" width: 100px; height: 100px;" id="imgLoading" />
+            </div>
+        </div>
+
+        }
+        else
+        {
+        <div class="form-group">
+            <label class="lbl">Mã chiến dịch</label>
+            <div class="wrap_input">
+                <input type="text" class="form-control" id="campaign_code" data-campaign-id="-1" value="">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="lbl">Loại khách hàng</label>
+            <div class="wrap_input">
+                <select class="form-control" id="client_type_id">
+                    @foreach (var customer_type in Model.CustomerTypeList)
+                        {
+                            if (Model.CampaignDetail.ClientTypeId == customer_type.CodeValue)
+                            {
+                    <option value="@customer_type.CodeValue" selected="selected">@customer_type.Description</option>
+                            }
+                            else
+                            {
+                    <option value="@customer_type.CodeValue">@customer_type.Description</option>
+
+                            }
+
+                        }
+
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="lbl">Nhà cung cấp</label>
+            <div class="search-wrapper provider_input_block" style="width:calc(100% - 130px)!important;">
+                <input type="text" class="form-control provider_input" id="provider_input" data-mode="new" data-providerid="" value="">
+                <button type="reset" class="btn_reset reset_provider_input" style="display:none;">×</button>
+                <button class="dropdown-toggle dropbtn open_provider_suggestion"></button>
+                <ul class="dropdown-menu show  provider_input_suggestion" style="display:none;">
+                </ul>
+            </div>
+
+        </div>
+        <div class="form-group">
+            <label class="lbl mt0">Loại hợp đồng</label>
+            <div class="wrap_input flex">
+                <label class="radio radio-block">
+                    <input type="radio" name="contract_type" value="1">
+                    <span class="checkmark"></span>
+                    Allotment
+                </label>
+                <label class="radio radio-block ml-4">
+                    <input type="radio" name="contract_type" value="2">
+                    <span class="checkmark"></span>
+                    Hợp đồng
+                </label>
+            </div>
+        </div>
+        <div class="form-group hidden_when_contract">
+            <label class="lbl">Hiệu lực từ ngày</label>
+            <div class="wrap_input">
+                <div class="row">
+                    <div class="col-md-5">
+                        <input id="campaign_from_date" class="form-control date datefilter campaign_from_date" type="text" name="campaign_date_range" value="@((new DateTime(DateTime.Now.Year,01,01,00,00,00)).ToString("dd/MM/yyyy HH:mm"))">
+                    </div>
+                    <div class="col-md-7 flex">
+                        <div class="col-3" style="margin-top: 6px;">Đến</div>
+                        <div class="col-9" style="padding: 0;">
+                            <input id="campaign_to_date" class="form-control date datefilter campaign_to_date" type="text" name="campaign_date_range" value="@((new DateTime((DateTime.Now.Year + 1),01,01,00,00,00)).ToString("dd/MM/yyyy HH:mm"))">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="lbl">Mô tả</label>
+            <div class="wrap_input">
+                <input type="text" class="form-control" id="campaign_description" value="">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="lbl mt0">Trạng thái</label>
+            <div class="wrap_input flex">
+                <label class="radio radio-block">
+                    <input type="radio" name="campaign_status" checked value="0">
+                    <span class="checkmark"></span>
+                    Kích hoạt
+                </label>
+                <label class="radio radio-block ml-4">
+                    <input type="radio" name="campaign_status" value="1">
+                    <span class="checkmark"></span>
+                    Khóa tạm dừng
+                </label>
+            </div>
+        </div>
+        <div class="expand-collapsible mb20 form-group policy_block">
+            <div class="title-collapsible">
+                <div class="title">Chính sách giá</div>
+
+                <div class="control">
+                    <a href="javascript:;" class="expand_all">Mở rộng</a>
+                    <a href="javascript:;" class="collapse_all active">Thu gọn</a>
+                </div>
+            </div>
+            <div id="box_list_price_policy" class="content-panel">
+                <img src="~/images/icons/loading.gif" style=" width: 100px; height: 100px;" id="imgLoading" />
+            </div>
+        </div>
+
+        }
+    }
+</div>
+<div class="form-group align-right mt20 block">
+    <img src="/images/icons/loading.gif" style="width: 35px;height: 35px;margin-left: 10px;margin-bottom: 10px; display:none;" class="img_loading_summit coll">
+    <button type="submit" class="btn btn-default bg-main" onclick="_price_policy_detail.Summit();"><i class="fa fa-floppy-o"></i>Lưu</button>
+    <button type="submit" class="btn btn-default cancel" onclick="_price_policy_detail.Cancel();"><i class="fa fa-minus-circle"></i>Bỏ qua</button>
+</div>
+<div style="display:none;" class="campaign_detail_value" data-contract-type="@Model.CampaignDetail.ContractType" data-servicetype="@service_type"></div>
+
+<script>
+
+    _pricepolicymanagement.RoomPricePolicyInitialization('@Model.CampaignDetail.Id');
+    _price_policy_detail.FromDate = '@((Model.CampaignDetail.FromDate==null ||Model.CampaignDetail.FromDate==DateTime.MinValue)?(new DateTime(DateTime.Now.Year,01,01,00,00,00)).ToString("dd/MM/yyyy HH:mm"):((DateTime)Model.CampaignDetail.FromDate).ToString("dd/MM/yyyy HH:mm"))';
+    _price_policy_detail.ToDate = '@((Model.CampaignDetail.ToDate==null ||Model.CampaignDetail.ToDate==DateTime.MinValue)?(new DateTime(DateTime.Now.Year,01,01,00,00,00)).ToString("dd/MM/yyyy HH:mm"):((DateTime)Model.CampaignDetail.ToDate).ToString("dd/MM/yyyy HH:mm"))';
+
+</script>
+
+

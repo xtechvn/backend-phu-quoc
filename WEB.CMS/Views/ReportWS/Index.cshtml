@@ -1,0 +1,117 @@
+﻿@using Entities.Models
+@{
+    var service_type = (List<AllCode>)ViewBag.Type;
+
+
+    ViewData["Title"] = "Báo cáo Doanh thu thể thao biển";
+
+}
+<style>
+    .btn_reset {
+        position: absolute;
+        right: 32px;
+        top: 7px;
+        width: 20px;
+        height: 20px;
+        border: 0;
+        outline: 0;
+        border-radius: 50%;
+        cursor: pointer;
+        background: #C4C4C4
+    }
+    .datepicker-wrap .select2{
+        padding-left:100px;
+    }
+</style>
+<section style=" overflow-x: hidden; min-height: 800px;">
+    <div id="filter" class="row-main container">
+        <div class="flex" style="margin-bottom:15px;">
+            <div class="form-group mb10 mr-2">
+                <div class="multiple-select form-group mb10 mr-2" style="width: 180px;">
+                    <div class="select-btn  select-service-type select-btn-service-type" id="utmSourde">
+                        <span class="btn-text-service text-service-type">Tất cả sản phẩm</span>
+                        <span class="arrow-dwn">
+                            <i class="fa fa-angle-down"></i>
+                        </span>
+                    </div>
+
+                    <ul class="list-items" id="list-item-service">
+                        @if (service_type != null && service_type.Count > 0)
+                        {
+                            foreach (var item in service_type)
+                            {
+                                <li class="item item-services item-service-type" data-value="@item.CodeValue">
+                                    <span class="checkbox service-type-select">
+                                        <i class="fa fa-check"></i>
+                                    </span>
+                                    <span class="item-text">@item.Description</span>
+                                </li>
+                            }
+                        }
+
+                    </ul>
+                </div>
+            </div>
+
+            <div class="form-group mb10 mr-2" style="min-width: 220px;">
+                <div class="datepicker-wrap add-lbl " style="width:100%">
+                    <span class="lbl">Từ ngày</span>
+                    <input style="padding-left:100px!important" class="form-control date text-left from-date" id="from-date" type="text" name="from-date"
+                           placeholder="Từ ngày" value="" />
+                </div>
+            </div>
+            <div class="form-group mb10 mr-2" style="min-width: 220px;">
+                <div class="datepicker-wrap add-lbl " style="width:100%">
+                    <span class="lbl">Đến ngày </span>
+                    <input style="padding-left:100px!important" class="form-control date text-left to-date" id="to-date" type="text" name="to-date"
+                           placeholder="Đến ngày" value="" />
+                </div>
+            </div>
+            <div class="form-group mb10 mr-2 " style="min-width: 350px; position:relative;">
+                <select class="filter-client" id="filter-client" style="width:100% !important" placeholder="Tất cả khách hàng">
+                </select>
+                <button type="reset" class="btn_reset reset-client-input" style="display:none;">×</button>
+
+            </div>
+            <div class="form-group mb10 mr-2" style="min-width: 220px;">
+                <div class="datepicker-wrap add-lbl " style="width:100%">
+                    <span class="lbl" style="width: 100px; border: 1px solid #f7f7f7;">Thuế suất VAT</span>
+                    <select class="form-control vat-value" id="vat-value" style="">
+                        <option value="0" selected>0%</option>
+                        @for (int i = 1; i <= 100; i++)
+                        {
+                            <option value="@((i/(double)100))">@i%</option>
+                        }
+                    </select>
+                </div>
+
+            </div>
+            <div class="mb10 mr-2" style="min-width: 220px;">
+                <button class="btn btn-default" type="button" onclick="_report_ws.ExportTotal()" id="operator-export-btn">
+                    <i class="fa fa-file-excel-o" id="operator-export" title="Xuất excel">
+                    </i>
+                </button>
+                <button type="button" class="btn btn-default bg-main" onclick="_report_ws.SearchData()">
+                    <svg class="icon-svg" style="vertical-align: sub;">
+                        <use xlink:href="/images/icons/icon.svg#search"></use>
+                    </svg>
+                    Tìm kiếm
+                </button>
+            </div>
+        </div>
+
+    </div>
+    <div class="row-main container">
+        <div id="grid-data">
+        </div>
+        <img src="~/images/icons/loading.gif" style="margin-left:45%; width: 100px; height: 100px; display:none" class="loading" id="imgLoading" />
+    </div>
+</section>
+
+@section scripts{
+    <script type="text/javascript" src="~/modules/report_ws.js"></script>
+    <script>
+        
+        _report_ws.Initialization();
+    </script>
+}

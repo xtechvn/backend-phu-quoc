@@ -1,0 +1,81 @@
+﻿@using Entities.Models
+@using Entities.ViewModels
+@using Entities.ViewModels.Report
+@{
+    Layout = null;
+    int index = 0;
+    GenericViewModel<WSReportViewModel> model = (GenericViewModel<WSReportViewModel>)ViewBag.Model;
+    var service_type = (List<AllCode>)ViewBag.Type;
+
+
+}
+@if (model.ListData != null && model.ListData.Any())
+{
+   
+    <style>
+        .mfp-content {
+            width: 100% !important;
+        }
+        .white-popup{
+            max-width:100% !important;
+        }
+    </style>
+    <div class="table-responsive table-default table-gray wrap_bg wrap_bg_no-padding  table-scroll table-report"style="max-height:1200px;">
+        <table class="table table-nowrap">
+            <thead>
+                <tr>
+
+                    <th>Mã khách hàng</th>
+                    <th>Nhãn đơn</th>
+                    <th>Ngày sử dụng</th>
+                    <th>Tên khách hàng</th>
+                    <th>Số Conf No.</th>
+                    <th>Số phòng</th>
+                    <th>Số Series</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Đơn giá</th>
+                    <th>Thành tiền</th>
+                    <th>Trước VAT</th>
+                    <th>Hoa hồng</th>
+                    <th>Ghi chú</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="background-color:yellow;">
+
+                    <td colspan="10" style=" font-weight: bold;">Tổng cộng</td>
+                    <td class="amount"style=" font-weight: bold;">@((model.ListData.Sum(x=>x.Amount).ToString("N0")))</td>
+                    <td class="amount_before_vat"style=" font-weight: bold;">@((model.ListData.Sum(x=>x.AmountVat).ToString("N0")))</td>
+                    <td class="vat_value"style=" font-weight: bold;">@((model.ListData.Sum(item=> item.Amount - item.AmountVat).ToString("N0")))</td>
+                    <td class="note"style=" font-weight: bold;"></td>
+
+                </tr>
+                @foreach (var item in model.ListData)
+                {
+                    <tr>
+
+                        <td class="client_code">@item.ClientCode</td>
+                        <td class="label">@item.Label</td>
+                        <td class="used_date">@item.StartDate.ToString("dd/MM/yyyy")</td>
+                        <td class="client_name">@item.ClientName</td>
+                        <td class="conf_no">@item.ConfNo</td>
+                        <td class="room_no">@item.RoomNo</td>
+                        <td class="serial_no">@item.SerialNo</td>
+
+                        <td class="product_name">@item.ProductName</td>
+                        <td class="quanity">@item.Quantity</td>
+                        <td class="base_price">@item.BasePrice</td>
+                        <td class="amount">@item.Amount.ToString("N0")</td>
+                        <td class="amount_before_vat">@((item.AmountVat).ToString("N0"))</td>
+                        <td class="vat_value">@((item.Commission!=null? (double)item.Commission:0).ToString("N0"))</td>
+                        <td class="note">@item.Note</td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+}
