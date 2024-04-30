@@ -6,9 +6,6 @@ F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\netcoreapp3.1\x86\liblept1
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\netcoreapp3.1\x86\libtesseract3052.dll
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\netcoreapp3.1\x64\liblept1753.dll
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\netcoreapp3.1\x64\libtesseract3052.dll
-F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\netcoreapp3.1\wwwroot\Template\import\template-danh-sach-doan-ks.xlsx
-F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\netcoreapp3.1\wwwroot\Template\import\template-danh-sach-doan-tour.xlsx
-F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\netcoreapp3.1\wwwroot\Template\import\template-danh-sach-doan-vmb.xlsx
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\netcoreapp3.1\appsettings.Development.json
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\netcoreapp3.1\appsettings.json
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\netcoreapp3.1\config.Development.json
@@ -535,3 +532,6 @@ F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\obj\Debug\netcoreapp3.1\staticwebass
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\obj\Debug\netcoreapp3.1\WEB.Adavigo.CMS.PQ.dll
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\obj\Debug\netcoreapp3.1\WEB.Adavigo.CMS.PQ.pdb
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\obj\Debug\netcoreapp3.1\WEB.Adavigo.CMS.PQ.genruntimeconfig.cache
+F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\netcoreapp3.1\wwwroot\Template\Export\Chi tiết nợ phải thu của Khách hàng Đinh Thanh  Bình  _18.xlsx
+F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\netcoreapp3.1\wwwroot\Template\Export\Danh sách đặt dịch vụ khác.xlsx
+F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\netcoreapp3.1\wwwroot\Template\Export\xample_vinwonder_ticket.html
