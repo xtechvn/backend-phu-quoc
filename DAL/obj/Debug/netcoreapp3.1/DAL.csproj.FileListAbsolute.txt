@@ -2,10 +2,10 @@ F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\DAL\bin\Debug\netcoreapp3.1\EmailTemplate\Fl
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\DAL\bin\Debug\netcoreapp3.1\EmailTemplate\HotelBookingTemplate.html
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\DAL\bin\Debug\netcoreapp3.1\EmailTemplate\TourServiceCodeTemplate.html
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\DAL\bin\Debug\netcoreapp3.1\EmailTemplate\VinWonder\VinWonderMailTemplate.html
-F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\DAL\bin\Debug\netcoreapp3.1\x86\liblept1753.dll
-F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\DAL\bin\Debug\netcoreapp3.1\x86\libtesseract3052.dll
-F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\DAL\bin\Debug\netcoreapp3.1\x64\liblept1753.dll
-F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\DAL\bin\Debug\netcoreapp3.1\x64\libtesseract3052.dll
+F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\DAL\bin\Debug\netcoreapp3.1\x86\leptonica-1.82.0.dll
+F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\DAL\bin\Debug\netcoreapp3.1\x86\tesseract50.dll
+F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\DAL\bin\Debug\netcoreapp3.1\x64\leptonica-1.82.0.dll
+F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\DAL\bin\Debug\netcoreapp3.1\x64\tesseract50.dll
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\DAL\bin\Debug\netcoreapp3.1\EmailTemplate\OrderFlyTemplate.html
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\DAL\bin\Debug\netcoreapp3.1\EmailTemplate\OrderTemplate.html
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\DAL\bin\Debug\netcoreapp3.1\EmailTemplate\SupplierTemplate.html

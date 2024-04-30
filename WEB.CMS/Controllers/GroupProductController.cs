@@ -233,96 +233,96 @@ namespace WEB.CMS.Controllers
             }
         }
 
-        [HttpPost]
-        [Obsolete]
-        public IActionResult UploadExcel(IFormFile fileCrawl)
-        {
-            try
-            {
-                var listLink = new List<string>();
-                if (fileCrawl == null)
-                {
-                    return new JsonResult(new
-                    {
-                        Code = 2,
-                        Data = new List<String>(),
-                        Message = "Vui lòng chọn file."
-                    });
-                }
-                if (!fileCrawl.FileName.Contains("xlsx") && !fileCrawl.FileName.Contains("xsl"))
-                {
-                    return new JsonResult(new
-                    {
-                        Code = 2,
-                        Data = new List<String>(),
-                        Message = "File không đúng định dạng. Vui lòng nhập định dạng là file excel."
-                    });
-                }
-                if (fileCrawl.Length > 10000000)
-                {
-                    return new JsonResult(new
-                    {
-                        Code = 2,
-                        Data = new List<String>(),
-                        Message = "File bạn tải lên quá 10MB. Vui lòng nhập file có kích thước nhỏ hơn 10MB."
-                    });
-                }
-                Workbook workbook = new Workbook(fileCrawl.OpenReadStream());
-                var worksheet = workbook.Worksheets[0];
-                var listLinkWrong = new List<string>();//list link khong hop le
-                if (worksheet.Cells.Count > 0)
-                {
-                    var listLable = _LabelRepository.GetListAll();
-                    //truong hop link trong file khong dung dinh dang
-                    var list = worksheet.Cells;
-                    for (int i = 1; i < list.Count; i++)
-                    {
-                        if (list[i].Value == null || string.IsNullOrEmpty(list[i].Value.ToString()))
-                        {
-                            continue;
-                        }
-                        //kiem tra link co nam trong cac nhan hang US ho tro khong?
-                        var checkLink = listLable.FirstOrDefault(n => list[i].Value.ToString().ToLower().Contains(n.Domain.ToLower()));
-                        if (checkLink != null)
-                        {
-                            listLink.Add(list[i].Value.ToString());
-                        }
-                        else
-                        {
-                            listLinkWrong.Add(list[i].Value.ToString());
-                        }
-                    }
-                }
-                else
-                {
-                    return new JsonResult(new
-                    {
-                        Code = 2,
-                        Data = listLink,
-                        DataLinkWrong = listLinkWrong,
-                        Message = "Bạn chưa nhập link vào file excel"
-                    });
-                }
-                return new JsonResult(new
-                {
-                    Code = 1,
-                    Data = listLink,
-                    DataLinkWrong = listLinkWrong,
-                    Message = "Thành công"
-                });
-            }
-            catch (Exception ex)
-            {
-                LogHelper.InsertLogTelegram("UploadExcelAsync: " + ex);
-                return new JsonResult(new
-                {
-                    Code = 0,
-                    Data = new List<String>(),
-                    DataLinkWrong = new List<String>(),
-                    Message = "Lỗi khi gửi file lên server."
-                });
-            }
-        }
+        //[HttpPost]
+        //[Obsolete]
+        //public IActionResult UploadExcel(IFormFile fileCrawl)
+        //{
+        //    try
+        //    {
+        //        var listLink = new List<string>();
+        //        if (fileCrawl == null)
+        //        {
+        //            return new JsonResult(new
+        //            {
+        //                Code = 2,
+        //                Data = new List<String>(),
+        //                Message = "Vui lòng chọn file."
+        //            });
+        //        }
+        //        if (!fileCrawl.FileName.Contains("xlsx") && !fileCrawl.FileName.Contains("xsl"))
+        //        {
+        //            return new JsonResult(new
+        //            {
+        //                Code = 2,
+        //                Data = new List<String>(),
+        //                Message = "File không đúng định dạng. Vui lòng nhập định dạng là file excel."
+        //            });
+        //        }
+        //        if (fileCrawl.Length > 10000000)
+        //        {
+        //            return new JsonResult(new
+        //            {
+        //                Code = 2,
+        //                Data = new List<String>(),
+        //                Message = "File bạn tải lên quá 10MB. Vui lòng nhập file có kích thước nhỏ hơn 10MB."
+        //            });
+        //        }
+        //        Workbook workbook = new Workbook(fileCrawl.OpenReadStream());
+        //        var worksheet = workbook.Worksheets[0];
+        //        var listLinkWrong = new List<string>();//list link khong hop le
+        //        if (worksheet.Cells.Count > 0)
+        //        {
+        //            var listLable = _LabelRepository.GetListAll();
+        //            //truong hop link trong file khong dung dinh dang
+        //            var list = worksheet.Cells;
+        //            for (int i = 1; i < list.Count; i++)
+        //            {
+        //                if (list[i].Value == null || string.IsNullOrEmpty(list[i].Value.ToString()))
+        //                {
+        //                    continue;
+        //                }
+        //                //kiem tra link co nam trong cac nhan hang US ho tro khong?
+        //                var checkLink = listLable.FirstOrDefault(n => list[i].Value.ToString().ToLower().Contains(n.Domain.ToLower()));
+        //                if (checkLink != null)
+        //                {
+        //                    listLink.Add(list[i].Value.ToString());
+        //                }
+        //                else
+        //                {
+        //                    listLinkWrong.Add(list[i].Value.ToString());
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            return new JsonResult(new
+        //            {
+        //                Code = 2,
+        //                Data = listLink,
+        //                DataLinkWrong = listLinkWrong,
+        //                Message = "Bạn chưa nhập link vào file excel"
+        //            });
+        //        }
+        //        return new JsonResult(new
+        //        {
+        //            Code = 1,
+        //            Data = listLink,
+        //            DataLinkWrong = listLinkWrong,
+        //            Message = "Thành công"
+        //        });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        LogHelper.InsertLogTelegram("UploadExcelAsync: " + ex);
+        //        return new JsonResult(new
+        //        {
+        //            Code = 0,
+        //            Data = new List<String>(),
+        //            DataLinkWrong = new List<String>(),
+        //            Message = "Lỗi khi gửi file lên server."
+        //        });
+        //    }
+        //}
 
         public IActionResult AddCampaign()
         {

@@ -58,7 +58,7 @@
             },
             "StackExchange.Redis": {
               "target": "Package",
-              "version": "[2.1.58, )"
+              "version": "[2.7.33, )"
             }
           },
           "imports": [
