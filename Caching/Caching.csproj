@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="NEST" Version="7.17.5" />
-    <PackageReference Include="StackExchange.Redis" Version="2.1.58" />
+    <PackageReference Include="StackExchange.Redis" Version="2.7.33" />
   </ItemGroup>
 
   <ItemGroup>

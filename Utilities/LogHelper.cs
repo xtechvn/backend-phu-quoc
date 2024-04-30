@@ -1,12 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Telegram.Bot;
-using Telegram.Bot.Types.InputFiles;
-using Utilities.Contants;
 
 namespace Utilities
 {
