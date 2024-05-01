@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Net.Mail;
 using System.ComponentModel;
+using System.IO;
+using System.Net.Mail;
 using Utilities.Contants;
 using Utilities.ViewModels;
-using System.Threading.Tasks;
-using System.Net.Http;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.IO;
-using TheArtOfDev.HtmlRenderer.PdfSharp;
-using PdfSharp;
 
 namespace Utilities
 {
@@ -148,13 +142,14 @@ namespace Utilities
             {
                 using (var outputStream = new MemoryStream())
                 {
-                    PdfGenerateConfig pdfGenerateConfig = new PdfGenerateConfig();
-                    pdfGenerateConfig.PageSize = PageSize.A4;
-                    var pdf = PdfGenerator.GeneratePdf(html, pdfGenerateConfig, null, null);
-                    pdf.Save(outputStream);
-                    var result = outputStream.ToArray();
-                    pdf.Dispose();
-                    return result;
+                    //PdfGenerateConfig pdfGenerateConfig = new PdfGenerateConfig();
+                    //pdfGenerateConfig.PageSize = PageSize.A4;
+                    //var pdf = PdfGenerator.GeneratePdf(html, pdfGenerateConfig, null, null);
+                    //pdf.Save(outputStream);
+                    //var result = outputStream.ToArray();
+                    //pdf.Dispose();
+                    //return result;
+                    return null;
                 }
             }
             catch (Exception ex)
