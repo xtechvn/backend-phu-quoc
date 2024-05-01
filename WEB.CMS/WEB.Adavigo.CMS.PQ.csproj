@@ -3,7 +3,7 @@
       <EnableDefaultContentItems>false</EnableDefaultContentItems>
         <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
       
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>13f8a7cd-9d3d-47d0-9422-bc3b9fd8003a</UserSecretsId>
     <NoWin32Manifest>true</NoWin32Manifest>
     <StartupObject></StartupObject>
