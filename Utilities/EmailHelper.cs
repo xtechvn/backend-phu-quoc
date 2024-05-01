@@ -1,7 +1,9 @@
-﻿using System;
+﻿using PdfSharp;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Net.Mail;
+using TheArtOfDev.HtmlRenderer.PdfSharp;
 using Utilities.Contants;
 using Utilities.ViewModels;
 
@@ -142,14 +144,13 @@ namespace Utilities
             {
                 using (var outputStream = new MemoryStream())
                 {
-                    //PdfGenerateConfig pdfGenerateConfig = new PdfGenerateConfig();
-                    //pdfGenerateConfig.PageSize = PageSize.A4;
-                    //var pdf = PdfGenerator.GeneratePdf(html, pdfGenerateConfig, null, null);
-                    //pdf.Save(outputStream);
-                    //var result = outputStream.ToArray();
-                    //pdf.Dispose();
-                    //return result;
-                    return null;
+                    PdfGenerateConfig pdfGenerateConfig = new PdfGenerateConfig();
+                    pdfGenerateConfig.PageSize = PageSize.A4;
+                    var pdf = PdfGenerator.GeneratePdf(html, pdfGenerateConfig, null, null);
+                    pdf.Save(outputStream);
+                    var result = outputStream.ToArray();
+                    pdf.Dispose();
+                    return result;
                 }
             }
             catch (Exception ex)
