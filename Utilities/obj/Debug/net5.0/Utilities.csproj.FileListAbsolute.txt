@@ -14,7 +14,6 @@ F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\Utilities\bin\Debug\net5.0\Utilities.deps.js
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\Utilities\bin\Debug\net5.0\Utilities.dll
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\Utilities\bin\Debug\net5.0\Utilities.pdb
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\Utilities\obj\Debug\net5.0\Utilities.csproj.AssemblyReference.cache
-F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\Utilities\obj\Debug\net5.0\Utilities.csproj.ResolveComReference.cache
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\Utilities\obj\Debug\net5.0\Utilities.GeneratedMSBuildEditorConfig.editorconfig
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\Utilities\obj\Debug\net5.0\Utilities.AssemblyInfoInputs.cache
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\Utilities\obj\Debug\net5.0\Utilities.AssemblyInfo.cs
