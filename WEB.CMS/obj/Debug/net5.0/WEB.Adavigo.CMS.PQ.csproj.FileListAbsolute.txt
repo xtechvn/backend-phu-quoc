@@ -23,8 +23,6 @@ F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\EPPlus.dll
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\EPPlus.Interfaces.dll
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\EPPlus.System.Drawing.dll
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\HtmlAgilityPack.dll
-F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\HtmlRenderer.dll
-F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\HtmlRenderer.PdfSharp.dll
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\System.Web.Mvc.dll
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\System.Web.Razor.dll
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\System.Web.Helpers.dll
@@ -84,8 +82,6 @@ F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\Newtonsoft.Json.dll
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\Newtonsoft.Json.Bson.dll
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\NuGet.Frameworks.dll
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\Otp.NET.dll
-F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\PdfSharp.Charting.dll
-F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\PdfSharp.dll
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\PdfSharpCore.dll
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\Pipelines.Sockets.Unofficial.dll
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\PuppeteerSharp.dll
@@ -179,8 +175,6 @@ F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\ru\Microsoft.CodeAn
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
-F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\de\PdfSharp.Charting.resources.dll
-F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\de\PdfSharp.resources.dll
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\runtimes\unix\lib\netcoreapp2.1\Microsoft.Data.SqlClient.dll
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\runtimes\win\lib\netcoreapp2.1\Microsoft.Data.SqlClient.dll
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\runtimes\linux\native\libsnappy64.so

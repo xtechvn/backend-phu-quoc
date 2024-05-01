@@ -28,26 +28,6 @@
           }
         }
       },
-      "HtmlRenderer.Core/1.5.0.5": {
-        "runtime": {
-          "lib/net45/HtmlRenderer.dll": {
-            "assemblyVersion": "1.5.0.5",
-            "fileVersion": "1.5.0.5"
-          }
-        }
-      },
-      "HtmlRenderer.PdfSharp/1.5.0.6": {
-        "dependencies": {
-          "HtmlRenderer.Core": "1.5.0.5",
-          "PDFsharp": "1.32.3057"
-        },
-        "runtime": {
-          "lib/net45/HtmlRenderer.PdfSharp.dll": {
-            "assemblyVersion": "1.5.0.6",
-            "fileVersion": "1.5.0.6"
-          }
-        }
-      },
       "jQuery/1.8.0": {},
       "jQuery.Validation/1.8.0.1": {
         "dependencies": {
@@ -900,26 +880,6 @@
           "lib/netstandard1.3/Newtonsoft.Json.Bson.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.1.20722"
-          }
-        }
-      },
-      "PDFsharp/1.32.3057": {
-        "runtime": {
-          "lib/net20/PdfSharp.Charting.dll": {
-            "assemblyVersion": "1.32.3057.0",
-            "fileVersion": "1.32.3057.0"
-          },
-          "lib/net20/PdfSharp.dll": {
-            "assemblyVersion": "1.32.3057.0",
-            "fileVersion": "1.32.3057.0"
-          }
-        },
-        "resources": {
-          "lib/net20/de/PdfSharp.Charting.resources.dll": {
-            "locale": "de"
-          },
-          "lib/net20/de/PdfSharp.resources.dll": {
-            "locale": "de"
           }
         }
       },
@@ -2054,7 +2014,6 @@
       "Utilities/1.0.0": {
         "dependencies": {
           "HtmlAgilityPack": "1.11.60",
-          "HtmlRenderer.PdfSharp": "1.5.0.6",
           "Microsoft.AspNet.Mvc": "5.3.0",
           "Newtonsoft.Json": "13.0.3",
           "RabbitMQ.Client": "6.8.1",
@@ -2086,20 +2045,6 @@
       "sha512": "sha512-7Uzaf1Mxeuxne33LpTZfSsuRW4sRRX6FWMolOSxXcaAwcKvFevH2E+P6tb4dMWhdyUdBfi0N0yyPZ8hqodfEYg==",
       "path": "htmlagilitypack/1.11.60",
       "hashPath": "htmlagilitypack.1.11.60.nupkg.sha512"
-    },
-    "HtmlRenderer.Core/1.5.0.5": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-QfZkSOb8HomRkKW3EAjT/VT48x6q+bgK4IBA9gFF+5FVTbvmMEIm42NsXEx/LTBHMssnQTPe94X0Bi8KdUIVQA==",
-      "path": "htmlrenderer.core/1.5.0.5",
-      "hashPath": "htmlrenderer.core.1.5.0.5.nupkg.sha512"
-    },
-    "HtmlRenderer.PdfSharp/1.5.0.6": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-uk2lzFa/0zQSk8im2CX8ROXlqy8YAJUG28b5/G8wa0YNdO6+04bEl3iZCaThkcyNWnnIsHCn5hWR3vZjc6JhmA==",
-      "path": "htmlrenderer.pdfsharp/1.5.0.6",
-      "hashPath": "htmlrenderer.pdfsharp.1.5.0.6.nupkg.sha512"
     },
     "jQuery/1.8.0": {
       "type": "package",
@@ -2604,13 +2549,6 @@
       "sha512": "sha512-5PYT/IqQ+UK31AmZiSS102R6EsTo+LGTSI8bp7WAUqDKaF4wHXD8U9u4WxTI1vc64tYi++8p3dk3WWNqPFgldw==",
       "path": "newtonsoft.json.bson/1.0.1",
       "hashPath": "newtonsoft.json.bson.1.0.1.nupkg.sha512"
-    },
-    "PDFsharp/1.32.3057": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-M8w6e4R+jA1j3ddPCY6jNnb8RG21ZgCr+ENapwaH5NPzNl600f1wOcCPY2hEO+jb0aCGjcMHrWk/K+PC1cw0PQ==",
-      "path": "pdfsharp/1.32.3057",
-      "hashPath": "pdfsharp.1.32.3057.nupkg.sha512"
     },
     "RabbitMQ.Client/6.8.1": {
       "type": "package",
