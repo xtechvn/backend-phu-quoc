@@ -1,15 +1,11 @@
-﻿using System;
-using System.Net.Mail;
+﻿using PdfSharp;
+using System;
 using System.ComponentModel;
+using System.IO;
+using System.Net.Mail;
+using TheArtOfDev.HtmlRenderer.PdfSharp;
 using Utilities.Contants;
 using Utilities.ViewModels;
-using System.Threading.Tasks;
-using System.Net.Http;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.IO;
-using TheArtOfDev.HtmlRenderer.PdfSharp;
-using PdfSharp;
 
 namespace Utilities
 {

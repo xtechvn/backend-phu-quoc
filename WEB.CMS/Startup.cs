@@ -19,6 +19,7 @@ namespace WEB.CMS
 {
     public class Startup
     {
+        //test 2
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;

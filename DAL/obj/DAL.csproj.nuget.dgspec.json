@@ -1,38 +1,43 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Mirrors\\Desktop\\cms-pq-git\\DAL\\DAL.csproj": {}
+    "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\DAL\\DAL.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Mirrors\\Desktop\\cms-pq-git\\DAL\\DAL.csproj": {
+    "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\DAL\\DAL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Mirrors\\Desktop\\cms-pq-git\\DAL\\DAL.csproj",
+        "projectUniqueName": "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\DAL\\DAL.csproj",
         "projectName": "DAL",
-        "projectPath": "C:\\Users\\Mirrors\\Desktop\\cms-pq-git\\DAL\\DAL.csproj",
-        "packagesPath": "C:\\Users\\Mirrors\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Mirrors\\Desktop\\cms-pq-git\\DAL\\obj\\",
+        "projectPath": "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\DAL\\DAL.csproj",
+        "packagesPath": "C:\\Users\\cuong\\.nuget\\packages\\",
+        "outputPath": "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\DAL\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Mirrors\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\cuong\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "netcoreapp3.1"
+          "net5.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "netcoreapp3.1": {
-            "targetAlias": "netcoreapp3.1",
+          "net5.0": {
+            "targetAlias": "net5.0",
             "projectReferences": {
-              "C:\\Users\\Mirrors\\Desktop\\cms-pq-git\\Entities\\Entities.csproj": {
-                "projectPath": "C:\\Users\\Mirrors\\Desktop\\cms-pq-git\\Entities\\Entities.csproj"
+              "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Entities\\Entities.csproj": {
+                "projectPath": "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Entities\\Entities.csproj"
               },
-              "C:\\Users\\Mirrors\\Desktop\\cms-pq-git\\Utilities\\Utilities.csproj": {
-                "projectPath": "C:\\Users\\Mirrors\\Desktop\\cms-pq-git\\Utilities\\Utilities.csproj"
+              "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Utilities\\Utilities.csproj": {
+                "projectPath": "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Utilities\\Utilities.csproj"
               }
             }
           }
@@ -44,14 +49,14 @@
         }
       },
       "frameworks": {
-        "netcoreapp3.1": {
-          "targetAlias": "netcoreapp3.1",
+        "net5.0": {
+          "targetAlias": "net5.0",
           "dependencies": {
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[3.1.13, )"
+              "version": "[3.1.14, )"
             }
           },
           "imports": [
@@ -60,7 +65,8 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -69,36 +75,41 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.412\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Mirrors\\Desktop\\cms-pq-git\\Entities\\Entities.csproj": {
+    "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Entities\\Entities.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Mirrors\\Desktop\\cms-pq-git\\Entities\\Entities.csproj",
+        "projectUniqueName": "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Entities\\Entities.csproj",
         "projectName": "Entities",
-        "projectPath": "C:\\Users\\Mirrors\\Desktop\\cms-pq-git\\Entities\\Entities.csproj",
-        "packagesPath": "C:\\Users\\Mirrors\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Mirrors\\Desktop\\cms-pq-git\\Entities\\obj\\",
+        "projectPath": "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Entities\\Entities.csproj",
+        "packagesPath": "C:\\Users\\cuong\\.nuget\\packages\\",
+        "outputPath": "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Entities\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Mirrors\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\cuong\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "netcoreapp3.1"
+          "net5.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "netcoreapp3.1": {
-            "targetAlias": "netcoreapp3.1",
+          "net5.0": {
+            "targetAlias": "net5.0",
             "projectReferences": {
-              "C:\\Users\\Mirrors\\Desktop\\cms-pq-git\\Utilities\\Utilities.csproj": {
-                "projectPath": "C:\\Users\\Mirrors\\Desktop\\cms-pq-git\\Utilities\\Utilities.csproj"
+              "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Utilities\\Utilities.csproj": {
+                "projectPath": "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Utilities\\Utilities.csproj"
               }
             }
           }
@@ -110,8 +121,8 @@
         }
       },
       "frameworks": {
-        "netcoreapp3.1": {
-          "targetAlias": "netcoreapp3.1",
+        "net5.0": {
+          "targetAlias": "net5.0",
           "dependencies": {
             "Microsoft.AspNetCore.Mvc.ViewFeatures": {
               "target": "Package",
@@ -148,7 +159,8 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -157,33 +169,38 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.412\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Mirrors\\Desktop\\cms-pq-git\\Utilities\\Utilities.csproj": {
+    "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Utilities\\Utilities.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Mirrors\\Desktop\\cms-pq-git\\Utilities\\Utilities.csproj",
+        "projectUniqueName": "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Utilities\\Utilities.csproj",
         "projectName": "Utilities",
-        "projectPath": "C:\\Users\\Mirrors\\Desktop\\cms-pq-git\\Utilities\\Utilities.csproj",
-        "packagesPath": "C:\\Users\\Mirrors\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Mirrors\\Desktop\\cms-pq-git\\Utilities\\obj\\",
+        "projectPath": "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Utilities\\Utilities.csproj",
+        "packagesPath": "C:\\Users\\cuong\\.nuget\\packages\\",
+        "outputPath": "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Utilities\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Mirrors\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\cuong\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "netcoreapp3.1"
+          "net5.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "netcoreapp3.1": {
-            "targetAlias": "netcoreapp3.1",
+          "net5.0": {
+            "targetAlias": "net5.0",
             "projectReferences": {}
           }
         },
@@ -194,32 +211,32 @@
         }
       },
       "frameworks": {
-        "netcoreapp3.1": {
-          "targetAlias": "netcoreapp3.1",
+        "net5.0": {
+          "targetAlias": "net5.0",
           "dependencies": {
             "HtmlAgilityPack": {
               "target": "Package",
-              "version": "[1.11.24, )"
+              "version": "[1.11.61, )"
             },
             "HtmlRenderer.PdfSharp": {
               "target": "Package",
               "version": "[1.5.0.6, )"
             },
-            "Microsoft.AspNet.Mvc": {
-              "target": "Package",
-              "version": "[5.2.9, )"
-            },
             "Newtonsoft.Json": {
               "target": "Package",
-              "version": "[12.0.3, )"
+              "version": "[13.0.3, )"
+            },
+            "PdfSharpCore": {
+              "target": "Package",
+              "version": "[1.1.25, )"
             },
             "RabbitMQ.Client": {
               "target": "Package",
-              "version": "[6.0.0, )"
+              "version": "[6.8.1, )"
             },
             "Serilog.AspNetCore": {
               "target": "Package",
-              "version": "[3.2.0, )"
+              "version": "[8.0.1, )"
             },
             "Serilog.Enrichers.Thread": {
               "target": "Package",
@@ -231,15 +248,15 @@
             },
             "Serilog.Settings.Configuration": {
               "target": "Package",
-              "version": "[3.1.0, )"
+              "version": "[8.0.0, )"
             },
             "Serilog.Sinks.File": {
               "target": "Package",
-              "version": "[4.1.0, )"
+              "version": "[5.0.0, )"
             },
             "System.Drawing.Common": {
               "target": "Package",
-              "version": "[4.7.0, )"
+              "version": "[8.0.4, )"
             },
             "System.Reflection.Emit": {
               "target": "Package",
@@ -247,11 +264,11 @@
             },
             "Telegram.Bot": {
               "target": "Package",
-              "version": "[17.0.0, )"
+              "version": "[19.0.0, )"
             },
             "Tesseract": {
               "target": "Package",
-              "version": "[3.3.0, )"
+              "version": "[5.2.0, )"
             }
           },
           "imports": [
@@ -260,7 +277,8 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -269,7 +287,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.412\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     }
