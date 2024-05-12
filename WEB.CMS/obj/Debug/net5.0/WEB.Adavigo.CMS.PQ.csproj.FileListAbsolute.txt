@@ -209,7 +209,6 @@ F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\obj\Debug\net5.0\WEB.Adavigo.CMS.PQ.
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\obj\Debug\net5.0\staticwebassets\WEB.Adavigo.CMS.PQ.StaticWebAssets.Manifest.cache
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\obj\Debug\net5.0\staticwebassets\WEB.Adavigo.CMS.PQ.StaticWebAssets.xml
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\obj\Debug\net5.0\WEB.Adavigo.CMS.PQ.dll
-F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\obj\Debug\net5.0\refint\WEB.Adavigo.CMS.PQ.dll
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\obj\Debug\net5.0\WEB.Adavigo.CMS.PQ.pdb
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\obj\Debug\net5.0\WEB.Adavigo.CMS.PQ.genruntimeconfig.cache
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\obj\Debug\net5.0\ref\WEB.Adavigo.CMS.PQ.dll
@@ -219,3 +218,4 @@ F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\PdfSharp.Charting.d
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\PdfSharp.dll
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\de\PdfSharp.Charting.resources.dll
 F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\de\PdfSharp.resources.dll
+F:\PROJECT\ADAVIGO\BACKEND\PHU_QUOC\WEB.CMS\bin\Debug\net5.0\ref\WEB.Adavigo.CMS.PQ.dll
