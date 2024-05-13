@@ -81,8 +81,8 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Tour
                     {
                         switch (Convert.ToInt32(item))
                         {
-                     
-                     
+
+
                             case (int)RoleType.TPTour:
                             case (int)RoleType.DHPQ:
                             case (int)RoleType.DHTour:
@@ -116,7 +116,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Tour
                 }
             }
 
-            
+
             var BOOKING_HOTEL_Data = BOOKING_HOTEL.Data;
             var BOOKING_HOTEL_Data2 = BOOKING_HOTEL_Data;
             ViewBag.BOOKING_HOTEL = BOOKING_HOTEL_Data2;
@@ -134,18 +134,18 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Tour
                 if (current_user != null)
                 {
                     if (current_user.Role != "")
-                {
-                    var list = current_user.Role.Split(',');
-                    foreach (var item in list)
                     {
-                        switch (Convert.ToInt32(item))
+                        var list = current_user.Role.Split(',');
+                        foreach (var item in list)
                         {
+                            switch (Convert.ToInt32(item))
+                            {
 
-                            case (int)RoleType.TPDHTour:
-                            case (int)RoleType.TPTour:
-                            case (int)RoleType.DHTour:
-                                {
-                                   
+                                case (int)RoleType.TPDHTour:
+                                case (int)RoleType.TPTour:
+                                case (int)RoleType.DHTour:
+                                    {
+
                                         if (searchModel.SalerPermission == null || searchModel.SalerPermission.Trim() == "")
                                         {
                                             searchModel.SalerPermission = current_user.UserUnderList;
@@ -156,23 +156,23 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Tour
 
                                         }
                                     }
-                                break;
-                            case (int)RoleType.Admin:
-                            case (int)RoleType.KT:
-                            case (int)RoleType.GDHN:
-                            case (int)RoleType.GDHPQ:
-                            case (int)RoleType.GD:
-                                {
-                                    searchModel.SalerPermission = null;
-                                }
-                                break;
+                                    break;
+                                case (int)RoleType.Admin:
+                                case (int)RoleType.KT:
+                                case (int)RoleType.GDHN:
+                                case (int)RoleType.GDHPQ:
+                                case (int)RoleType.GD:
+                                    {
+                                        searchModel.SalerPermission = null;
+                                    }
+                                    break;
+                            }
                         }
-                    }
 
                         model = await _tourRepository.GetListTour(searchModel);
                     }
                 }
-               
+
             }
             catch (Exception ex)
             {
@@ -230,7 +230,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Tour
                     model.Price = model.Amount;
                 }
                 ViewBag.Profit = (model.Amount - model.Price) > 0 ? model.Amount - model.Price : 0;
-               
+
                 return PartialView(model);
             }
             catch (Exception ex)
@@ -257,19 +257,22 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Tour
 
                 var model = await _tourRepository.ListTourPackagesByTourId(id);
                 var ListTourGuests = await _tourRepository.GetListTourGuestsByTourId(id);
-                if(model!=null)
-                foreach(var item in model)
-                {
-                    if(item.PackageCode== "adt_amount") {
-                        item.PackageName = "Người lớn";
+                if (model != null)
+                    foreach (var item in model)
+                    {
+                        if (item.PackageCode == "adt_amount")
+                        {
+                            item.PackageName = "Người lớn";
+                        }
+                        if (item.PackageCode == "chd_amount")
+                        {
+                            item.PackageName = "Trẻ em(2 - 14 tuổi)";
+                        }
+                        if (item.PackageCode == "inf_amount")
+                        {
+                            item.PackageName = "Em bé(0 - 2 tuổi)";
+                        }
                     }
-                    if(item.PackageCode== "chd_amount") {
-                        item.PackageName = "Trẻ em(2 - 14 tuổi)";
-                    }
-                    if (item.PackageCode== "inf_amount") {
-                        item.PackageName = "Em bé(0 - 2 tuổi)";
-                    }
-                }
                 ViewBag.ListTourGuests = ListTourGuests;
                 if (Order != null && Order.Count > 0)
                 {
@@ -351,13 +354,13 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Tour
                     int statusOder = 0;
                     if (tour_status == (int)ServiceStatus.Decline)
                     {
-                        var SendMessage = apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.TU_CHOI).ToString(), order.OrderNo, link, current_user.Role.ToString(), tour.ServiceCode);
+                        apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.TU_CHOI).ToString(), order.OrderNo, link, current_user.Role.ToString(), tour.ServiceCode);
 
                         msg = "Từ chối dịch vụ thành công";
                     }
                     if (tour_status == (int)ServiceStatus.OnExcution)
                     {
-                        var SendMessage = apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.NHAN_TRIEN_KHAI).ToString(), order.OrderNo, link, current_user.Role.ToString(), tour.ServiceCode);
+                        apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.NHAN_TRIEN_KHAI).ToString(), order.OrderNo, link, current_user.Role.ToString(), tour.ServiceCode);
                         msg = "Nhận đặt dịch vụ thành công";
                     }
                     if (tour_status == (int)ServiceStatus.Payment)
@@ -366,7 +369,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Tour
                         var sum = data.Where(n => ((n.Status == (int)(PAYMENT_REQUEST_STATUS.DA_CHI) || n.Status == (int)(PAYMENT_REQUEST_STATUS.CHO_CHI) || n.IsSupplierDebt == true))).Sum(n => n.Amount);
                         if (data != null && data.Count > 0 && sum >= amount)
                         {
-                            var SendMessage = apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.QUYET_TOAN).ToString(), order.OrderNo, link, current_user.Role.ToString(), tour.ServiceCode);
+                            apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.QUYET_TOAN).ToString(), order.OrderNo, link, current_user.Role.ToString(), tour.ServiceCode);
                             msg = "Quyết toán dịch vụ thành công";
                         }
                         else
@@ -384,7 +387,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Tour
                         var hotelBookingCode = await _hotelBookingCodeRepository.GetListlBookingCodeByHotelBookingId(tourId, Type);
                         if (hotelBookingCode != null && hotelBookingCode.Count > 0)
                         {
-                            var SendMessage = apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.TRA_CODE).ToString(), order.OrderNo, link, current_user.Role.ToString(), tour.ServiceCode);
+                            apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.TRA_CODE).ToString(), order.OrderNo, link, current_user.Role.ToString(), tour.ServiceCode);
                             msg = "Trả code dịch vụ thành công";
                         }
                         else
@@ -409,13 +412,13 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Tour
                             long UserVerify = 0;
                             if (status == (int)ServiceStatus.Decline)
                             {
-                                var UpdateOrderStatus = await _orderRepository.UpdateOrderStatus(OrderId, (int)OrderStatus.WAITING_FOR_ACCOUNTANT, UpdatedBy, UserVerify);
+                                await _orderRepository.UpdateOrderStatus(OrderId, (int)OrderStatus.WAITING_FOR_ACCOUNTANT, UpdatedBy, UserVerify);
                             }
                             else
                             {
-                                var UpdateOrderStatus = await _orderRepository.UpdateOrderStatus(OrderId, (int)OrderStatus.WAITING_FOR_ACCOUNTANT, UpdatedBy, UserVerify);
+                                await _orderRepository.UpdateOrderStatus(OrderId, (int)OrderStatus.WAITING_FOR_ACCOUNTANT, UpdatedBy, UserVerify);
                             }
-                           
+
                         }
                     }
                     status = (int)ResponseType.SUCCESS;
@@ -632,7 +635,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Tour
 
         }
 
-        public async Task<IActionResult> DeleteTourPackageOptional(int id,int tourId)
+        public async Task<IActionResult> DeleteTourPackageOptional(int id, int tourId)
         {
             int status = (int)ResponseType.SUCCESS;
             string msg = "Xóa không thành công";
@@ -640,17 +643,14 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Tour
             {
                 if (id > 0)
                 {
-                    var delete =await  _tourPackagesOptionalRepository.DeleteTourPackagesOptional(id);
+                    var delete = await _tourPackagesOptionalRepository.DeleteTourPackagesOptional(id);
                     if (delete > 0)
                     {
                         var y = _tourRepository.UpdateTourTotalPrice((long)tourId);
                         status = (int)ResponseType.SUCCESS;
                         msg = "Xóa thành công";
                     }
-                    
                 }
-               
-               
             }
             catch (Exception ex)
             {
@@ -681,7 +681,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Tour
                 }
                 if (name == null) name = "";
                 var data = TourPackageOptional.Data.ToList();
-                data= data.Where(s=>s.Description.ToLower().Contains(name.ToLower())).ToList();
+                data = data.Where(s => s.Description.ToLower().Contains(name.ToLower())).ToList();
                 if (data == null) data = new List<AllCode>();
                 return Ok(new
                 {
@@ -689,7 +689,6 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Tour
                     data = data,
                     selected = _UserId
                 });
-
             }
             catch (Exception ex)
             {
@@ -710,9 +709,9 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Tour
             var msg = "Cập nhật không thành công";
             try
             {
-                foreach(var item in data)
+                foreach (var item in data)
                 {
-                    item.UpdatedBy= Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                    item.UpdatedBy = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                     var update = _tourRepository.UpdateTourGuest(item);
                     if (update < 0)
                     {

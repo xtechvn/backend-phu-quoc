@@ -719,11 +719,11 @@ namespace WEB.Adavigo.CMS.Controllers.Report
         {
             try
             {
-                string _FileName = "Doanh thu tổng theo phòng ban bán hàng.xlsx";
                 string _UploadFolder = @"Template\Export";
                 string _UploadDirectory = Path.Combine(_WebHostEnvironment.WebRootPath, _UploadFolder);
 
                 var current_user = _ManagementUser.GetCurrentUser();
+
                 if (current_user != null)
                 {
                     if (current_user.Role != "")
@@ -769,28 +769,29 @@ namespace WEB.Adavigo.CMS.Controllers.Report
                     }
 
                 }
+                string _FileName_Base = "Doanh thu tổng theo phòng ban bán hàng";
                 if (searchModel.Type == 1)
                 {
                     switch (searchModel.DepartmentType)
                     {
                         case (int)DepartmentType.RevenueByDepartment:
                             {
-                                _FileName = "Doanh thu tổng theo phòng ban bán hàng.xlsx";
+                                _FileName_Base = "Doanh thu tổng theo phòng ban bán hàng";
                             }
                             break;
                         case (int)DepartmentType.RevenueByDepartmentsaler:
                             {
-                                _FileName = "Doanh thu tổng theo nhân viên bán hàng.xlsx";
+                                _FileName_Base = "Doanh thu tổng theo nhân viên bán hàng";
                             }
                             break;
                         case (int)DepartmentType.RevenueByDepartmentSupplier:
                             {
-                                _FileName = "Doanh thu tổng theo nhà cung cấp.xlsx";
+                                _FileName_Base = "Doanh thu tổng theo nhà cung cấp";
                             }
                             break;
                         case (int)DepartmentType.RevenueByDepartmentClient:
                             {
-                                _FileName = "Doanh thu tổng theo khách hàng .xlsx";
+                                _FileName_Base = "Doanh thu tổng theo khách hàng";
                             }
                             break;
                     }
@@ -801,26 +802,27 @@ namespace WEB.Adavigo.CMS.Controllers.Report
                     {
                         case (int)DepartmentType.RevenueByDepartment:
                             {
-                                _FileName = "Doanh thu chi tiết dịch vụ theo phòng ban bán hàng.xlsx";
+                                _FileName_Base = "Doanh thu chi tiết dịch vụ theo phòng ban bán hàng";
                             }
                             break;
                         case (int)DepartmentType.RevenueByDepartmentsaler:
                             {
-                                _FileName = "Doanh thu chi tiết dịch vụ theo nhân viên bán hàng.xlsx";
+                                _FileName_Base = "Doanh thu chi tiết dịch vụ theo nhân viên bán hàng";
                             }
                             break;
                         case (int)DepartmentType.RevenueByDepartmentSupplier:
                             {
-                                _FileName = "Doanh thu chi tiết dịch vụ theo nhà cung cấp.xlsx";
+                                _FileName_Base = "Doanh thu chi tiết dịch vụ theo nhà cung cấp";
                             }
                             break;
                         case (int)DepartmentType.RevenueByDepartmentClient:
                             {
-                                _FileName = "Doanh thu chi tiết dịch vụ theo khách hàng.xlsx";
+                                _FileName_Base = "Doanh thu chi tiết dịch vụ theo khách hàng";
                             }
                             break;
                     }
                 }
+                string _FileName = StringHelpers.GenFileName(_FileName_Base, current_user.Id, "xlsx");
 
                 if (!Directory.Exists(_UploadDirectory))
                 {
@@ -876,11 +878,17 @@ namespace WEB.Adavigo.CMS.Controllers.Report
         {
             try
             {
-                string _FileName = "Danh sách đơn hàng.xlsx";
                 string _UploadFolder = @"Template\Export";
                 string _UploadDirectory = Path.Combine(_WebHostEnvironment.WebRootPath, _UploadFolder);
-
+                var date = DateTime.Now;
                 var current_user = _ManagementUser.GetCurrentUser();
+                int _UserId = 0;
+                if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
+                {
+                    _UserId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                }
+                string _FileName = StringHelpers.GenFileName("Danh sách đơn hàng", _UserId, "xlsx");
+
                 if (current_user != null)
                 {
                     if (current_user.Role != "")
@@ -1166,23 +1174,40 @@ namespace WEB.Adavigo.CMS.Controllers.Report
                     }
 
                 }
-              
-                string folder = @"\Template\Export\";
-                string file_name = "Doanh thu theo Phát sinh chi tiết đơn hàng_"+_UserId+".xlsx";
+                string folder = @"\wwwroot\Template\Export\" + _UserId;
+                string full_path = Directory.GetCurrentDirectory() + folder;
+                string file_name = StringHelpers.GenFileName("Doanh thu theo Phát sinh chi tiết đơn hàng", current_user.Id, "xlsx");
+
                 string _UploadDirectory = Path.Combine(_WebHostEnvironment.WebRootPath, folder);
                 string file_path_combine = Path.Combine(_UploadDirectory, file_name);
-                if (!Directory.Exists(folder))
+                try
                 {
-                    Directory.CreateDirectory(folder);
+                    System.IO.DirectoryInfo di = new DirectoryInfo(full_path);
+                    if (!di.Exists)
+                    {
+                        Directory.CreateDirectory(full_path);
+                    }
+                    else
+                    {
+                        foreach (FileInfo file in di.GetFiles())
+                        {
+                            file.Delete();
+                        }
+                    }
                 }
-                
+                catch
+                {
+
+                }
+
+
                 var file_path = await _reportRepository.ExportOperatorExcel( await _reportRepository.GetOperatorReport(searchModel, 1, 20000), file_path_combine);
 
                 return Ok(new
                 {
                     status = (int)ResponseType.SUCCESS,
                     msg = "Xuất dữ liệu thành công",
-                    path= file_path
+                    path = file_path.Replace(@"\wwwroot", "")
                 });
             }
             catch (Exception ex)
@@ -1327,11 +1352,13 @@ namespace WEB.Adavigo.CMS.Controllers.Report
         {
             try
             {
-                string _FileName = "Danh sách báo cáo phòng ban sale.xlsx";
+
                 string _UploadFolder = @"Template\Export";
                 string _UploadDirectory = Path.Combine(_WebHostEnvironment.WebRootPath, _UploadFolder);
 
                 var current_user = _ManagementUser.GetCurrentUser();
+                string _FileName = StringHelpers.GenFileName("Danh sách báo cáo phòng ban sale", current_user.Id, "xlsx");
+
                 if (current_user != null)
                 {
                     if (current_user.Role != "")
@@ -1431,11 +1458,12 @@ namespace WEB.Adavigo.CMS.Controllers.Report
         {
             try
             {
-                string _FileName = "Danh sách chi tiết báo cáo phòng ban sale.xlsx";
                 string _UploadFolder = @"Template\Export";
                 string _UploadDirectory = Path.Combine(_WebHostEnvironment.WebRootPath, _UploadFolder);
 
                 var current_user = _ManagementUser.GetCurrentUser();
+                string _FileName = StringHelpers.GenFileName("Danh sách chi tiết báo cáo phòng ban sale", current_user.Id, "xlsx");
+
                 if (current_user != null)
                 {
                     if (current_user.Role != "")

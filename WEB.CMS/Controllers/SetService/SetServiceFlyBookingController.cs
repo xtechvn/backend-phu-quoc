@@ -216,7 +216,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Fly
                         }
                     }
                     model.BaseTotalAmount = fly_detail.Sum(x => x.Amount != null ? (double)x.Amount : 0);
-                    model.BaseSalerTotalAmount = fly_detail.Sum(x => x.TotalNetPrice!=null?(double)x.TotalNetPrice:0);
+                    model.BaseSalerTotalAmount = fly_detail.Sum(x => x.TotalNetPrice != null ? (double)x.TotalNetPrice : 0);
                     var operator_order_amount = fly_detail.Sum(x => x.Price != null ? (double)x.Price : 0);
                     if (operator_order_amount > 0)
                     {
@@ -249,7 +249,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Fly
                     model.TotalSalerProfit = fly_detail.Sum(x => (double)x.Profit);
 
                     var max_date = fly_detail.OrderByDescending(x => x.EndDate).First().EndDate;
-                    if(max_date < DateTime.Now)
+                    if (max_date < DateTime.Now)
                     {
                         ViewBag.AllowToFinishPayment = true;
 
@@ -260,7 +260,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Fly
 
                     }
                     var data_refund = _paymentRequestRepository.GetRequestByClientId((long)order.ClientId);
-                    if(data_refund!=null && data_refund.Count > 0)
+                    if (data_refund != null && data_refund.Count > 0)
                     {
                         ViewBag.RefundAmount = data_refund.Where(n => (n.Status == (int)(PAYMENT_REQUEST_STATUS.DA_CHI)) && !string.IsNullOrEmpty(n.PaymentVoucherCode)).Sum(n => n.Amount);
 
@@ -463,7 +463,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Fly
                 ViewBag.ListPackagesOptional = new List<FlyBookingPackagesOptionalViewModel>();
                 ViewBag.FlyDetailCount = 1;
                 ViewBag.OperatorName = "";
-               
+
                 if (order_id > 0)
                 {
 
@@ -497,7 +497,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Fly
                         }
                         ViewBag.ListPackagesOptional = package_optional_list;
 
-                        if (go!=null && go.SalerId!=null && (long)go.SalerId > 0)
+                        if (go != null && go.SalerId != null && (long)go.SalerId > 0)
                         {
                             var user = await _userRepository.GetById((long)go.SalerId);
                             ViewBag.OperatorName = user != null && user.Id > 0 ? user.FullName : "";
@@ -817,9 +817,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Fly
                         id = _orderRepository2.UpdateOrderOperator(detail[0].OrderId);
                         var order = _orderRepository.GetByOrderId(detail[0].OrderId);
                         string link = "/Order/" + detail[0].OrderId;
-                        var SendMessage = apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.NHAN_TRIEN_KHAI).ToString(), order.OrderNo, link, current_user.Role, detail[0].ServiceCode);
-
-                      
+                        apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.NHAN_TRIEN_KHAI).ToString(), order.OrderNo, link, current_user.Role, detail[0].ServiceCode);
                     }
 
                     return Ok(new
@@ -869,7 +867,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Fly
                         var detail = await _flyBookingDetailRepository.GetListByGroupFlyID(group_booking_id);
                         var order = _orderRepository.GetByOrderId(detail[0].OrderId);
                         string link = "/Order/" + detail[0].OrderId;
-                        var SendMessage = apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.TRA_CODE).ToString(), order.OrderNo, link, current_user.Role, detail[0].ServiceCode);
+                        apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.TRA_CODE).ToString(), order.OrderNo, link, current_user.Role, detail[0].ServiceCode);
                         return Ok(new
                         {
                             status = (int)ResponseType.SUCCESS,
@@ -929,7 +927,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Fly
                 }
                 var fly_detail = await _flyBookingDetailRepository.GetListByGroupFlyID(group_booking_id);
                 var amount = Convert.ToDouble(fly_detail.Sum(x => x.Price));
-                var request_amount = Convert.ToDouble(payment_request.Sum(x => (((x.Status == (int)(PAYMENT_REQUEST_STATUS.DA_CHI)|| x.Status == (int)(PAYMENT_REQUEST_STATUS.CHO_CHI)|| x.IsSupplierDebt == true))) ? x.Amount : 0));
+                var request_amount = Convert.ToDouble(payment_request.Sum(x => (((x.Status == (int)(PAYMENT_REQUEST_STATUS.DA_CHI) || x.Status == (int)(PAYMENT_REQUEST_STATUS.CHO_CHI) || x.IsSupplierDebt == true))) ? x.Amount : 0));
                 if (request_amount >= amount)
                 {
                     var id = await _flyBookingDetailRepository.UpdateServiceStatus((int)ServiceStatus.Payment, group_booking_id, _UserId);
@@ -950,7 +948,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Fly
                         var detail = await _flyBookingDetailRepository.GetListByGroupFlyID(group_booking_id);
                         var order = _orderRepository.GetByOrderId(detail[0].OrderId);
                         string link = "/Order/" + fly_detail[0].OrderId;
-                        var SendMessage = apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.QUYET_TOAN).ToString(), order.OrderNo, link, current_user.Role, detail[0].ServiceCode);
+                        apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.QUYET_TOAN).ToString(), order.OrderNo, link, current_user.Role, detail[0].ServiceCode);
                         return Ok(new
                         {
                             status = (int)ResponseType.SUCCESS,
@@ -1039,6 +1037,6 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Fly
                 });
             }
         }
-       
+
     }
 }

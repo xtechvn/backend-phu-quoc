@@ -147,7 +147,7 @@ namespace WEB.Adavigo.CMS.Controllers.Funding
 
                     if (ContractPayByOrderId != null && ContractPayByOrderId.Count <= 1)
                     {
-                        bool resulstSendMail = await _emailService.SendEmail(modelEmail, attach_file);
+                        _emailService.SendEmail(modelEmail, attach_file);
                     }
                 }
 

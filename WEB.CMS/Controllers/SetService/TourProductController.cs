@@ -106,6 +106,8 @@ namespace WEB.Adavigo.CMS.Controllers.SetService
                     TourType = tourProduct.TourType,
                     Transportation = tourProduct.Transportation,
                 };
+                //gọi như này thì các biến ở object tourProduct sẽ copy value sang model, không cần khai báo từng dòng
+                tourProduct.CopyProperties(model);
 
                 if (!string.IsNullOrEmpty(model.Schedule))
                 {

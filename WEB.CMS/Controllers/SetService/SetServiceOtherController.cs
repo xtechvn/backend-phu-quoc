@@ -76,7 +76,8 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Other
             {
                 var allcode_list = _allCodeRepository.GetListByType(AllCodeType.BOOKING_HOTEL_ROOM_STATUS);
                 ViewBag.status = allcode_list.Where(x => x.CodeValue != (int)ServiceStatus.New).ToList();
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 LogHelper.InsertLogTelegram("Others - SetServiceOtherController: " + ex);
 
@@ -115,7 +116,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Other
                             bool is_admin_or_department = false;
                             switch (Convert.ToInt32(item))
                             {
-                          
+
                                 case (int)RoleType.TPKS:
                                 case (int)RoleType.TPTour:
                                 case (int)RoleType.TPVe:
@@ -178,7 +179,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Other
             ViewBag.RefundAmount = 0;
             try
             {
-               
+
                 var allcode_list = _allCodeRepository.GetListByType(AllCodeType.BOOKING_HOTEL_ROOM_STATUS);
                 var other_detail = await _otherBookingRepository.GetOtherBookingById(id);
                 if (other_detail != null && other_detail.Id > 0)
@@ -188,7 +189,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Other
                     ViewBag.Booking = other_detail;
                     ViewBag.UserCreated = await _userRepository.GetById((long)other_detail.CreatedBy);
                     var order = _orderRepository.GetByOrderId(other_detail.OrderId);
-                    if(order!=null && order.OrderId > 0)
+                    if (order != null && order.OrderId > 0)
                     {
                         ViewBag.OrderAmount = order.Amount;
                         ViewBag.Saler = await _userRepository.GetById((long)order.SalerId);
@@ -272,7 +273,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Other
                     ViewBag.Service = allcode_list.FirstOrDefault(x => x.CodeValue == other_detail.ServiceType);
                     ViewBag.Booking = other_detail;
                     var optional_list = await _otherBookingRepository.GetOtherBookingPackagesOptionalByBookingId(other_detail.Id);
-                    if(optional_list!=null && optional_list.Count > 0)
+                    if (optional_list != null && optional_list.Count > 0)
                     {
                         var list_optional = new List<OtherBookingPackagesOptionalViewModel>();
                         foreach (var item in optional_list)
@@ -320,7 +321,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Other
 
             try
             {
-                if (booking_id <=0 || user_id <= 0)
+                if (booking_id <= 0 || user_id <= 0)
                 {
                     return Ok(new
                     {
@@ -379,9 +380,9 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Other
                     var id = await _otherBookingRepository.UpdateOtherBookingOptional(data, data[0].BookingId, _UserId);
                     other_booking = await _otherBookingRepository.GetOtherBookingById(data[0].BookingId);
                     amount = other_booking.Amount;
-                    price = (other_booking.Price!=null?(double)other_booking.Price:0);
+                    price = (other_booking.Price != null ? (double)other_booking.Price : 0);
                     if (price <= 0) price = 0;
-                    profit = amount - price- (other_booking.Commission==null?0:(double)other_booking.Commission) - (other_booking.OthersAmount == null ? 0 : (double)other_booking.OthersAmount);
+                    profit = amount - price - (other_booking.Commission == null ? 0 : (double)other_booking.Commission) - (other_booking.OthersAmount == null ? 0 : (double)other_booking.OthersAmount);
 
                     #region Update Order Amount:
                     await _orderRepository2.UpdateOrderDetail(other_booking.OrderId, _UserId);
@@ -474,7 +475,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Other
             try
             {
                 var current_user = _ManagementUser.GetCurrentUser();
-                if (booking_id<=0)
+                if (booking_id <= 0)
                 {
                     return Ok(new
                     {
@@ -515,7 +516,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Other
             try
             {
                 var current_user = _ManagementUser.GetCurrentUser();
-                if (booking_id <=0)
+                if (booking_id <= 0)
                 {
                     return Ok(new
                     {
@@ -537,7 +538,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Other
                         var detail = await _otherBookingRepository.GetOtherBookingById(booking_id);
                         var order = _orderRepository.GetByOrderId(detail.OrderId);
                         string link = "/Order/" + detail.OrderId;
-                        var SendMessage = apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.TRA_CODE).ToString(), order.OrderNo, link, current_user.Role, detail.ServiceCode);
+                        apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.TRA_CODE).ToString(), order.OrderNo, link, current_user.Role, detail.ServiceCode);
                         return Ok(new
                         {
                             status = (int)ResponseType.SUCCESS,
@@ -596,8 +597,8 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Other
                     });
                 }
                 var detail = await _otherBookingRepository.GetOtherBookingById(booking_id);
-                double amount = detail.Price!=null ? (double)detail.Price:(detail.Amount-detail.Profit);
-                var request_amount = Convert.ToDouble(payment_request.Sum(x => (((x.Status == (int)(PAYMENT_REQUEST_STATUS.DA_CHI)|| x.Status == (int)(PAYMENT_REQUEST_STATUS.CHO_CHI)|| x.IsSupplierDebt == true))) ? x.Amount : 0));
+                double amount = detail.Price != null ? (double)detail.Price : (detail.Amount - detail.Profit);
+                var request_amount = Convert.ToDouble(payment_request.Sum(x => (((x.Status == (int)(PAYMENT_REQUEST_STATUS.DA_CHI) || x.Status == (int)(PAYMENT_REQUEST_STATUS.CHO_CHI) || x.IsSupplierDebt == true))) ? x.Amount : 0));
                 if (request_amount >= amount)
                 {
                     var id = await _otherBookingRepository.UpdateServiceStatus((int)ServiceStatus.Payment, booking_id, _UserId);
@@ -608,14 +609,13 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Other
                     if (!is_other_than_payment && is_has_payment)
                     {
                         long UpdatedBy = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                        long UserVerify = 0;
-                        var UpdateOrderStatus = await _orderRepository2.UpdateOrderStatus(detail.OrderId, (int)OrderStatus.WAITING_FOR_ACCOUNTANT, UpdatedBy, UserVerify);
+                        await _orderRepository2.UpdateOrderStatus(detail.OrderId, (int)OrderStatus.WAITING_FOR_ACCOUNTANT, UpdatedBy, 0);
                     }
                     if (id > 0)
                     {
                         var order = _orderRepository.GetByOrderId(detail.OrderId);
                         string link = "/Order/" + detail.OrderId;
-                        var SendMessage = apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.QUYET_TOAN).ToString(), order.OrderNo, link, current_user.Role, detail.ServiceCode);
+                        apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.QUYET_TOAN).ToString(), order.OrderNo, link, current_user.Role, detail.ServiceCode);
                         //-- update order payment_status
                         await _orderRepository2.UpdateOrderDetail(detail.OrderId, _UserId);
 
@@ -661,7 +661,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Other
                 {
                     status = (int)ResponseType.SUCCESS,
                     msg = "Success",
-                    data=data
+                    data = data
                 });
 
             }
@@ -673,7 +673,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Other
             {
                 status = (int)ResponseType.ERROR,
                 msg = "OtherServiceCodeSuggestion error on excution",
-                data=data
+                data = data
             });
         }
     }

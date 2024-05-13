@@ -156,10 +156,7 @@ namespace Repositories.Repositories
             try
             {
                 string full_path = Directory.GetCurrentDirectory() + file_path;
-                if (!file_path.Contains("wwwroot"))
-                {
-                    full_path = Directory.GetCurrentDirectory() + @"\wwwroot" + file_path;
-                }
+              
                 try
                 {
                     File.Delete(full_path);

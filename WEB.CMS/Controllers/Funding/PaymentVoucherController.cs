@@ -256,29 +256,6 @@ namespace WEB.Adavigo.CMS.Controllers.Funding
                 {
                     userLogin = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 }
-                //PaymentVoucherViewModel model = JsonConvert.DeserializeObject<PaymentVoucherViewModel>(jsonData);
-                //if (imagefile != null)
-                //{
-                //    string _FileName = Guid.NewGuid() + Path.GetExtension(imagefile.FileName);
-                //    string _UploadFolder = @"uploads/images";
-                //    string _UploadDirectory = Path.Combine(_WebHostEnvironment.WebRootPath, _UploadFolder);
-
-                //    if (!Directory.Exists(_UploadDirectory))
-                //    {
-                //        Directory.CreateDirectory(_UploadDirectory);
-                //    }
-
-                //    string filePath = Path.Combine(_UploadDirectory, _FileName);
-
-                //    if (!System.IO.File.Exists(filePath))
-                //    {
-                //        using (var fileStream = new FileStream(filePath, FileMode.Create))
-                //        {
-                //            await imagefile.CopyToAsync(fileStream);
-                //        }
-                //    }
-                //    model.AttachFiles = "/" + _UploadFolder + "/" + _FileName;
-                //}
                 model.UpdatedBy = userLogin;
                 var validate = Validate(model, out string messages);
                 if (validate < 0)

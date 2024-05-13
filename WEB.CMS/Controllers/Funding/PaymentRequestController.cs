@@ -429,7 +429,7 @@ namespace WEB.Adavigo.CMS.Controllers.Funding
                 }
                 var current_user = _ManagementUser.GetCurrentUser();
                 string link = "/PaymentRequest/Detail?paymentRequestId=" + result;
-                var SendMessage = apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.PHIEU_YEU_CAU_CHI).ToString(), ((int)ActionType.TAO_YEU_CAU_CHI).ToString(), model.PaymentCode, link, current_user == null ? "0" : current_user.Role);
+                apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.PHIEU_YEU_CAU_CHI).ToString(), ((int)ActionType.TAO_YEU_CAU_CHI).ToString(), model.PaymentCode, link, current_user == null ? "0" : current_user.Role);
 
                 return Ok(new
                 {
@@ -641,7 +641,7 @@ namespace WEB.Adavigo.CMS.Controllers.Funding
                 }
                 var current_user = _ManagementUser.GetCurrentUser();
                 string link = "/PaymentRequest/Detail?paymentRequestId=" + model.Id;
-                var SendMessage = apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.PHIEU_YEU_CAU_CHI).ToString(), ((int)ActionType.TU_CHOI_DUYET_YEU_CAU_CHI).ToString(), model.PaymentCode, link, current_user == null ? "0" : current_user.Role);
+               apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.PHIEU_YEU_CAU_CHI).ToString(), ((int)ActionType.TU_CHOI_DUYET_YEU_CAU_CHI).ToString(), model.PaymentCode, link, current_user == null ? "0" : current_user.Role);
                 return Ok(new
                 {
                     isSuccess = true,
@@ -685,7 +685,7 @@ namespace WEB.Adavigo.CMS.Controllers.Funding
                 }
                 var current_user = _ManagementUser.GetCurrentUser();
                 string link = "/PaymentRequest/Detail?paymentRequestId=" + model.Id;
-                var SendMessage = apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.PHIEU_YEU_CAU_CHI).ToString(), ((int)ActionType.DUYET_YEU_CAU_CHI).ToString(), model.PaymentCode, link, current_user == null ? "0" : current_user.Role);
+                apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.PHIEU_YEU_CAU_CHI).ToString(), ((int)ActionType.DUYET_YEU_CAU_CHI).ToString(), model.PaymentCode, link, current_user == null ? "0" : current_user.Role);
 
                 return Ok(new
                 {
@@ -1304,7 +1304,7 @@ namespace WEB.Adavigo.CMS.Controllers.Funding
                     });
 
                 string link = "/PaymentRequest/Detail?paymentRequestId=" + model.Id;
-                var SendMessage = apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.PHIEU_YEU_CAU_CHI).ToString(), ((int)ActionType.BO_DUYET_YEU_CAU_CHI).ToString(), model.PaymentCode, link, current_user == null ? "0" : current_user.Role);
+                apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.PHIEU_YEU_CAU_CHI).ToString(), ((int)ActionType.BO_DUYET_YEU_CAU_CHI).ToString(), model.PaymentCode, link, current_user == null ? "0" : current_user.Role);
 
                 return Ok(new
                 {

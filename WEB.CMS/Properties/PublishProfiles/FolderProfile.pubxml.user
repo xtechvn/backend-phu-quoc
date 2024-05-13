@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\Users\Mirrors\Desktop\publish-api</_PublishTargetUrl>
+    <History>True|2024-05-11T04:53:59.9028326Z;True|2024-05-11T09:06:33.0401040+07:00;True|2024-05-09T14:02:20.3055889+07:00;</History>
+  </PropertyGroup>
+</Project>

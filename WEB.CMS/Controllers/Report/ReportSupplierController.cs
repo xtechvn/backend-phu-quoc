@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Utilities;
 using Utilities.Contants;
@@ -140,7 +141,12 @@ namespace WEB.Adavigo.CMS.Controllers.Report
         {
             try
             {
-                string _FileName = "Danh sách công nợ NCC.xlsx";
+                int _UserId = 0;
+                if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
+                {
+                    _UserId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                }
+                string _FileName = StringHelpers.GenFileName("Danh sách công nợ NCC", _UserId, "xlsx");
                 string _UploadFolder = @"Template\Export";
                 string _UploadDirectory = Path.Combine(_WebHostEnvironment.WebRootPath, _UploadFolder);
 
@@ -196,7 +202,12 @@ namespace WEB.Adavigo.CMS.Controllers.Report
         {
             try
             {
-                string _FileName = "Danh sách CT công nợ NCC.xlsx";
+                int _UserId = 0;
+                if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
+                {
+                    _UserId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                }
+                string _FileName = StringHelpers.GenFileName("Danh sách CT công nợ NCC", _UserId, "xlsx");
                 string _UploadFolder = @"Template\Export";
                 string _UploadDirectory = Path.Combine(_WebHostEnvironment.WebRootPath, _UploadFolder);
 

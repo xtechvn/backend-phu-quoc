@@ -75,7 +75,8 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.WaterSport
             {
                 var allcode_list = _allCodeRepository.GetListByType(AllCodeType.BOOKING_HOTEL_ROOM_STATUS);
                 ViewBag.status = allcode_list.Where(x => x.CodeValue != (int)ServiceStatus.New).ToList();
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 LogHelper.InsertLogTelegram("WaterSports - SetServiceWaterSportController: " + ex);
 
@@ -184,7 +185,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.WaterSport
                     ViewBag.Booking = WaterSport_detail;
                     ViewBag.UserCreated = await _userRepository.GetById((long)WaterSport_detail.CreatedBy);
                     var order = _orderRepository.GetByOrderId(WaterSport_detail.OrderId);
-                    if(order!=null && order.OrderId > 0)
+                    if (order != null && order.OrderId > 0)
                     {
                         ViewBag.OrderAmount = order.Amount;
                         ViewBag.Saler = await _userRepository.GetById((long)order.SalerId);
@@ -317,7 +318,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.WaterSport
 
             try
             {
-                if (booking_id <=0 || user_id <= 0)
+                if (booking_id <= 0 || user_id <= 0)
                 {
                     return Ok(new
                     {
@@ -348,7 +349,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.WaterSport
                 });
             }
         }
-      
+
         [HttpPost]
         public async Task<IActionResult> WSExportExcel(SearchFlyBookingViewModel searchModel)
         {
@@ -421,7 +422,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.WaterSport
             try
             {
                 var current_user = _ManagementUser.GetCurrentUser();
-                if (booking_id<=0)
+                if (booking_id <= 0)
                 {
                     return Ok(new
                     {
@@ -456,7 +457,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.WaterSport
                 msg = "Nhận đặt dịch vụ thất bại, vui lòng liên hệ IT"
             });
         }
-       
+
         [HttpPost]
         public async Task<IActionResult> WSServiceChangeToConfirmPaymentStatus(long booking_id)
         {
@@ -536,14 +537,13 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.WaterSport
                 if (!is_WaterSport_than_payment && is_has_payment)
                 {
                     long UpdatedBy = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                    long UserVerify = 0;
-                    var UpdateOrderStatus = await _orderRepository2.UpdateOrderStatus(detail.OrderId, (int)OrderStatus.WAITING_FOR_ACCOUNTANT, UpdatedBy, UserVerify);
+                    await _orderRepository2.UpdateOrderStatus(detail.OrderId, (int)OrderStatus.WAITING_FOR_ACCOUNTANT, UpdatedBy, 0);
                 }
                 if (id > 0)
                 {
                     var order = _orderRepository.GetByOrderId(detail.OrderId);
                     string link = "/Order/" + detail.OrderId;
-                    var SendMessage = apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.QUYET_TOAN).ToString(), order.OrderNo, link, current_user.Role, detail.ServiceCode);
+                    apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.QUYET_TOAN).ToString(), order.OrderNo, link, current_user.Role, detail.ServiceCode);
                     //-- update order payment_status
                     await _orderRepository2.UpdateOrderDetail(detail.OrderId, _UserId);
 
@@ -579,7 +579,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.WaterSport
                 {
                     status = (int)ResponseType.SUCCESS,
                     msg = "Success",
-                    data=data
+                    data = data
                 });
 
             }
@@ -591,7 +591,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.WaterSport
             {
                 status = (int)ResponseType.ERROR,
                 msg = "WaterSportServiceCodeSuggestion error on excution",
-                data=data
+                data = data
             });
         }
         [HttpPost]
@@ -619,7 +619,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.WaterSport
                     {
                         _UserId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                     }
-                    var id = await _otherBookingRepository.UpdateOtherBookingOptional(data, data[0].BookingId, _UserId);
+                    await _otherBookingRepository.UpdateOtherBookingOptional(data, data[0].BookingId, _UserId);
                     other_booking = await _otherBookingRepository.GetOtherBookingById(data[0].BookingId);
                     amount = other_booking.Amount;
                     price = (other_booking.Price != null ? (double)other_booking.Price : 0);

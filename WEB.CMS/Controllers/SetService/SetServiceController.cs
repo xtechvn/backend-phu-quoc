@@ -278,11 +278,8 @@ namespace WEB.Adavigo.CMS.Controllers.SetService
                     if (model != null && model.Count > 0)
                     {
                         var max_date = model[0].DepartureDate;
-                        if (max_date < DateTime.Now)
-                        {
-                            ViewBag.AllowToFinishPayment = true;
+                        ViewBag.AllowToFinishPayment = max_date < DateTime.Now;
 
-                        }
                         var order = await _orderRepository.GetOrderByID(model[0].OrderId);
                         if (order != null && order.OrderId > 0 && order.ClientId != null && order.ClientId > 0)
                         {
@@ -571,8 +568,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService
             if (current_user != null && !string.IsNullOrEmpty(current_user.Role))
             {
                 var listRole = Array.ConvertAll(current_user.Role.Split(','), int.Parse);
-                bool isAdmin = _userRepository.IsAdmin(current_user.Id);
-                ViewBag.isAdmin = isAdmin;
+                ViewBag.isAdmin = _userRepository.IsAdmin(current_user.Id);
             }
             var data = _paymentRequestRepository.GetByServiceId(HotelBookingID, serviceType);
             ViewBag.listContractPay = _contractPayRepository.GetContractPayBySupplierId(orderId, HotelBookingID);
@@ -623,8 +619,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService
             if (current_user != null && !string.IsNullOrEmpty(current_user.Role))
             {
                 var listRole = Array.ConvertAll(current_user.Role.Split(','), int.Parse);
-                bool isAdmin = _userRepository.IsAdmin(current_user.Id);
-                ViewBag.isAdmin = isAdmin;
+                ViewBag.isAdmin = _userRepository.IsAdmin(current_user.Id);
             }
             var data = _paymentRequestRepository.GetRequestByClientId(clientId, orderId);
             return PartialView(data);
@@ -645,17 +640,14 @@ namespace WEB.Adavigo.CMS.Controllers.SetService
                     var order = _orderRepositor.GetByOrderId(OrderId);
                     string link = "/Order/" + OrderId;
                     var current_user = _ManagementUser.GetCurrentUser();
-                    int statusOder = 0;
                     if (status == (int)ServiceStatus.Decline)
                     {
-
-
-                        var SendMessage = apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.QUYET_TOAN).ToString(), order.OrderNo, link, current_user.Role.ToString(), Hotel[0].ServiceCode);
+                        apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.QUYET_TOAN).ToString(), order.OrderNo, link, current_user.Role.ToString(), Hotel[0].ServiceCode);
                         smg = "Từ chối dịch vụ thành công";
                     }
                     if (status == (int)ServiceStatus.OnExcution)
                     {
-                        var SendMessage = apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.NHAN_TRIEN_KHAI).ToString(), order.OrderNo, link, current_user.Role.ToString(), Hotel[0].ServiceCode);
+                        apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.NHAN_TRIEN_KHAI).ToString(), order.OrderNo, link, current_user.Role.ToString(), Hotel[0].ServiceCode);
                         smg = "Nhận đặt dịch vụ thành công";
                     }
                     if (status == (int)ServiceStatus.Payment)
@@ -666,9 +658,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService
 
                         if (data != null && data.Count > 0 && sum >= amount)
                         {
-
-
-                            var SendMessage = apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.QUYET_TOAN).ToString(), order.OrderNo, link, current_user.Role.ToString(), Hotel[0].ServiceCode);
+                            apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.QUYET_TOAN).ToString(), order.OrderNo, link, current_user.Role.ToString(), Hotel[0].ServiceCode);
                             smg = "Quyết toán dịch vụ thành công";
                         }
                         else
@@ -687,7 +677,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService
                         var hotelBookingCode = await _hotelBookingCodeRepository.GetListlBookingCodeByHotelBookingId(id, Type);
                         if (hotelBookingCode != null && hotelBookingCode.Count > 0)
                         {
-                            var SendMessage = apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.TRA_CODE).ToString(), order.OrderNo, link, current_user.Role.ToString(), Hotel[0].ServiceCode);
+                            apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.TRA_CODE).ToString(), order.OrderNo, link, current_user.Role.ToString(), Hotel[0].ServiceCode);
                             smg = "Trả code dịch vụ thành công";
                         }
                         else
@@ -712,14 +702,13 @@ namespace WEB.Adavigo.CMS.Controllers.SetService
                         if (data.Count == count_dataOrder2)
                         {
                             long UpdatedBy = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                            long UserVerify = 0;
                             if (status == (int)ServiceStatus.Decline)
                             {
-                                var UpdateOrderStatus = await _orderRepository.UpdateOrderStatus(OrderId, (int)OrderStatus.OPERATOR_DECLINE, UpdatedBy, UserVerify);
+                                await _orderRepository.UpdateOrderStatus(OrderId, (int)OrderStatus.OPERATOR_DECLINE, UpdatedBy, 0);
                             }
                             else
                             {
-                                var UpdateOrderStatus = await _orderRepository.UpdateOrderStatus(OrderId, (int)OrderStatus.WAITING_FOR_ACCOUNTANT, UpdatedBy, UserVerify);
+                                await _orderRepository.UpdateOrderStatus(OrderId, (int)OrderStatus.WAITING_FOR_ACCOUNTANT, UpdatedBy, 0);
                             }
 
                         }
@@ -1381,9 +1370,9 @@ namespace WEB.Adavigo.CMS.Controllers.SetService
                                     var listdata2 = dataOrder2.Where(s => s.Status == (int)ServiceStatus.Decline).ToList();
                                     if (listdata2.Count == dataOrder2.Count && listdata.Count == dataOrder2.Count)
                                     {
-                                        var UpdateOrderStatus = await _orderRepository.UpdateOrderStatus(orderid, (int)OrderStatus.OPERATOR_DECLINE, UpdatedBy, UserVerify);
+                                        await _orderRepository.UpdateOrderStatus(orderid, (int)OrderStatus.OPERATOR_DECLINE, UpdatedBy, UserVerify);
                                     }
-                                    var SendMessage = apiService.SendMessage(CreatedatedBy.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.TU_CHOI).ToString(), order.OrderNo, link, current_user.Role, listHotel.Count > 0 ? listHotel[0].ServiceCode : "0");
+                                    apiService.SendMessage(CreatedatedBy.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.TU_CHOI).ToString(), order.OrderNo, link, current_user.Role, listHotel.Count > 0 ? listHotel[0].ServiceCode : "0");
                                     status = (int)ResponseType.SUCCESS;
                                     msg = "Từ chối thành công";
                                 }
@@ -1408,11 +1397,10 @@ namespace WEB.Adavigo.CMS.Controllers.SetService
                                     var listdata2 = dataOrder2.Where(s => s.Status == (int)ServiceStatus.Decline).ToList();
                                     if (listdata2.Count == dataOrder2.Count && listdata.Count == dataOrder2.Count)
                                     {
-
-                                        var UpdateOrderStatus = await _orderRepository.UpdateOrderStatus(orderid, (int)OrderStatus.OPERATOR_DECLINE, UpdatedBy, UserVerify);
+                                        await _orderRepository.UpdateOrderStatus(orderid, (int)OrderStatus.OPERATOR_DECLINE, UpdatedBy, UserVerify);
                                     }
 
-                                    var SendMessage = apiService.SendMessage(CreatedatedBy.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.TU_CHOI).ToString(), order.OrderNo, link, current_user.Role, fly_list[0].ServiceCode);
+                                    apiService.SendMessage(CreatedatedBy.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.TU_CHOI).ToString(), order.OrderNo, link, current_user.Role, fly_list[0].ServiceCode);
                                     status = (int)ResponseType.SUCCESS;
                                     msg = "Đổi trạng thái từ chối dịch vụ thành công";
                                 }
@@ -1431,10 +1419,9 @@ namespace WEB.Adavigo.CMS.Controllers.SetService
                                     var listdata2 = dataOrder2.Where(s => s.Status == (int)ServiceStatus.Decline).ToList();
                                     if (listdata2.Count == dataOrder2.Count && listdata.Count == dataOrder2.Count)
                                     {
-
-                                        var UpdateOrderStatus = await _orderRepository.UpdateOrderStatus(orderid, (int)OrderStatus.OPERATOR_DECLINE, UpdatedBy, UserVerify);
+                                        await _orderRepository.UpdateOrderStatus(orderid, (int)OrderStatus.OPERATOR_DECLINE, UpdatedBy, UserVerify);
                                     }
-                                    var SendMessage = apiService.SendMessage(CreatedatedBy.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.TU_CHOI).ToString(), order.OrderNo, link, current_user.Role, listtour[0].ServiceCode);
+                                    apiService.SendMessage(CreatedatedBy.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.TU_CHOI).ToString(), order.OrderNo, link, current_user.Role, listtour[0].ServiceCode);
                                     status = (int)ResponseType.SUCCESS;
                                     msg = "Từ chối thành công";
                                 }
@@ -1459,10 +1446,9 @@ namespace WEB.Adavigo.CMS.Controllers.SetService
                                     var listdata2 = dataOrder2.Where(s => s.Status == (int)ServiceStatus.Decline).ToList();
                                     if (listdata2.Count == dataOrder2.Count && listdata.Count == dataOrder2.Count)
                                     {
-
-                                        var UpdateOrderStatus = await _orderRepository.UpdateOrderStatus(orderid, (int)OrderStatus.OPERATOR_DECLINE, UpdatedBy, UserVerify);
+                                        await _orderRepository.UpdateOrderStatus(orderid, (int)OrderStatus.OPERATOR_DECLINE, UpdatedBy, UserVerify);
                                     }
-                                    var SendMessage = apiService.SendMessage(CreatedatedBy.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.TU_CHOI).ToString(), order.OrderNo, link, current_user.Role, otherBookings.ServiceCode);
+                                    apiService.SendMessage(CreatedatedBy.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.TU_CHOI).ToString(), order.OrderNo, link, current_user.Role, otherBookings.ServiceCode);
                                     status = (int)ResponseType.SUCCESS;
                                     msg = "Từ chối thành công";
                                 }
@@ -1487,10 +1473,9 @@ namespace WEB.Adavigo.CMS.Controllers.SetService
                                     var listdata2 = dataOrder2.Where(s => s.Status == (int)ServiceStatus.Decline).ToList();
                                     if (listdata2.Count == dataOrder2.Count && listdata.Count == dataOrder2.Count)
                                     {
-
-                                        var UpdateOrderStatus = await _orderRepository.UpdateOrderStatus(orderid, (int)OrderStatus.OPERATOR_DECLINE, UpdatedBy, UserVerify);
+                                        await _orderRepository.UpdateOrderStatus(orderid, (int)OrderStatus.OPERATOR_DECLINE, UpdatedBy, UserVerify);
                                     }
-                                    var SendMessage = apiService.SendMessage(CreatedatedBy.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.TU_CHOI).ToString(), order.OrderNo, link, current_user.Role, vinwonderBooking.ServiceCode);
+                                    apiService.SendMessage(CreatedatedBy.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.TU_CHOI).ToString(), order.OrderNo, link, current_user.Role, vinwonderBooking.ServiceCode);
                                     status = (int)ResponseType.SUCCESS;
                                     msg = "Từ chối thành công";
                                 }

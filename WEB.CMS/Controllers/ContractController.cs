@@ -477,14 +477,13 @@ namespace WEB.Adavigo.CMS.Controllers
                     var data = await _contractRepository.CreateContact(model);
                     if (data != 0)
                     {
-                        //var SendMessage = apiService.SendMessage(userId, ModuleType.HOP_DONG.ToString(), ActionType.TAO_MOI.ToString(), model.ContractNo);
                         stt_code = (int)ResponseType.SUCCESS;
                         msg = "Gửi thành công";
                         if (model.ContractStatus == ContractStatus.DOI_DUYET)
                         {
                             var current_user = _ManagementUser.GetCurrentUser();
                             string link = "/Contract/DetailContract/" + data;
-                            var SendMessage = apiService.SendMessage(userId, ((int)ModuleType.HOP_DONG).ToString(), ((int)ActionType.DUYET).ToString(), model.ContractNo, link, current_user.Role);
+                            apiService.SendMessage(userId, ((int)ModuleType.HOP_DONG).ToString(), ((int)ActionType.DUYET).ToString(), model.ContractNo, link, current_user.Role);
                         }
                     }
                     else
@@ -647,11 +646,11 @@ namespace WEB.Adavigo.CMS.Controllers
                         string link = "/Contract/DetailContract/" + id;
                         if (Status == ContractStatus.DA_DUYET)
                         {
-                            var SendMessage = apiService.SendMessage(userId, ((int)ModuleType.HOP_DONG).ToString(), ((int)ActionType.DA_DUYET).ToString(), model[0].ContractNo, link, current_user.Role);
+                            apiService.SendMessage(userId, ((int)ModuleType.HOP_DONG).ToString(), ((int)ActionType.DA_DUYET).ToString(), model[0].ContractNo, link, current_user.Role);
                         }
                         if (Status == ContractStatus.TU_CHOI)
                         {
-                            var SendMessage = apiService.SendMessage(userId, ((int)ModuleType.HOP_DONG).ToString(), ((int)ActionType.TU_CHOI_HOP_DONG).ToString(), model[0].ContractNo, link, current_user.Role);
+                            apiService.SendMessage(userId, ((int)ModuleType.HOP_DONG).ToString(), ((int)ActionType.TU_CHOI_HOP_DONG).ToString(), model[0].ContractNo, link, current_user.Role);
                         }
 
                         status = (int)ResponseType.SUCCESS;
@@ -670,7 +669,6 @@ namespace WEB.Adavigo.CMS.Controllers
                     var data = await _contractRepository.UpdataContactStatus(id, Status, Note, UserIdUpdate);
                     if (data != 0)
                     {
-                        // var SendMessage = apiService.SendMessage( userId, ModuleType.HOP_DONG.ToString(), ActionType.HUY.ToString(), model[0].ContractNo);
                         status = (int)ResponseType.SUCCESS;
                         msg = "Hủy hợp đồng thành công";
                     }

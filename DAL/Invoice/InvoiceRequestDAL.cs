@@ -652,7 +652,7 @@ namespace DAL.Invoice
             try
             {
                 SqlParameter[] objParam = new SqlParameter[1];
-                objParam[0] = new SqlParameter("@OrderId", orderId);
+                objParam[0] = new SqlParameter("@OrderId", orderId.ToString());
                 return _DbWorker.GetDataTable(StoreProcedureConstant.sp_GetListInvoiceRequestByOrderId, objParam).ToList<InvoiceRequestViewModel>();
             }
             catch (Exception ex)

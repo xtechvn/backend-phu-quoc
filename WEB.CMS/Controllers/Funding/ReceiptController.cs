@@ -301,7 +301,7 @@ namespace WEB.Adavigo.CMS.Controllers
                 foreach (var item in model.ContractPayDetails)
                 {
                     string link = "/Receipt/Detail?contractPayId=" + contractPayId;
-                    var SendMessage = apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.PHIEU_THU).ToString(),
+                    apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.PHIEU_THU).ToString(),
                         ((int)ActionType.TAO_MOI_PHIEU_THU).ToString(), item.OrderCode, link, current_user == null ? "0" : current_user.Role);
 
                     var data = await _orderRepository.GetAllServiceByOrderId(item.OrderId);
@@ -310,15 +310,15 @@ namespace WEB.Adavigo.CMS.Controllers
                         {
                             if (item2.Type.Equals("Tour"))
                             {
-                                var SendMessage2 = apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DON_HANG).ToString(), ((int)ActionType.DUYET_DICH_VU).ToString(), item2.OrderNo, link, current_user.Role, item2.ServiceCode);
+                                apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DON_HANG).ToString(), ((int)ActionType.DUYET_DICH_VU).ToString(), item2.OrderNo, link, current_user.Role, item2.ServiceCode);
                             }
                             if (item2.Type.Equals("Khách sạn"))
                             {
-                                var SendMessage2 = apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DON_HANG).ToString(), ((int)ActionType.DUYET_DICH_VU).ToString(), item2.OrderNo, link, current_user.Role, item2.ServiceCode);
+                                apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DON_HANG).ToString(), ((int)ActionType.DUYET_DICH_VU).ToString(), item2.OrderNo, link, current_user.Role, item2.ServiceCode);
                             }
                             if (item2.Type.Equals("Vé máy bay"))
                             {
-                                var SendMessage2 = apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DON_HANG).ToString(), ((int)ActionType.DUYET_DICH_VU).ToString(), item2.OrderNo, link, current_user.Role, item2.ServiceCode);
+                                apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DON_HANG).ToString(), ((int)ActionType.DUYET_DICH_VU).ToString(), item2.OrderNo, link, current_user.Role, item2.ServiceCode);
                             }
                         }
                     var modelEmail = new SendEmailViewModel();
@@ -328,7 +328,7 @@ namespace WEB.Adavigo.CMS.Controllers
                     modelEmail.ServiceType = (int)EmailType.SaleDH;
                     if (ContractPayByOrderId != null && ContractPayByOrderId.Count <= 1)
                     {
-                        var resulstSendMail =  _emailService.SendEmail(modelEmail, attach_file);
+                        var resulstSendMail = _emailService.SendEmail(modelEmail, attach_file);
                     }
                 }
                 return Ok(new

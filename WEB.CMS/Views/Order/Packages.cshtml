@@ -60,9 +60,9 @@
                                 <td>@(i++)</td>
                                 <td>@item.Type</td>
                                 <td>
-                                    @switch (item.Type)
+                                    @switch (item.Type.ToLower().Trim())
                                     {
-                                        case "Vé máy bay":
+                                        case "vé máy bay":
                                             {
                                                 if (item.Flight != null)
                                                 {
@@ -85,26 +85,28 @@
                                                 }
                                             }
                                             break;
-                                        case "Vinwonder":
+                                        case "vinwonder":
                                             {
                                                 <div>@item.StartDate.ToString("dd/MM/yyyy HH:mm") </div>
                                             }
                                             break;
-                                        case "Tour":
-                                        case "Khách sạn":
-                                        case "Dịch vụ khác":
+                                        case "tour":
+                                        case "khách sạn":
+                                        case "dịch vụ khác":
+                                        case "thể thao biển":
                                             {
                                                 <div>@item.StartDate.ToString("dd/MM/yyyy HH:mm") - @item.EndDate.ToString("dd/MM/yyyy HH:mm")</div>
                                             }
                                             break;
 
+
                                     }
 
                                 </td>
                                 <td>
-                                    @switch (item.Type)
+                                    @switch (item.Type.ToLower().Trim())
                                     {
-                                        case "Vé máy bay":
+                                        case "vé máy bay":
                                             {
                                                 if (item.Flight != null)
                                                 {
@@ -140,14 +142,14 @@
                                                 }
                                             }
                                             break;
-                                        case "Vinwonder":
+                                        case "vinwonder":
                                             {
                                                 <div>@item.VinWonderBooking[0].SiteName </div>
                                                 <div>@item.VinWonderBooking[0].TotalTicket loại vé </div>
                                                 <div class="red">@item.Note</div>
                                             }
                                             break;
-                                        case "Tour":
+                                        case "tour":
                                             {
 
                                                 if (item.tour != null)
@@ -166,7 +168,7 @@
                                                 }
                                             }
                                             break;
-                                        case "Khách sạn":
+                                        case "khách sạn":
                                             {
                                                 if (item.Hotel != null)
                                                 {
@@ -189,12 +191,24 @@
                                                 }
                                             }
                                             break;
-                                        case "Dịch vụ khác":
+                                        case "dịch vụ khác":
                                             {
                                                 if (item.OtherBooking != null)
                                                 {
 
                                                     <div>Dịch vụ : @item.OtherBooking[0].ServiceName </div>
+                                                    <div class="red">@item.Note</div>
+                                                }
+                                            }
+                                            break;
+                                        case "thể thao biển":
+                                            {
+                                                if (item.OtherBooking != null)
+                                                {
+
+                                                    <div>Conf No: @item.OtherBooking[0].ConfNo </div>
+                                                    <div>Serial No: @item.OtherBooking[0].SerialNo </div>
+                                                    <div>Số phòng: @item.OtherBooking[0].RoomNo </div>
                                                     <div class="red">@item.Note</div>
                                                 }
                                             }
@@ -237,9 +251,9 @@
 
                                 </td>
                                 <td class="text-center">
-                                    @switch (item.Type)
+                                    @switch (item.Type.ToLower().Trim())
                                     {
-                                        case "Vé máy bay":
+                                        case "vé máy bay":
                                             {
                                                 <a class="delete blue" href="javascript:;" onclick="_order_detail_create_service.FlyingTicket(@item.OrderId, '@item.Flight.GroupBookingId');">Xem</a>
                                                 @if (service_status_allow_to_delete.Contains(item.Status) && order_status_allow_to_delete.Contains(order_status) && allow_to_edit)
@@ -251,7 +265,7 @@
                                                 }
                                             }
                                             break;
-                                        case "Vinwonder":
+                                        case "vinwonder":
                                             {
                                                 <a class="delete blue" href="javascript:;" onclick="_order_detail_create_service.VinWonderService(@item.OrderId,@item.ServiceId);">Xem</a>
                                                 @if (service_status_allow_to_delete.Contains(item.Status) && order_status_allow_to_delete.Contains(order_status) && allow_to_edit)
@@ -273,7 +287,7 @@
                                                     <a class="delete red " href="javascript:;" onclick="_order_detail_create_service.CancelTour(@item.ServiceId);">Hủy</a>}
                                             }
                                             break;
-                                        case "Khách sạn":
+                                        case "khách sạn":
                                             {
                                                 <a class="delete blue" href="javascript:;" onclick="_order_detail_create_service.ServiceHotel(@item.ServiceId);">Xem</a>
                                                 @if (service_status_allow_to_delete.Contains(item.Status) && order_status_allow_to_delete.Contains(order_status) && allow_to_edit)
@@ -285,7 +299,7 @@
 
                                             }
                                             break;
-                                        case "Dịch vụ khác":
+                                        case "dịch vụ khác":
                                             {
                                                 <a class="delete blue" href="javascript:;" onclick="_order_detail_create_service.OtherService(@item.OrderId,@item.ServiceId);">Xem</a>
                                                 @if (service_status_allow_to_delete.Contains(item.Status) && order_status_allow_to_delete.Contains(order_status) && allow_to_edit)
@@ -294,6 +308,18 @@
                                                 @if (item.Status == (int)ServiceStatus.Decline)
                                                 {
                                                     <a class="delete red " href="javascript:;" onclick="_order_detail_create_service.CancelOthers(@item.ServiceId);">Hủy</a>}
+                                            }
+                                            break;
+                                        case "thể thao biển":
+                                            {
+                                                <a class="delete blue" href="javascript:;" onclick="_order_detail_create_service.WaterSportService(@item.OrderId,@item.ServiceId);">Xem</a>
+                                                @if (service_status_allow_to_delete.Contains(item.Status) && order_status_allow_to_delete.Contains(order_status) && allow_to_edit)
+                                                {
+                                                    <a class="delete red " href="javascript:;" onclick="_order_detail_create_service.DeleteWaterSportBookingDetail(@item.ServiceId);">Xóa</a>}
+                                                @if (item.Status == (int)ServiceStatus.Decline)
+                                                {
+                                                    <a class="delete red " href="javascript:;" onclick="_order_detail_create_service.CancelWaterSport(@item.ServiceId);">Hủy</a>}
+
                                             }
                                             break;
 

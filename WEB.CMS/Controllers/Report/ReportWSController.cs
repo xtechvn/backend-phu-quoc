@@ -111,7 +111,8 @@ namespace WEB.Adavigo.CMS.PQ.Controllers.Report
                 if (searchModel.FromDate == DateTime.MinValue) searchModel.FromDate = new DateTime(DateTime.Now.Year, 1, 1, 1, 0, 0, 0);
                 if (searchModel.ToDate == DateTime.MinValue) searchModel.ToDate = DateTime.Now;
                 string folder = @"\Template\Export\";
-                string file_name = "Chi tiết Doanh thu Thể thao biển ngày "+searchModel.FromDate.ToString("dd-MM-yyyy")+" _" + _UserId + ".xlsx";
+                string file_name = StringHelpers.GenFileName("Chi tiết Doanh thu Thể thao biển ngày" + searchModel.FromDate.ToString("dd-MM-yyyy"), _UserId, "xlsx");
+
                 string _UploadDirectory = Path.Combine(_WebHostEnvironment.WebRootPath, folder);
                 string file_path_combine = Path.Combine(_UploadDirectory, file_name);
                 if (!Directory.Exists(folder))
@@ -151,7 +152,8 @@ namespace WEB.Adavigo.CMS.PQ.Controllers.Report
                 if (searchModel.FromDate == DateTime.MinValue) searchModel.FromDate = new DateTime(DateTime.Now.Year, 1, 1, 1, 0, 0, 0);
                 if (searchModel.ToDate == DateTime.MinValue) searchModel.ToDate = DateTime.Now;
                 string folder = @"\Template\Export\";
-                string file_name = "Doanh thu Thể thao biển  _" + _UserId + ".xlsx";
+                string file_name = StringHelpers.GenFileName("Doanh thu Thể thao biển", _UserId, "xlsx");
+
                 string _UploadDirectory = Path.Combine(_WebHostEnvironment.WebRootPath, folder);
                 string file_path_combine = Path.Combine(_UploadDirectory, file_name);
                 if (!Directory.Exists(folder))

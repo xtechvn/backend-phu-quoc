@@ -206,7 +206,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.VinWonder
                     ViewBag.AllowToFinishPayment = false;
                     if (tickets != null && tickets.Count > 0)
                     {
-                        var max_date = tickets.OrderByDescending(x=>x.DateUsed).First().DateUsed;
+                        var max_date = tickets.OrderByDescending(x => x.DateUsed).First().DateUsed;
                         if (max_date < DateTime.Now)
                         {
                             ViewBag.AllowToFinishPayment = true;
@@ -366,7 +366,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.VinWonder
                     profit = amount - price - (VinWonder_booking.Commission == null ? 0 : (double)VinWonder_booking.Commission) - (VinWonder_booking.OthersAmount == null ? 0 : (double)VinWonder_booking.OthersAmount);
 
                     #region Update Order Amount:
-                  
+
                     await _orderRepository2.UpdateOrderDetail((long)VinWonder_booking.OrderId, _UserId);
                     #endregion
                 }
@@ -461,7 +461,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.VinWonder
                         var detail = _VinWonderBookingRepository.GetVinWonderBookingById(booking_id);
                         var order = _orderRepository.GetByOrderId((long)detail.OrderId);
                         string link = "/Order/" + detail.OrderId;
-                        var SendMessage = apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.TRA_CODE).ToString(), order.OrderNo, link, current_user.Role, detail.ServiceCode);
+                        apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.TRA_CODE).ToString(), order.OrderNo, link, current_user.Role, detail.ServiceCode);
                         return Ok(new
                         {
                             status = (int)ResponseType.SUCCESS,
@@ -521,7 +521,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.VinWonder
                 }
                 var detail = _VinWonderBookingRepository.GetVinWonderBookingById(booking_id);
                 double amount = detail.TotalUnitPrice != null ? (double)detail.TotalUnitPrice : ((double)detail.Amount - (double)detail.TotalProfit);
-                var request_amount = Convert.ToDouble(payment_request.Sum(x => (((x.Status == (int)(PAYMENT_REQUEST_STATUS.DA_CHI)|| x.Status == (int)(PAYMENT_REQUEST_STATUS.CHO_CHI) || x.IsSupplierDebt == true))) ? x.Amount : 0));
+                var request_amount = Convert.ToDouble(payment_request.Sum(x => (((x.Status == (int)(PAYMENT_REQUEST_STATUS.DA_CHI) || x.Status == (int)(PAYMENT_REQUEST_STATUS.CHO_CHI) || x.IsSupplierDebt == true))) ? x.Amount : 0));
                 if (request_amount >= amount)
                 {
                     var id = await _VinWonderBookingRepository.UpdateServiceStatus((int)ServiceStatus.Payment, booking_id, _UserId);
@@ -531,18 +531,15 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.VinWonder
                     if (data.Count == count_dataOrder2)
                     {
                         long UpdatedBy = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                        long UserVerify = 0;
-                        var UpdateOrderStatus = await _orderRepository2.UpdateOrderStatus((long)detail.OrderId, (int)OrderStatus.WAITING_FOR_ACCOUNTANT, UpdatedBy, UserVerify);
+                        await _orderRepository2.UpdateOrderStatus((long)detail.OrderId, (int)OrderStatus.WAITING_FOR_ACCOUNTANT, UpdatedBy, 0);
                     }
                     if (id > 0)
                     {
                         var order = _orderRepository.GetByOrderId((long)detail.OrderId);
                         string link = "/Order/" + detail.OrderId;
-                        var SendMessage = apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.QUYET_TOAN).ToString(), order.OrderNo, link, current_user.Role, detail.ServiceCode);
+                        apiService.SendMessage(_UserId.ToString(), ((int)ModuleType.DICH_VU).ToString(), ((int)ActionType.QUYET_TOAN).ToString(), order.OrderNo, link, current_user.Role, detail.ServiceCode);
                         //-- update order payment_status
                         await _orderRepository2.UpdateOrderDetail((long)detail.OrderId, _UserId);
-
-
 
                         return Ok(new
                         {
@@ -644,9 +641,9 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.VinWonder
                 {
                     _UserId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 }
-                List<int> status_allowed = new List<int>() {  (int)ServiceStatus.OnExcution, (int)ServiceStatus.ServeCode };
+                List<int> status_allowed = new List<int>() { (int)ServiceStatus.OnExcution, (int)ServiceStatus.ServeCode };
                 var vinwonder = _vinWonderBookingRepository.GetVinWonderBookingById(booking_id);
-                if(vinwonder==null || !status_allowed.Contains(vinwonder.Status==null ? 0 : (int)vinwonder.Status))
+                if (vinwonder == null || !status_allowed.Contains(vinwonder.Status == null ? 0 : (int)vinwonder.Status))
                 {
                     return Ok(new
                     {
@@ -682,7 +679,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.VinWonder
                 var result = result_post.Content.ReadAsStringAsync().Result;
                 var model = JsonConvert.DeserializeObject<VinWonderConfirmBookingOutputModel>(result);
 
-                if (model != null && model.data != null && model.data.Count>0 && model.data[0].Data != null && model.data[0].Data.Tickets != null && model.data[0].Data.Tickets.Count > 0)
+                if (model != null && model.data != null && model.data.Count > 0 && model.data[0].Data != null && model.data[0].Data.Tickets != null && model.data[0].Data.Tickets.Count > 0)
                 {
                     foreach (var data in model.data)
                     {
@@ -708,21 +705,21 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.VinWonder
                             UpdatedDate = DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss")
                         };
                         var id = await _hotelBookingCodeRepository.InsertHotelBookingCode(order_code);
-                        
+
                     }
-                      
+
                 }
-                
+
                 // Send Email Ticket
                 if (model != null && model.data != null && model.data.Count > 0)
                 {
                     List<string> images_ticket = new List<string>();
-                    if(model.data!=null && model.data[0]!=null && (model.data[0].Data == null || model.data[0].Data.Tickets==null || model.data[0].Data.Tickets.Count <= 0))
+                    if (model.data != null && model.data[0] != null && (model.data[0].Data == null || model.data[0].Data.Tickets == null || model.data[0].Data.Tickets.Count <= 0))
                     {
                         return Ok(new
                         {
                             status = (int)ResponseType.FAILED,
-                            msg = "Xuất vé VinWonder tự động thất bại: "+model.data[0].Result.Message
+                            msg = "Xuất vé VinWonder tự động thất bại: " + model.data[0].Result.Message
                         });
                     }
                     foreach (var data in model.data)
@@ -735,7 +732,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.VinWonder
                                 byte[] bytes_file = System.IO.File.ReadAllBytes(file_path);
                                 string base64_file = Convert.ToBase64String(bytes_file);
                                 var url_static = await _emailService.UploadImageBase64(base64_file, "png", file_path);
-   
+
                                 if (url_static != null && url_static.Trim() != "")
                                 {
                                     images_ticket.Add(url_static);
@@ -744,21 +741,21 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.VinWonder
                             }
                         }
                     }
-                    if(images_ticket!=null && images_ticket.Count > 0)
+                    if (images_ticket != null && images_ticket.Count > 0)
                     {
-                        foreach(var url in images_ticket)
+                        foreach (var url in images_ticket)
                         {
                             var ext = url.Split(".");
                             AttachFile file = new AttachFile()
                             {
-                                Capacity=0,
-                                CreateDate=DateTime.Now,
-                                DataId=booking_id,
-                                Ext=ext[^1],
-                                Path=url,
-                                Type=(int)AttachmentType.Email_VinWonder_Ticket,
-                                UserId=_UserId,
-                                
+                                Capacity = 0,
+                                CreateDate = DateTime.Now,
+                                DataId = booking_id,
+                                Ext = ext[^1],
+                                Path = url,
+                                Type = (int)AttachmentType.Email_VinWonder_Ticket,
+                                UserId = _UserId,
+
                             };
                             var id = await _AttachFileRepository.AddAttachFile(file);
                         }
@@ -773,7 +770,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.VinWonder
             }
             catch (Exception ex)
             {
-                LogHelper.InsertLogTelegram("ExportVinWonderTicket - SetServiceVinWonderController with BookingID="+booking_id+" : " + ex.ToString());
+                LogHelper.InsertLogTelegram("ExportVinWonderTicket - SetServiceVinWonderController with BookingID=" + booking_id + " : " + ex.ToString());
                 return Ok(new
                 {
                     status = (int)ResponseType.ERROR,
@@ -843,21 +840,21 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.VinWonder
                     mail.body = await _emailService.GetTemplateVinWordbookingTC(order.OrderId);
                     mail.can_sendemail = true;
                     var list = await _AttachFileRepository.GetListByDataID(booking_id, (int)AttachmentType.Email_VinWonder_Ticket);
-                    if(list!=null && list.Count > 0)
+                    if (list != null && list.Count > 0)
                     {
                         if (mail.file_attachment == null) mail.file_attachment = new List<LightGalleryViewModel>();
                         foreach (var f in list)
                         {
                             mail.file_attachment.Add(new LightGalleryViewModel()
                             {
-                                ext=f.Ext,
-                                thumb=f.Path,
-                                url=f.Path
+                                ext = f.Ext,
+                                thumb = f.Path,
+                                url = f.Path
                             });
                         }
 
                     }
-                    mail.subject = "[Adavigo] Vé Điện Tử Vinwonder Của Quý Khách - Mã Đơn hàng "+order.OrderNo ;
+                    mail.subject = "[Adavigo] Vé Điện Tử Vinwonder Của Quý Khách - Mã Đơn hàng " + order.OrderNo;
                 }
             }
             catch (Exception ex)
@@ -868,11 +865,11 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.VinWonder
             return PartialView();
         }
         [HttpPost]
-        public async Task<IActionResult> SendEmailVinWonderTicket(long order_id, long booking_id,string subject, List<string> to_email, List<string> cc_email, List<string> bcc_email)
+        public async Task<IActionResult> SendEmailVinWonderTicket(long order_id, long booking_id, string subject, List<string> to_email, List<string> cc_email, List<string> bcc_email)
         {
             try
             {
-                if(order_id<=0|| booking_id<=0|| subject==null || subject.Trim()==""||to_email==null || to_email.Count <= 0)
+                if (order_id <= 0 || booking_id <= 0 || subject == null || subject.Trim() == "" || to_email == null || to_email.Count <= 0)
                 {
                     return Ok(new
                     {

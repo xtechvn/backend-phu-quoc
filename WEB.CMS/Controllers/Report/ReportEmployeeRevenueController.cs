@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Entities.ViewModels;
 using Entities.ViewModels.Report;
@@ -41,7 +42,13 @@ namespace WEB.Adavigo.CMS.Controllers.Report
         {
             try
             {
-                string _FileName = "Doanh thu tổng theo nhân viên bán hàng.xlsx";
+                int _UserId = 0;
+                if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
+                {
+                    _UserId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                }
+                string _FileName = StringHelpers.GenFileName("Doanh thu tổng theo nhân viên bán hàng", _UserId, "xlsx");
+
                 string _UploadFolder = @"Template\Export";
                 string _UploadDirectory = Path.Combine(_WebHostEnvironment.WebRootPath, _UploadFolder);
 

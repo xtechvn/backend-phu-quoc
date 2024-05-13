@@ -563,7 +563,12 @@ namespace WEB.Adavigo.CMS.Controllers
         {
             try
             {
-                string _FileName = "Danh sách khác hàng.xlsx";
+                int _UserId = 0;
+                if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
+                {
+                    _UserId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                }
+                string _FileName = StringHelpers.GenFileName("Danh sách khách hàng", _UserId, "xlsx"); 
                 string _UploadFolder = @"Template\Export";
                 string _UploadDirectory = Path.Combine(_WebHostEnvironment.WebRootPath, _UploadFolder);
 

@@ -17,10 +17,8 @@
     Operator: false,
     HINHTHUCTT: true,
     KHACHPT: false,
-    tum_medium: true,
-    HINHTHUCTTb: true,
     YcHoaDon: false,
-    MaHoaDon: false,
+   
     
 }
 let cookieName = 'orderFields_transactionsms';
@@ -935,22 +933,12 @@ var _ordersCMS = {
         } else {
             $('#KHACHPT').prop('checked', false);
         }
-        if (orderFields.tum_medium === true) {
-            $('#tum_medium').prop('checked', true);
-        } else {
-            $('#tum_medium').prop('checked', false);
-        }
+    
         if (orderFields.YcHoaDon === true) {
             $('#YcHoaDon').prop('checked', true);
         } else {
             $('#YcHoaDon').prop('checked', false);
         }
-        if (orderFields.MaHoaDon === true) {
-            $('#MaHoaDon').prop('checked', true);
-        } else {
-            $('#MaHoaDon').prop('checked', false);
-        }
-
     },
     eraseCookie: function (name) {
         document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';

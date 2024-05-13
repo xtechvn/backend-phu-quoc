@@ -170,7 +170,7 @@ namespace WEB.Adavigo.CMS.Controllers.Report
                 }
 
                 string folder = @"\Template\Export\";
-                string file_name = "Tổng hợp nợ phải thu của Khách hàng_" + _UserId + ".xlsx";
+                string file_name = StringHelpers.GenFileName("Tổng hợp nợ phải thu của Khách hàng",_UserId, "xlsx");
                 string _UploadDirectory = Path.Combine(_WebHostEnvironment.WebRootPath, folder);
                 string file_path_combine = Path.Combine(_UploadDirectory, file_name);
                 if (!Directory.Exists(folder))
@@ -409,7 +409,8 @@ namespace WEB.Adavigo.CMS.Controllers.Report
                 }
 
                 string folder = @"\Template\Export\";
-                string file_name = "Chi tiết nợ phải thu của Khách hàng "+ sum_model.ClientName+ " _" + _UserId + ".xlsx";
+                string file_name = StringHelpers.GenFileName("Chi tiết nợ phải thu của Khách hàng " + sum_model.ClientName, _UserId, "xlsx");
+
                 string _UploadDirectory = Path.Combine(_WebHostEnvironment.WebRootPath, folder);
                 string file_path_combine = Path.Combine(_UploadDirectory, file_name);
                 if (!Directory.Exists(folder))
