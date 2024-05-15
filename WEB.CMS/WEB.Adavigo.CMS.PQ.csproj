@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
       <EnableDefaultContentItems>false</EnableDefaultContentItems>
-        <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+       
       
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>13f8a7cd-9d3d-47d0-9422-bc3b9fd8003a</UserSecretsId>
