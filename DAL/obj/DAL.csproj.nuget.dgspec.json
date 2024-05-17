@@ -1,43 +1,38 @@
 {
   "format": 1,
   "restore": {
-    "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\DAL\\DAL.csproj": {}
+    "C:\\Users\\Mirrors\\Desktop\\cms-pq\\DAL\\DAL.csproj": {}
   },
   "projects": {
-    "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\DAL\\DAL.csproj": {
+    "C:\\Users\\Mirrors\\Desktop\\cms-pq\\DAL\\DAL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\DAL\\DAL.csproj",
+        "projectUniqueName": "C:\\Users\\Mirrors\\Desktop\\cms-pq\\DAL\\DAL.csproj",
         "projectName": "DAL",
-        "projectPath": "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\DAL\\DAL.csproj",
-        "packagesPath": "C:\\Users\\cuong\\.nuget\\packages\\",
-        "outputPath": "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\DAL\\obj\\",
+        "projectPath": "C:\\Users\\Mirrors\\Desktop\\cms-pq\\DAL\\DAL.csproj",
+        "packagesPath": "C:\\Users\\Mirrors\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Mirrors\\Desktop\\cms-pq\\DAL\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\cuong\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\Mirrors\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net6.0"
+          "net80"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net6.0": {
-            "targetAlias": "net6.0",
+          "net80": {
+            "targetAlias": "net8.0",
             "projectReferences": {
-              "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Entities\\Entities.csproj": {
-                "projectPath": "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Entities\\Entities.csproj"
+              "C:\\Users\\Mirrors\\Desktop\\cms-pq\\Entities\\Entities.csproj": {
+                "projectPath": "C:\\Users\\Mirrors\\Desktop\\cms-pq\\Entities\\Entities.csproj"
               },
-              "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Utilities\\Utilities.csproj": {
-                "projectPath": "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Utilities\\Utilities.csproj"
+              "C:\\Users\\Mirrors\\Desktop\\cms-pq\\Utilities\\Utilities.csproj": {
+                "projectPath": "C:\\Users\\Mirrors\\Desktop\\cms-pq\\Utilities\\Utilities.csproj"
               }
             }
           }
@@ -49,67 +44,38 @@
         }
       },
       "frameworks": {
-        "net6.0": {
-          "targetAlias": "net6.0",
-          "dependencies": {
-            "Microsoft.EntityFrameworkCore.Design": {
-              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[3.1.14, )"
-            }
-          },
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48",
-            "net481"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+        "net80": {
+          "targetAlias": "net8.0",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.426\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Entities\\Entities.csproj": {
+    "C:\\Users\\Mirrors\\Desktop\\cms-pq\\Entities\\Entities.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Entities\\Entities.csproj",
+        "projectUniqueName": "C:\\Users\\Mirrors\\Desktop\\cms-pq\\Entities\\Entities.csproj",
         "projectName": "Entities",
-        "projectPath": "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Entities\\Entities.csproj",
-        "packagesPath": "C:\\Users\\cuong\\.nuget\\packages\\",
-        "outputPath": "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Entities\\obj\\",
+        "projectPath": "C:\\Users\\Mirrors\\Desktop\\cms-pq\\Entities\\Entities.csproj",
+        "packagesPath": "C:\\Users\\Mirrors\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Mirrors\\Desktop\\cms-pq\\Entities\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\cuong\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\Mirrors\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net6.0"
+          "net80"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net6.0": {
-            "targetAlias": "net6.0",
+          "net80": {
+            "targetAlias": "net8.0",
             "projectReferences": {
-              "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Utilities\\Utilities.csproj": {
-                "projectPath": "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Utilities\\Utilities.csproj"
+              "C:\\Users\\Mirrors\\Desktop\\cms-pq\\Utilities\\Utilities.csproj": {
+                "projectPath": "C:\\Users\\Mirrors\\Desktop\\cms-pq\\Utilities\\Utilities.csproj"
               }
             }
           }
@@ -121,86 +87,35 @@
         }
       },
       "frameworks": {
-        "net6.0": {
-          "targetAlias": "net6.0",
-          "dependencies": {
-            "Microsoft.AspNetCore.Mvc.ViewFeatures": {
-              "target": "Package",
-              "version": "[2.2.0, )"
-            },
-            "Microsoft.EntityFrameworkCore.Design": {
-              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[3.1.3, )"
-            },
-            "Microsoft.EntityFrameworkCore.SqlServer": {
-              "target": "Package",
-              "version": "[3.1.3, )"
-            },
-            "Microsoft.EntityFrameworkCore.Tools": {
-              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[3.1.3, )"
-            },
-            "Microsoft.jQuery.Unobtrusive.Validation": {
-              "target": "Package",
-              "version": "[3.2.11, )"
-            },
-            "MongoDB.Bson": {
-              "target": "Package",
-              "version": "[2.11.2, )"
-            }
-          },
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48",
-            "net481"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+        "net80": {
+          "targetAlias": "net8.0",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.426\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Utilities\\Utilities.csproj": {
+    "C:\\Users\\Mirrors\\Desktop\\cms-pq\\Utilities\\Utilities.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Utilities\\Utilities.csproj",
+        "projectUniqueName": "C:\\Users\\Mirrors\\Desktop\\cms-pq\\Utilities\\Utilities.csproj",
         "projectName": "Utilities",
-        "projectPath": "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Utilities\\Utilities.csproj",
-        "packagesPath": "C:\\Users\\cuong\\.nuget\\packages\\",
-        "outputPath": "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Utilities\\obj\\",
+        "projectPath": "C:\\Users\\Mirrors\\Desktop\\cms-pq\\Utilities\\Utilities.csproj",
+        "packagesPath": "C:\\Users\\Mirrors\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Mirrors\\Desktop\\cms-pq\\Utilities\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\cuong\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\Mirrors\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net6.0"
+          "net80"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net6.0": {
-            "targetAlias": "net6.0",
+          "net80": {
+            "targetAlias": "net8.0",
             "projectReferences": {}
           }
         },
@@ -211,83 +126,9 @@
         }
       },
       "frameworks": {
-        "net6.0": {
-          "targetAlias": "net6.0",
-          "dependencies": {
-            "HtmlAgilityPack": {
-              "target": "Package",
-              "version": "[1.11.61, )"
-            },
-            "HtmlRenderer.PdfSharp": {
-              "target": "Package",
-              "version": "[1.5.0.6, )"
-            },
-            "Newtonsoft.Json": {
-              "target": "Package",
-              "version": "[13.0.3, )"
-            },
-            "PdfSharpCore": {
-              "target": "Package",
-              "version": "[1.1.25, )"
-            },
-            "RabbitMQ.Client": {
-              "target": "Package",
-              "version": "[6.8.1, )"
-            },
-            "Serilog.AspNetCore": {
-              "target": "Package",
-              "version": "[8.0.1, )"
-            },
-            "Serilog.Enrichers.Thread": {
-              "target": "Package",
-              "version": "[3.1.0, )"
-            },
-            "Serilog.Filters.Expressions": {
-              "target": "Package",
-              "version": "[2.1.0, )"
-            },
-            "Serilog.Settings.Configuration": {
-              "target": "Package",
-              "version": "[8.0.0, )"
-            },
-            "Serilog.Sinks.File": {
-              "target": "Package",
-              "version": "[5.0.0, )"
-            },
-            "System.Drawing.Common": {
-              "target": "Package",
-              "version": "[8.0.4, )"
-            },
-            "System.Reflection.Emit": {
-              "target": "Package",
-              "version": "[4.7.0, )"
-            },
-            "Telegram.Bot": {
-              "target": "Package",
-              "version": "[19.0.0, )"
-            },
-            "Tesseract": {
-              "target": "Package",
-              "version": "[5.2.0, )"
-            }
-          },
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48",
-            "net481"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+        "net80": {
+          "targetAlias": "net8.0",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.426\\RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -1,85 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "tgOAX/brMD8sqUHMvfPJNh5WXU3KUGM6Cus/3pauqcxCtQaw/OhTVSHOsR61uAPHPAiIJfTAk1Yq+tvpzpj1Qw==",
+  "dgSpecHash": "6g6ofkCeVn1TjzGwGN8mz8VP8T5qzZElegq4wcawYQ/JP6emZIxsxbpC5CmbhVC+wGAe/vgj8c1b6fKnssHPhg==",
   "success": true,
-  "projectFilePath": "F:\\PROJECT\\ADAVIGO\\BACKEND\\PHU_QUOC\\Utilities\\Utilities.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\cuong\\.nuget\\packages\\htmlagilitypack\\1.11.61\\htmlagilitypack.1.11.61.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\htmlrenderer.core\\1.5.0.5\\htmlrenderer.core.1.5.0.5.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\htmlrenderer.pdfsharp\\1.5.0.6\\htmlrenderer.pdfsharp.1.5.0.6.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\8.0.0\\microsoft.extensions.configuration.abstractions.8.0.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\microsoft.extensions.configuration.binder\\8.0.0\\microsoft.extensions.configuration.binder.8.0.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\8.0.0\\microsoft.extensions.dependencyinjection.8.0.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0\\microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\microsoft.extensions.dependencymodel\\8.0.0\\microsoft.extensions.dependencymodel.8.0.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\microsoft.extensions.diagnostics.abstractions\\8.0.0\\microsoft.extensions.diagnostics.abstractions.8.0.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\microsoft.extensions.fileproviders.abstractions\\8.0.0\\microsoft.extensions.fileproviders.abstractions.8.0.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\microsoft.extensions.hosting.abstractions\\8.0.0\\microsoft.extensions.hosting.abstractions.8.0.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\microsoft.extensions.logging\\8.0.0\\microsoft.extensions.logging.8.0.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\8.0.0\\microsoft.extensions.logging.abstractions.8.0.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\microsoft.extensions.options\\8.0.0\\microsoft.extensions.options.8.0.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\microsoft.extensions.primitives\\8.0.0\\microsoft.extensions.primitives.8.0.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\microsoft.win32.systemevents\\8.0.0\\microsoft.win32.systemevents.8.0.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\pdfsharp\\1.32.3057\\pdfsharp.1.32.3057.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\pdfsharpcore\\1.1.25\\pdfsharpcore.1.1.25.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\rabbitmq.client\\6.8.1\\rabbitmq.client.6.8.1.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\serilog\\3.1.1\\serilog.3.1.1.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\serilog.aspnetcore\\8.0.1\\serilog.aspnetcore.8.0.1.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\serilog.enrichers.thread\\3.1.0\\serilog.enrichers.thread.3.1.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\serilog.extensions.hosting\\8.0.0\\serilog.extensions.hosting.8.0.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\serilog.extensions.logging\\8.0.0\\serilog.extensions.logging.8.0.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\serilog.filters.expressions\\2.1.0\\serilog.filters.expressions.2.1.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\serilog.formatting.compact\\2.0.0\\serilog.formatting.compact.2.0.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\serilog.settings.configuration\\8.0.0\\serilog.settings.configuration.8.0.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\serilog.sinks.console\\5.0.0\\serilog.sinks.console.5.0.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\serilog.sinks.debug\\2.0.0\\serilog.sinks.debug.2.0.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\serilog.sinks.file\\5.0.0\\serilog.sinks.file.5.0.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\sixlabors.core\\1.0.0-beta0008\\sixlabors.core.1.0.0-beta0008.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\sixlabors.fonts\\1.0.0-beta0009\\sixlabors.fonts.1.0.0-beta0009.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\sixlabors.imagesharp\\1.0.0-beta0006\\sixlabors.imagesharp.1.0.0-beta0006.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\superpower\\2.3.0\\superpower.2.3.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\system.diagnostics.diagnosticsource\\8.0.0\\system.diagnostics.diagnosticsource.8.0.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\system.drawing.common\\8.0.4\\system.drawing.common.8.0.4.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\system.memory\\4.5.5\\system.memory.4.5.5.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\system.reflection.emit\\4.7.0\\system.reflection.emit.4.7.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\system.text.encodings.web\\8.0.0\\system.text.encodings.web.8.0.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\system.text.json\\8.0.0\\system.text.json.8.0.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\system.threading.channels\\7.0.0\\system.threading.channels.7.0.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\telegram.bot\\19.0.0\\telegram.bot.19.0.0.nupkg.sha512",
-    "C:\\Users\\cuong\\.nuget\\packages\\tesseract\\5.2.0\\tesseract.5.2.0.nupkg.sha512"
-  ],
-  "logs": [
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'HtmlRenderer.Core 1.5.0.5' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net6.0'. This package may not be fully compatible with your project.",
-      "libraryId": "HtmlRenderer.Core",
-      "targetGraphs": [
-        "net6.0"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'HtmlRenderer.PdfSharp 1.5.0.6' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net6.0'. This package may not be fully compatible with your project.",
-      "libraryId": "HtmlRenderer.PdfSharp",
-      "targetGraphs": [
-        "net6.0"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'PDFsharp 1.32.3057' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net6.0'. This package may not be fully compatible with your project.",
-      "libraryId": "PDFsharp",
-      "targetGraphs": [
-        "net6.0"
-      ]
-    }
-  ]
+  "projectFilePath": "C:\\Users\\Mirrors\\Desktop\\cms-pq\\Utilities\\Utilities.csproj",
+  "expectedPackageFiles": [],
+  "logs": []
 }
