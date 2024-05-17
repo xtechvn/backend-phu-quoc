@@ -1,14 +1,11 @@
 ﻿using Entities.Models;
 using Entities.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using OtpNet;
 using Repositories.IRepositories;
-using System;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Utilities;
 using Utilities.Common;
 using Utilities.Contants;

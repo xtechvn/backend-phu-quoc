@@ -3,3 +3,15 @@
 ################################################################################
 
 /.vs
+/Caching/bin
+/Caching/obj
+/DAL/bin
+/DAL/obj
+/Entities/bin
+/Entities/obj
+/Repositories/bin
+/Repositories/obj
+/Utilities/bin
+/Utilities/obj
+/WEB.CMS/bin
+/WEB.CMS/obj

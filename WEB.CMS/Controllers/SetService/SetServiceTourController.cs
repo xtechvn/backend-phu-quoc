@@ -2,24 +2,15 @@
 using Entities.Models;
 using Entities.ViewModels.Tour;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Repositories.IRepositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Utilities;
 using Utilities.Contants;
 using WEB.CMS.Customize;
 using WEB.CMS.Models;
 using Caching.Elasticsearch;
 using Entities.ViewModels.ElasticSearch;
-using static Utilities.Contants.OrderConstants;
-using MongoDB.Driver.Linq;
 using WEB.Adavigo.CMS.Service;
-using System.IO;
-using Microsoft.AspNetCore.Hosting;
 
 namespace WEB.Adavigo.CMS.Controllers.SetService.Tour
 {
