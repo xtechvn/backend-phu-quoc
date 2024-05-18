@@ -151,7 +151,7 @@ namespace WEB.CMS
             }
             else
             {
-                app.UseExceptionHandler("/Error/Index");
+                app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
             app.UseSession();
