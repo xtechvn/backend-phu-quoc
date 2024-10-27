@@ -293,40 +293,41 @@ namespace DAL
                     }
                     else
                     {
-                        var data2 = _DbContext.Client.Where(s => s.Email.Equals(model.Email) && s.Id != model.Id).ToList();
-                      
+                        
 
-                        if (data2.Count == 0 && data2 != null  )
-                        {
-                            SqlParameter[] objParam = new SqlParameter[20];
-                            objParam[0] = model.ClientMapId == null ? new SqlParameter("@ClientMapId", DBNull.Value) : new SqlParameter("@ClientMapId", model.ClientMapId);
-                            objParam[1] = model.SaleMapId == null ? new SqlParameter("@SaleMapId", DBNull.Value) : new SqlParameter("@SaleMapId", model.SaleMapId);
-                            objParam[2] = model.ClientType == null ? new SqlParameter("@ClientType", DBNull.Value) : new SqlParameter("@ClientType", model.ClientType);
-                            objParam[3] = model.ClientName == null ? new SqlParameter("@ClientName", DBNull.Value) : new SqlParameter("@ClientName", model.ClientName);
-                            objParam[4] = model.Email == null ? new SqlParameter("@Email", DBNull.Value) : new SqlParameter("@Email", model.Email);
-                            objParam[5] = model.Gender == null ? new SqlParameter("@Gender", DBNull.Value) : new SqlParameter("@Gender", model.Gender);
-                            objParam[6] = model.Status == null ? new SqlParameter("@Status", DBNull.Value) : new SqlParameter("@Status", model.Status);
-                            objParam[7] = model.Note == null ? new SqlParameter("@Note", DBNull.Value) : new SqlParameter("@Note", model.Note);
-                            objParam[8] = model.Avartar == null ? new SqlParameter("@Avartar", DBNull.Value) : new SqlParameter("@Avartar", model.Avartar);
-                            objParam[9] = model.JoinDate == null ? new SqlParameter("@JoinDate", DBNull.Value) : new SqlParameter("@JoinDate", model.JoinDate);
-                            objParam[10] = new SqlParameter("@isReceiverInfoEmail", DBNull.Value);
-                            objParam[11] = model.Phone == null ? new SqlParameter("@Phone", DBNull.Value) : new SqlParameter("@Phone", model.Phone);
-                            objParam[12] = model.Birthday == null ? new SqlParameter("@Birthday", DBNull.Value) : new SqlParameter("@Birthday", model.Birthday);
-                            objParam[13] = model.UpdateTime == null ? new SqlParameter("@UpdateTime", DBNull.Value) : new SqlParameter("@UpdateTime", model.UpdateTime);
-                            objParam[14] = model.TaxNo == null ? new SqlParameter("@TaxNo", DBNull.Value) : new SqlParameter("@TaxNo", model.TaxNo);
-                            objParam[15] = model.AgencyType == null ? new SqlParameter("@AgencyType", DBNull.Value) : new SqlParameter("@AgencyType", model.AgencyType);
-                            objParam[16] = model.PermisionType == null ? new SqlParameter("@PermisionType", DBNull.Value) : new SqlParameter("@PermisionType", model.PermisionType);
-                            objParam[17] = model.BusinessAddress == null ? new SqlParameter("@BusinessAddress", DBNull.Value) : new SqlParameter("@BusinessAddress", model.BusinessAddress);
-                            objParam[18] = model.ExportBillAddress == null ? new SqlParameter("@ExportBillAddress", DBNull.Value) : new SqlParameter("@ExportBillAddress", model.ExportBillAddress);
-                            objParam[19] = model.ClientCode == null ? new SqlParameter("@ClientCode", DBNull.Value) : new SqlParameter("@ClientCode", model.ClientCode);
-                            return _DbWorker.ExecuteNonQuery(StoreProcedureConstant.SP_InsertClient, objParam);
+                        SqlParameter[] objParam = new SqlParameter[21];
+                        objParam[0] = new SqlParameter("@Id", model.Id);
+                        objParam[1] = model.ClientMapId == null ? new SqlParameter("@ClientMapId", DBNull.Value) : new SqlParameter("@ClientMapId", model.ClientMapId);
+                        objParam[2] = model.SaleMapId == null ? new SqlParameter("@SaleMapId", DBNull.Value) : new SqlParameter("@SaleMapId", model.SaleMapId);
+                        objParam[3] = model.ClientType == null ? new SqlParameter("@ClientType", DBNull.Value) : new SqlParameter("@ClientType", model.ClientType);
+                        objParam[4] = model.ClientName == null ? new SqlParameter("@ClientName", DBNull.Value) : new SqlParameter("@ClientName", model.ClientName);
+                        objParam[5] = model.Email == null ? new SqlParameter("@Email", DBNull.Value) : new SqlParameter("@Email", model.Email);
+                        objParam[6] = model.Gender == null ? new SqlParameter("@Gender", DBNull.Value) : new SqlParameter("@Gender", model.Gender);
+                        objParam[7] = model.Status == null ? new SqlParameter("@Status", DBNull.Value) : new SqlParameter("@Status", model.Status);
+                        objParam[8] = model.Note == null ? new SqlParameter("@Note", DBNull.Value) : new SqlParameter("@Note", model.Note);
+                        objParam[9] = model.Avartar == null ? new SqlParameter("@Avartar", DBNull.Value) : new SqlParameter("@Avartar", model.Avartar);
+                        objParam[10] = model.JoinDate == null ? new SqlParameter("@JoinDate", DBNull.Value) : new SqlParameter("@JoinDate", model.JoinDate);
+                        objParam[11] = new SqlParameter("@isReceiverInfoEmail", DBNull.Value);
+                        objParam[12] = model.Phone == null ? new SqlParameter("@Phone", DBNull.Value) : new SqlParameter("@Phone", model.Phone);
+                        objParam[13] = model.Birthday == null ? new SqlParameter("@Birthday", DBNull.Value) : new SqlParameter("@Birthday", model.Birthday);
+                        objParam[14] = model.UpdateTime == null ? new SqlParameter("@UpdateTime", DBNull.Value) : new SqlParameter("@UpdateTime", model.UpdateTime);
+                        objParam[15] = model.TaxNo == null ? new SqlParameter("@TaxNo", DBNull.Value) : new SqlParameter("@TaxNo", model.TaxNo);
+                        objParam[16] = model.AgencyType == null ? new SqlParameter("@AgencyType", DBNull.Value) : new SqlParameter("@AgencyType", model.AgencyType);
+                        objParam[17] = model.PermisionType == null ? new SqlParameter("@PermisionType", DBNull.Value) : new SqlParameter("@PermisionType", model.PermisionType);
+                        objParam[18] = model.BusinessAddress == null ? new SqlParameter("@BusinessAddress", DBNull.Value) : new SqlParameter("@BusinessAddress", model.BusinessAddress);
+                        objParam[19] = model.ExportBillAddress == null ? new SqlParameter("@ExportBillAddress", DBNull.Value) : new SqlParameter("@ExportBillAddress", model.ExportBillAddress);
+                        objParam[20] = model.ClientCode == null ? new SqlParameter("@ClientCode", DBNull.Value) : new SqlParameter("@ClientCode", model.ClientCode);
+       
+                        return _DbWorker.ExecuteNonQuery(StoreProcedureConstant.sp_UpdateClient, objParam);
 
-
-                        }
-                        else
-                        {
-                            return 2;
-                        }
+                        //var data2 = _DbContext.Client.Where(s => s.Email.Equals(model.Email) && s.Id != model.Id).ToList();
+                        //if (data2.Count == 0 && data2 != null  )
+                        //{
+                        //}
+                        //else
+                        //{
+                        //    return 2;
+                        //}
 
                     }
 

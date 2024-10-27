@@ -13,6 +13,14 @@ namespace Utilities.Contants
         Tourist=5,
         VinWonder = 6,
         Other = 9,
-        WaterSport=10
+        WaterSport=10,
+        Other_WaterSport = 28,
+    }
+    public enum SubServiceType
+    {
+        PRODUCT_FLY_TICKET = 31,
+        BOOK_HOTEL_ROOM_VIN = 30,
+        Tour = 32,
+        Other = 33,
     }
 }

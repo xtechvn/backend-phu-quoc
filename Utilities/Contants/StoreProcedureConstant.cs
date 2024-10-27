@@ -13,6 +13,7 @@ namespace Utilities.Contants
         public static string sp_GetListOrderByPayId = "sp_GetListOrderByPayId";
         public static string sp_GetListDepositHistoryByPayId = "sp_GetListDepositHistoryByPayId";
         public static string SP_GetListServiceByPayId = "SP_GetListServiceByPayId";
+        public static string SP_GetListSubServiceByPayId = "SP_GetListSubServiceByPayId";
         public static string GetFlyBookingDetailByOrderID = "SP_GetFlyBookingDetailByOrderID";
         public static string GetOrderByID = "SP_GetOrderByID";
         public static string GetPassengerByContactClientID = "SP_GetPassengerByContactClientID";
@@ -252,6 +253,17 @@ namespace Utilities.Contants
         public static string SP_Report_TotalRevenueOrderBySale = "SP_Report_TotalRevenueOrderBySale";
         public static string SP_Report_TotalRevenueOrderByClient = "SP_Report_TotalRevenueOrderByClient";
         public static string SP_InsertClient = "SP_InsertClient";
+        public static string sp_UpdateClient = "sp_UpdateClient";
+
+
+        public static string SP_GetListSportWaterGuests = "SP_GetListSportWaterGuests";
+        public static string sp_InsertSportWaterGuests = "sp_InsertSportWaterGuests";
+        public static string sp_UpdateSportWaterGuests = "sp_UpdateSportWaterGuests";
+        public static string SP_GetDetailNationalByCode = "SP_GetDetailNationalByCode";
+        public static string SP_GetListSportWaterGuestsByIds = "SP_GetListSportWaterGuestsByIds";
+        public static string sp_InsertPassenger = "sp_InsertPassenger";
+        public static string SP_GetListSportWaterPackages = "SP_GetListSportWaterPackages";
+
 
         #region vin wonder
         public static string sp_InsertCampaign = "sp_InsertCampaign";

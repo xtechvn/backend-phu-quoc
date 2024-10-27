@@ -261,13 +261,14 @@ namespace DAL.Funding
             return null;
         }
 
-        public DataTable GetServiceListBySupplierId(long supplierId, string proc)
+        public DataTable GetServiceListBySupplierId(long supplierId, string proc, string requestType = "1,2")
         {
             try
             {
-                SqlParameter[] objParam = new SqlParameter[2];
+                SqlParameter[] objParam = new SqlParameter[3];
                 objParam[0] = new SqlParameter("@SupplierId", supplierId);
                 objParam[1] = new SqlParameter("@Status", DBNull.Value);
+                objParam[2] = new SqlParameter("@RequestType", requestType);
                 return _DbWorker.GetDataTable(proc, objParam);
             }
             catch (Exception ex)
@@ -276,7 +277,6 @@ namespace DAL.Funding
             }
             return null;
         }
-
         public DataTable GetListPaymentRequestByServiceId(long serviceId, int type, string proc)
         {
             try

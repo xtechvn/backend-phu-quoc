@@ -1,5 +1,5 @@
 ﻿{
-  "endpoint": "{index_name}/_search?filter_path=hits.hits._source.email,hits.hits._source.phone,hits.hits._source.clientname,hits.hits._source.id,hits.hits._source.clienttype,hits.hits._source.userid,hits.hits._source._id",
+  "endpoint": "{index_name}/_search?filter_path=hits.hits._source.email,hits.hits._source.phone,hits.hits._source.clientname,hits.hits._source.id,hits.hits._source.clienttype,hits.hits._source.userid,hits.hits._source._id,hits.hits._source.agencytype",
   "input_query": {
     "query": {
       "bool": {
@@ -27,6 +27,6 @@
         ]
       }
     },
-    "_source": [ "email", "phone", "clientname", "id", "clienttype", "userid" ]
+    "_source": [ "email", "phone", "clientname", "id", "clienttype", "userid", "agencytype" ]
   }
 }

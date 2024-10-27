@@ -2435,29 +2435,13 @@ namespace Entities.Models
 
             modelBuilder.Entity<UserAgent>(entity =>
             {
-                entity.HasKey(e => new { e.UserId, e.ClientId });
-
                 entity.Property(e => e.CreateDate).HasColumnType("datetime");
-
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.MainFollow).HasComment("Quyền danh cho  0: Đối tác | 1: nhân viên của đối tác | 2: Saler phụ trách chính | 3: saler phụ trách cùng");
 
                 entity.Property(e => e.UpdateLast).HasColumnType("datetime");
 
                 entity.Property(e => e.VerifyDate).HasColumnType("datetime");
-
-                entity.HasOne(d => d.Client)
-                    .WithMany(p => p.UserAgent)
-                    .HasForeignKey(d => d.ClientId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_UserAgent_Client");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.UserAgent)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_UserAgent_User");
             });
 
             modelBuilder.Entity<UserDepart>(entity =>

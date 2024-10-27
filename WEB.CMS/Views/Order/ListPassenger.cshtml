@@ -1,9 +1,51 @@
 ﻿@using Entities.Models
 @using Entities.ViewModels.HotelBookingCode
-@{ var listPassenger = (List<Entities.ViewModels.PassengerViewModel>)ViewBag.Passenger;
+@{ var listPassenger = (List<Entities.Models.Passenger>)ViewBag.Passenger;
     var listContactClient = (ContactClient)ViewBag.ContactClient;
-    var i = 0; }
+    var i = 0; 
+    var i2 = 0; }
 @model List<HotelBookingCodeModel>
+@if (listPassenger != null && listPassenger.Count > 0)
+{
+    <div class="border bg-white mb20">
+
+        <div class="flex space-between row-main-head pd10">
+            <div class="bold">Thông tin khách hàng</div>
+            <div class="text-center ">
+                <div class="text-right ">
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="line-bottom pb0"></div>
+        <div class="pd10 ">
+            <div class="table-responsive table-gray">
+                <table class="table table-nowrap">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Họ và tên</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        @foreach (var item in listPassenger)
+                        {
+                            i2++;
+                            <tr>
+                                <td>@i2</td>
+                                <td>@item.Name</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+}
 @if (listContactClient != null)
 {
 <div class="border bg-white mb20">
@@ -108,51 +150,48 @@ else
                     foreach (var item in Model)
                     {
                         i++;
-                        <tr>
-                                <td>@i</td>
-                                <td>@item.BookingCode</td>
-                                <td>@item.ServiceName</td>
-                                <td>@item.Description</td>
-                                <td>@item.Note</td>
-                                <td>
-                                    <div class="row list-choose lightgallery image-choice-list">
-                                        @if (item.attachFiles != null && item.attachFiles.Count > 0)
-                                        {
-                            <div class="col-sm-3 col-4 mb10" data-src="@item.attachFiles[0].Path">
-                                <div style="margin-top: 10px;">
-                                    <img src="@item.attachFiles[0].Path" style="display:none" />
-                                    <a> <p class="blue">Xem</p></a>
+<tr>
+    <td>@i</td>
+    <td>@item.BookingCode</td>
+    <td>@item.ServiceName</td>
+    <td>@item.Description</td>
+    <td>@item.Note</td>
+    <td>
+        <div class="row list-choose lightgallery image-choice-list">
+            @if (item.attachFiles != null && item.attachFiles.Count > 0)
+            {
+<div class="col-sm-3 col-4 mb10" data-src="@item.attachFiles[0].Path">
+    <div style="margin-top: 10px;">
+        <img src="@item.attachFiles[0].Path" style="display:none" />
+        <a> <p class="blue">Xem</p></a>
 
-                                </div>
-                            </div> foreach (var A in item.attachFiles)
-                            {
-                                if (A.Id != item.attachFiles[0].Id)
-                                {
-                            <div style="display:none" class="col-sm-3 col-4 mb10" data-src="@A.Path">
-                                <img src="@A.Path" />
-                                <div>
-                                    <a> <p class="blue">Xem</p></a>
-                                </div>
-                            </div>
-                                        }
+    </div>
+</div> foreach (var A in item.attachFiles)
+{
+    if (A.Id != item.attachFiles[0].Id)
+    {
+<div style="display:none" class="col-sm-3 col-4 mb10" data-src="@A.Path">
+    <img src="@A.Path" />
+    <div>
+        <a> <p class="blue">Xem</p></a>
+    </div>
+</div>}
 
                             }
                         }
-                                    </div>
+        </div>
 
-                                </td>
+    </td>
 
 
-                        </tr>
-                    }
-                    }
+</tr>                    }
+                }
             </tbody>
         </table>
     </div>
-</div> 
-}
-else
-{
+</div> }
+            else
+            {
 
 
 <div class="wrap_bg bg-white wrap_bg_no-padding mb20">
@@ -168,7 +207,7 @@ else
                         Ghi chú
                     </th>
                     <th>Tệp đính kèm</th>
-                   
+
                 </tr>
             </thead>
             <tbody>

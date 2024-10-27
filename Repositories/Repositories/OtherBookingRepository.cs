@@ -84,6 +84,7 @@ namespace Repositories.Repositories
                 else
                 {
                     summit.booking = new OtherBooking();
+                    summit.booking.StatusOld = (int)ServiceStatus.WaitingExcution;
                 }
                 double amount = data.packages.Sum(x => x.amount);
                 double profit = data.packages.Sum(x => x.profit);
@@ -450,6 +451,7 @@ namespace Repositories.Repositories
                 else
                 {
                     summit.booking = new OtherBooking();
+                    summit.booking.StatusOld = 1;
                 }
                 double amount = data.packages.Sum(x => x.amount);
                 double price = amount;
@@ -489,6 +491,7 @@ namespace Repositories.Repositories
                             BookingId = data.id,
                             Id = item.id,
                             ServiceType = item.service_type,
+                            DurationType = item.duration_type,
                             Quantity = item.quantity,
                             UpdatedBy = user_summit,
                             UpdatedDate = DateTime.Now,

@@ -745,6 +745,10 @@ namespace WEB.Adavigo.CMS.Controllers.Funding
             try
             {
                 var listOrder = _paymentRequestRepository.GetServiceListBySupplierId(supplierId, requestId, serviceId);
+                if (listOrder != null)
+                {
+                    listOrder = listOrder.OrderByDescending(s => s.IsChecked).ToList();
+                }
                 return Ok(new
                 {
                     isSuccess = true,
@@ -770,6 +774,10 @@ namespace WEB.Adavigo.CMS.Controllers.Funding
             try
             {
                 var listOrder = _paymentRequestRepository.GetServiceListByClientId(clientId, requestId);
+                if (listOrder != null)
+                {
+                    listOrder = listOrder.OrderByDescending(s => s.IsChecked).ToList();
+                }
                 return Ok(new
                 {
                     isSuccess = true,

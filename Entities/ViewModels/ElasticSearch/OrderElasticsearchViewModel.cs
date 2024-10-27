@@ -16,4 +16,9 @@ namespace ENTITIES.ViewModels.ElasticSearch
             id = Convert.ToInt64(datetime);
         }
     }
+    public class SearchOrderElasticsearchViewModel
+    {
+        public string orderno { get; set; }
+        public string id { get; set; }
+    }
 }

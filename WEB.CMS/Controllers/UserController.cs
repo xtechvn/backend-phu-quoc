@@ -190,6 +190,14 @@ namespace WEB.CMS.Controllers
                 if (model.Phone == null) model.Phone = "";
                 if (model.Avata == null) model.Avata = "";
                 if (model.Address == null) model.Address = "";
+                //-- check exists:
+                var exists_detail = await _aPIService.GetByUserDetail(model.Id <= 0 ? -1 : model.Id, model.UserName, model.Email);
+                if (exists_detail != null && exists_detail.Id > 0)
+                {
+                    model.Id = exists_detail.Id;
+                    var combine_company_type = (exists_detail.CompanyType + "," + model.CompanyType).Split(",").Where(x => x != null && x.Trim() != "").Distinct();
+                    model.CompanyType = string.Join(",", combine_company_type);
+                }
                 //-- Update dbUser:
                 var success = await _aPIService.UpdateUser(model);
                 if (success > 0 )

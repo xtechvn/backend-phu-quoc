@@ -65,6 +65,7 @@ namespace DAL
                                     BasePrice = item.BasePrice,
                                     BookingId = model.booking.Id,
                                     Name = item.Name,
+                                    DurationType = item.DurationType,
                                     Profit = item.Profit,
                                     Quantity = item.Quantity,
                                     UpdatedBy = item.UpdatedBy,
@@ -132,6 +133,7 @@ namespace DAL
                                             exists_package.Note = item.Note;
                                             exists_package.ServiceType = item.ServiceType;
                                             exists_package.Commission = item.Commission;
+                                            exists_package.DurationType = item.DurationType;
 
                                             _DbContext.OtherBookingPackages.Update(exists_package);
                                             await _DbContext.SaveChangesAsync();

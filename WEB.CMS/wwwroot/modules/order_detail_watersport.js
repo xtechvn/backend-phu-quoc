@@ -1,13 +1,14 @@
 ﻿var _order_detail_watersport = {
     ServiceType: 33,
-    ServiceTypeList:[],
+    ServiceTypeList: [],
+    WSTypeList: [],
     Initialization: function (order_id, booking_id) {
         $('#watersportbooking-service').addClass('show')
         _order_detail_watersport.AddwatersportServicePackage(order_id, booking_id)
         _order_detail_common.SingleDatePicker($('.service-watersport-from-date'))
         _order_detail_common.UserSuggesstion($('.add-service-watersport-main-staff'))
         _order_detail_common.FileAttachment(booking_id, _order_detail_watersport.ServiceType)
-       
+
         _order_detail_watersport.DynamicBind()
     },
     DynamicBind: function () {
@@ -21,11 +22,18 @@
             _order_detail_watersport.CalucateTotalServiceProfit()
         });
         $('body').on('keyup', '.servicemanual-watersport-others-amount, .servicemanual-watersport-commission', function () {
-            
+
             _order_detail_watersport.CalucateTotalServiceAmount()
             _order_detail_watersport.CalucateTotalServiceProfit()
         });
+        $('body').on('change', '.service-watersport-service-type', function () {
+            var element = $(this)
+            var Type = element.val()
+            var row_element = element.closest('.service-watersport-packages-row')
 
+            _order_detail_watersport.WaterSportTypeSuggesstionadd(row_element.find('.service-watersport-type'), parseFloat(Type))
+            _order_detail_watersport.OnchangePrice(element)
+        });
 
         $('.service-watersport-note').keydown(function (e) {
             e.stopPropagation();
@@ -105,10 +113,12 @@
         $('.service-watersport-packages-row').each(function (index, item) {
             var extra_package_element = $(item);
             var service_type = extra_package_element.find('.service-watersport-service-type').find(':selected').val()
+            var duration_type = extra_package_element.find('.service-watersport-type').find(':selected').val()
 
             var extra_package = {
                 id: extra_package_element.attr('data-extra-package-id'),
                 service_type: service_type,
+                duration_type: parseFloat(duration_type),
                 base_price: _global_function.GetAmountFromCurrencyInput(extra_package_element.find('.service-watersport-packages-baseprice')),
                 quantity: _global_function.GetAmountFromCurrencyInput(extra_package_element.find('.service-watersport-packages-quantity')),
                 amount: _global_function.GetAmountFromCurrencyInput(extra_package_element.find('.service-watersport-packages-amount')),
@@ -159,7 +169,54 @@
         var new_position = _order_detail_watersport.GetLastestPackagesNo() + 1;
         table_element.find('.service-watersport-packages-summary-row').before(_order_detail_html.html_service_watersport_new_packages.replaceAll('@(++index)', new_position))
         _order_detail_watersport.WaterSportServiceTypeSuggesstion($('.service-watersport-service-type-new'))
+        _order_detail_watersport.WaterSportServiceTypeSuggesstion2($('.service-watersport-service-type-new'), 1)
+        _order_detail_watersport.WaterSportTypeSuggesstionadd($('.service-watersport-type-new-add'), 1)
+        _order_detail_watersport.GetPriceSportWaterPackage($('.service-watersport-packages-baseprice-newadd'),1, 1)
+
+        $('.service-watersport-service-type-new').attr('disabled', false)
         $('.service-watersport-service-type-new').removeClass('service-watersport-service-type-new')
+        $('.service-watersport-type-new-add').removeClass('service-watersport-type-new-add')
+        $('.service-watersport-packages-baseprice-newadd').removeClass('service-watersport-packages-baseprice-newadd')
+    },
+    AddwatersportBookingpackages2: function (id) {
+        var check = false;
+        var type = 1;
+        $('.service-watersport-packages-tbody .service-watersport-packages-row').each(function (index, item) {
+            var element = $(this);
+            var service_type = element.find('.service-watersport-service-type').val()
+            if (parseFloat(service_type) == parseFloat(id)) {
+                type = element.find('.service-watersport-type').val()
+            }
+        })
+        $('#watersportbooking-service .checkbox-service').each(function (index, item) {
+            var element = $(this);
+            if (element.is(":checked") == true && element.val() == id) {
+                check = true;
+            }
+        });
+        if (check == true) {
+            $.ajax({
+                url: "/WaterSport/GetPriceSportWaterPackage",
+                type: "post",
+                data: { id: id, type: parseFloat(type) },
+                success: function (result) {
+                    if (result != undefined && result.status == 0) {
+                        price = result.price
+                        $('.price-name-' + id).val(price)
+                    } else {
+                        $('.price-name-' + id).val(price)
+                    }
+                }
+            });
+            var table_element = $('.service-watersport-packages-tbody')
+            var new_position = _order_detail_watersport.GetLastestPackagesNo() + 1;
+            table_element.find('.service-watersport-packages-summary-row').before(_order_detail_html.html_service_watersport_new_packages.replaceAll('@(++index)', new_position).replaceAll('@(classname)', "Row-packages-" + id).replaceAll('{price-name}', id))
+            _order_detail_watersport.WaterSportServiceTypeSuggesstion2($('.service-watersport-service-type-new'), id)
+            _order_detail_watersport.WaterSportTypeSuggesstionadd($('.service-watersport-type-new-' + id), id)
+            $('.service-watersport-service-type-new').removeClass('service-watersport-service-type-new')
+        } else {
+            $('.Row-packages-' + id).remove()
+        }
     },
     GetLastestPackagesNo: function () {
         var total = 0;
@@ -177,7 +234,7 @@
             row_element.find('.service-watersport-packages-order').html('' + total)
         });
     },
-   
+
     CalucateAmount: function (table_element) {
         var total_amount = 0;
 
@@ -227,7 +284,31 @@
             });
 
         })
-      
+
+    },
+    WaterSportServiceTypeSuggesstion2: function (element, id) {
+        _order_detail_watersport.GetServiceTypeList(function () {
+
+            var html = _order_detail_html.html_hotel_option;
+            var template = ''
+            $(_order_detail_watersport.ServiceTypeList).each(function (index, item) {
+                var if_selected = ''
+                template += html.replaceAll('{if_selected}', '').replaceAll('{hotel_id}', item.codeValue).replaceAll('{name}', item.description)
+            });
+
+            element.each(function (index, item) {
+                var element = $(this);
+                var selected = id
+                element.html(template)
+                _order_detail_common.Select2WithFixedOptionAndNoSearch(element)
+                if (selected != null && selected != undefined) {
+                    element.val(selected).trigger('change')
+                    element.attr('disabled', 'disabled')
+                }
+            });
+
+        })
+
     },
     GetServiceTypeList: function (callback) {
         if (_order_detail_watersport.ServiceTypeList.length <= 0) {
@@ -245,18 +326,93 @@
         else {
             callback()
         }
-      
+
     },
     CalucateTotalServiceAmount: function () {
         var amount = $('.service-watersport-packages-total-amount').html()
         $('.servicemanual-watersport-total-service-amount').html(amount)
     },
     CalucateTotalServiceProfit: function () {
-        var profit = _global_function.GetAmountFromHTMLElement( $('.service-watersport-packages-total-amount'))
+        var profit = _global_function.GetAmountFromHTMLElement($('.service-watersport-packages-total-amount'))
         var other_amount = _global_function.GetAmountFromCurrencyInput($('.servicemanual-watersport-others-amount'))
         var discount = _global_function.GetAmountFromCurrencyInput($('.servicemanual-watersport-commission'))
 
         var total_profit = profit - discount - other_amount
         $('.servicemanual-watersport-service-profit').html((total_profit >= 0 ? '' : '-') + _global_function.Comma(total_profit)).change();
     },
+
+    OnchangePrice: function (element) {
+        var price = 0;
+        var row_element = element.closest('.service-watersport-packages-row')
+        var WSType = row_element.find('.service-watersport-service-type').val()
+        var Type = row_element.find('.service-watersport-type').val()
+
+        $.ajax({
+            url: "/WaterSport/GetPriceSportWaterPackage",
+            type: "post",
+            data: { id: parseFloat(WSType), type: parseFloat(Type) },
+            success: function (result) {
+                if (result != undefined && result.status == 0) {
+                    price = result.price
+                    row_element.find('.service-watersport-packages-baseprice').val(result.price)
+                } else {
+                    row_element.find('.service-watersport-packages-baseprice').val(0)
+                }
+            }
+        });
+    },
+    WaterSportTypeSuggesstionadd: function (element, id) {
+        var selected = element.val()
+        _order_detail_watersport.GetTypeList(function () {
+
+            var html = _order_detail_html.html_hotel_option;
+            var template = ''
+            $(_order_detail_watersport.WSTypeList).each(function (index, item) {
+                var if_selected = ''
+                if (selected != null && selected != undefined && item.codeValue == parseFloat(selected)) {
+                    template += html.replaceAll('{if_selected}', 'selected').replaceAll('{hotel_id}', item.codeValue).replaceAll('{name}', item.description)
+                } else {
+                    template += html.replaceAll('{if_selected}', '').replaceAll('{hotel_id}', item.codeValue).replaceAll('{name}', item.description)
+                }
+                
+            });
+
+            element.html(template)
+
+        }, id)
+
+    },
+    GetTypeList: function (callback, id) {
+
+        $.ajax({
+            url: "/WaterSport/WaterSportTypeSuggesstion",
+            type: "POST",
+            data: { id: id },
+            success: function (result) {
+                if (result.data != null && result.data != undefined) {
+                    _order_detail_watersport.WSTypeList = result.data
+                    callback()
+                } else {
+                    callback()
+                }
+            }
+        })
+    },
+    GetPriceSportWaterPackage: function (element,id, type) {
+        var price = 0;
+        $.ajax({
+            url: "/WaterSport/GetPriceSportWaterPackage",
+            type: "post",
+            data: { id: id, type: parseFloat(type) },
+            success: function (result) {
+                if (result != undefined && result.status == 0) {
+                    price = result.price
+                    element.val(price)
+                } else {
+                    element.val(price)
+                }
+            }
+        });
+
+    }
 }

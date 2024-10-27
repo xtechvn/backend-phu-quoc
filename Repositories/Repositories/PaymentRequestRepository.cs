@@ -781,12 +781,12 @@ namespace Repositories.Repositories
             return new List<PaymentRequestViewModel>();
         }
 
-        public List<PaymentRequestViewModel> GetBySupplierId(long supplierId, int paymentVoucherId = 0)
+        public List<PaymentRequestViewModel> GetBySupplierId(long supplierId, int paymentVoucherId = 0,string requestType = "1,2")
         {
             try
             {
                 var listPaymentRequest = paymentRequestDAL.GetServiceListBySupplierId(supplierId,
-                    ProcedureConstants.SP_GetListPaymentRequestBySupplierId).ToList<PaymentRequestViewModel>();
+                    ProcedureConstants.SP_GetListPaymentRequestBySupplierId, requestType).ToList<PaymentRequestViewModel>();
                 var listPaymentRequestOutput = new List<PaymentRequestViewModel>();
                 var listPaymentRequestExists = paymentRequestDAL.GetPaymentRequestExists(listPaymentRequest.Select(n => n.Id).ToList(),
                     ProcedureConstants.SP_CheckCreatePaymentVoucher).ToList<PaymentRequestViewModel>();
@@ -826,13 +826,10 @@ namespace Repositories.Repositories
                     {
                         foreach (var item in listRequest)
                         {
-                            var record = listPaymentRequest.FirstOrDefault(n => n.Id == item.Id);
-                            if (record != null && listPaymentRequestOutput.FirstOrDefault(n => n.Id == item.Id) == null)
-                            {
-                                record.IsChecked = true;
-                                listPaymentRequestOutput.Add(record);
-                            }
-
+                            PaymentRequestViewModel model = new PaymentRequestViewModel();
+                            item.CopyProperties(model);
+                            model.IsChecked = true;
+                            listPaymentRequestOutput.Add(model);
                         }
                     }
                 }

@@ -30,6 +30,7 @@ namespace Repositories.Repositories
         private readonly BankingAccountDAL bankingAccountDAL;
         private readonly ClientDAL clientDAL;
         private readonly UserDAL userDAL;
+        private readonly SupplierDAL supplierDAL;
 
         public ContractPayRepository(IOptions<DataBaseConfig> dataBaseConfig)
         {
@@ -40,6 +41,7 @@ namespace Repositories.Repositories
             depositHistoryDAL = new DepositHistoryDAL(dataBaseConfig.Value.SqlServer.ConnectionString);
             bankingAccountDAL = new BankingAccountDAL(dataBaseConfig.Value.SqlServer.ConnectionString);
             userDAL = new UserDAL(dataBaseConfig.Value.SqlServer.ConnectionString);
+            supplierDAL = new SupplierDAL(dataBaseConfig.Value.SqlServer.ConnectionString);
         }
 
         public string ExportDeposit(ContractPaySearchModel searchModel, string FilePath)
@@ -271,7 +273,11 @@ namespace Repositories.Repositories
             var listAccountClient = new List<Client>();
             if (contractPay.CreatedBy != null)
                 listAccountClient = clientDAL.GetClientInfo(new List<long>() { (long)contractPay.CreatedBy }).Result;
-
+            if (contractPay.SupplierId != null && contractPay.SupplierId > 0)
+            {
+                var Supplier = supplierDAL.GetById((long)contractPay.SupplierId);
+                contractPayViewModel.SupplierName = Supplier.FullName;
+            }
             var listClient = clientDAL.GetClientByIds(new List<long>() { (long)(contractPay.ClientId != null ? contractPay.ClientId.Value : 0) });
             var listContractPayDetail = _contractPayDAL.GetByContractPayIds(new List<int>() { contractPay.PayId });
             var orderList = orderDAL.GetByOrderIds(listContractPayDetail.Where(n => n.DataId != null).Select(n => n.DataId.Value).ToList());
@@ -366,9 +372,28 @@ namespace Repositories.Repositories
             if (contractPayViewModel.Type == (int)DepositHistoryConstant.CONTRACT_PAY_TYPE.THU_TIEN_HOA_HONG_NCC ||
                 contractPayViewModel.Type == (int)DepositHistoryConstant.CONTRACT_PAY_TYPE.THU_TIEN_NCC_HOAN_TRA)
             {
+                var listSubServiceByPayId = _contractPayDAL.GetDetailContractPayById(contractPayId,
+                    StoreProcedureConstant.SP_GetListSubServiceByPayId).ToList<ContractPayViewModel>();
                 var listServiceByPayId = _contractPayDAL.GetDetailContractPayById(contractPayId,
-                    StoreProcedureConstant.SP_GetListServiceByPayId).ToList<ContractPayViewModel>();
-                contractPayViewModel.ContractPayDetail = listServiceByPayId;
+                   StoreProcedureConstant.SP_GetListServiceByPayId).ToList<ContractPayViewModel>();
+                foreach (var item in listServiceByPayId)
+                {
+                    item.ServiceIdParent = item.ServiceId;
+                    listSubServiceByPayId.Add(item);
+                }
+                listSubServiceByPayId.AsParallel().ForAll(item =>
+                {
+                    if (item.ServiceType == (int)SubServiceType.Tour)
+                        item.ServiceType = (int)ServiceType.Tour;
+                    if (item.ServiceType == (int)SubServiceType.PRODUCT_FLY_TICKET)
+                        item.ServiceType = (int)ServiceType.PRODUCT_FLY_TICKET;
+                    if (item.ServiceType == (int)SubServiceType.BOOK_HOTEL_ROOM_VIN)
+                        item.ServiceType = (int)ServiceType.BOOK_HOTEL_ROOM_VIN;
+                    if (item.ServiceType == (int)SubServiceType.Other)
+                        item.ServiceType = (int)ServiceType.Other;
+                });
+
+                contractPayViewModel.ContractPayDetail = listSubServiceByPayId;
             }
 
             return contractPayViewModel;
@@ -890,16 +915,22 @@ namespace Repositories.Repositories
         {
             try
             {
+
                 var listService = new List<PaymentRequestViewModel>();
                 if (supplierId == 0) return listService;
+                //var listServiceOutput = _contractPayDAL.GetContractPayServiceListBySupplierId(supplierId,
+                //    ProcedureConstants.SP_GetAllServiceBySupplierIdForReturn).ToList<PaymentRequestViewModel>(); 
                 var listServiceOutput = _contractPayDAL.GetContractPayServiceListBySupplierId(supplierId,
-                    ProcedureConstants.SP_GetAllServiceBySupplierIdForReturn).ToList<PaymentRequestViewModel>();
+                    ProcedureConstants.SP_GetAllSubServiceBySupplierIdForReturn).ToList<PaymentRequestViewModel>();
+
                 var listServiceId = listServiceOutput.Select(n => Convert.ToInt64(n.ServiceId)).ToList();
                 var listRequestDetail = _contractPayDAL.GetByDataIdsService(listServiceId);
                 if (serviceId != 0)
                     listServiceOutput = listServiceOutput.Where(n => n.ServiceId == serviceId).ToList();
                 foreach (var item in listServiceOutput)
                 {
+                    if (item.PackageName != null)
+                        item.ServiceCode = item.PackageName.Trim();
                     item.TotalAmount = item.Amount;
                     var detail = listRequestDetail.Where(n => n.OrderId == item.OrderId && n.ContractPayId == contractPayId
                     && n.ServiceId == item.ServiceId).FirstOrDefault();
@@ -909,7 +940,7 @@ namespace Repositories.Repositories
                         item.Id = detail.Id;
                         item.AmountPayment = detail.Amount;
                         item.Payment = detail.Amount;
-                        item.TotalDisarmed = item.AmountReturn - detail.Amount;
+                        item.TotalDisarmed = detail.Amount - item.AmountReturn;
                     }
                     else
                     {

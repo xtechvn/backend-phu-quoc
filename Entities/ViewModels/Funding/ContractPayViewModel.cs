@@ -64,7 +64,10 @@ namespace Entities.ViewModels
         public string GroupBookingId { get; set; }
         public int DepositHistoryId { get; set; }
         public List<ContractPayDetailViewModel> ContractPayDetails { get; set; }
-        public int PermisionType { get; set; }    
+        public int PermisionType { get; set; }
+        public long ServiceIdParent { get; set; }
+
+        public string PackageName { get; set; }
     }
 
     public class ContractPayViewModelBK : ContractPay

@@ -297,16 +297,12 @@ namespace WEB.Adavigo.CMS.Controllers
                     {
 
                         var Result = await _customerManagerRepositories.SetUpClientAsync(DataModel);
-                        if (Result == 1)
+                        if (Result > 0)
                         {
                             stt_code = (int)ResponseType.SUCCESS;
                             msg = "Cập nhật thông tin thành công";
                         }
-                        if (Result == 2)
-                        {
-                            stt_code = (int)ResponseType.FAILED;
-                            msg = "Email đã tồn tại";
-                        }
+                    
 
                         if (Result == 0)
                         {

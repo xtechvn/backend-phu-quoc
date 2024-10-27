@@ -78,9 +78,9 @@
                 <th class="mfp-hide action-tc">Action</th>
                 <th class="mfp-hide">Mã hóa đơn</th>
                 <th>Hình thức thanh toán</th>
-                <th class="mfp-hide">Hình thức thanh toán</th>
                 <th class="mfp-hide">Khách phải trả</th>
-
+                <th class="mfp-hide">Khách phải trả</th>
+                <th class="mfp-hide">Yêu cầu hóa đơn</th>
 
             </tr>
         </thead>
@@ -140,6 +140,7 @@
                                     break;
                                 case ((int)(OrderStatus.CANCEL)):
                                 case ((int)(OrderStatus.ACCOUNTANT_DECLINE)):
+                                case ((int)(OrderStatus.OPERATOR_DECLINE)):
                                 case ((int)(OrderStatus.DonRac)):
                                     {
                                         <span class="status-red">@item.Status</span>

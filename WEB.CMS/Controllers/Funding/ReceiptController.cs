@@ -562,6 +562,10 @@ namespace WEB.Adavigo.CMS.Controllers
             try
             {
                 var listOrder = _orderRepository.GetByClientId(clientId, payId);
+                if (listOrder != null)
+                {
+                    listOrder= listOrder.OrderByDescending(x => x.IsChecked).ToList();
+                }
                 return Ok(new
                 {
                     isSuccess = true,

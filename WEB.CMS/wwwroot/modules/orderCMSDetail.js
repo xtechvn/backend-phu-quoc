@@ -635,6 +635,31 @@ var _orderDetail = {
             });
 
         });
+    },   
+    OnBillWaterSport: function (id) {
+        let title = 'Hóa đơn dịch vụ thể thao biển';
+        let url = '/Order/BillWaterSport';
+        let param = {
+            orderid: id,
+            type:0,
+        };
+        _magnific.OpenSmallPopup(title, url, param);
+
+    },
+    ConfirmBillWaterSport: function (id) {
+        _global_function.AddLoading()
+        $.ajax({
+            url: "/Order/BillWaterSport",
+            type: "Post",
+            data: { orderid: id, type:1 },
+            success: function (result) {
+                _global_function.RemoveLoading()
+                $.magnificPopup.close();
+                let text = window.open();
+                text.document.body.innerHTML = result;
+                text.print();
+            }
+        });
     },
 }
 var _OrderDetail_Sendemail = {

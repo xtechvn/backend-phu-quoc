@@ -116,5 +116,6 @@ namespace Entities.ViewModels
         public bool IsAdminEdit { get; set; }
         public decimal Payment { get; set; }
         public decimal AmountReturn { get; set; }
+        public string PackageName { get; set; }
     }
 }

@@ -234,6 +234,13 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.WaterSport
         {
             try
             {
+                ViewBag.FLOATING_HOUSE = _allCodeRepository.GetListByType(AllCodeType.WATER_SPORT_FLOATING_HOUSE);
+                ViewBag.BANANA_BOAT = _allCodeRepository.GetListByType(AllCodeType.WATER_SPORT_BANANA_BOAT);
+                ViewBag.FLY_FISH = _allCodeRepository.GetListByType(AllCodeType.WATER_SPORT_FLY_FISH);
+                ViewBag.JETSKI = _allCodeRepository.GetListByType(AllCodeType.WATER_SPORT_JETSKI);
+                ViewBag.PARASAILING = _allCodeRepository.GetListByType(AllCodeType.WATER_SPORT_PARASAILING);
+                ViewBag.KAYAK = _allCodeRepository.GetListByType(AllCodeType.WATER_SPORT_KAYAK);
+
                 var allcode_list = _allCodeRepository.GetListByType(AllCodeType.SERVICE_TYPE_OTHER);
                 ViewBag.ServiceType = _allCodeRepository.GetListByType(AllCodeType.WATER_SPORT_TYPE);
 

@@ -1,4 +1,5 @@
-﻿using Caching.Elasticsearch;
+﻿using AntiXssMiddleware.Middleware;
+using Caching.Elasticsearch;
 using Entities.Models;
 using Entities.ViewModels;
 using Entities.ViewModels.Attachment;
@@ -6,15 +7,19 @@ using Entities.ViewModels.Contract;
 using Entities.ViewModels.HotelBookingCode;
 using Entities.ViewModels.Invoice;
 using Entities.ViewModels.OrderManual;
+using Entities.ViewModels.SetServices;
 using ENTITIES.ViewModels.ElasticSearch;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver.Linq;
+using Nest;
 using Newtonsoft.Json;
 using OfficeOpenXml;
 using Repositories.IRepositories;
+using Repositories.Repositories;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -25,10 +30,12 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Utilities;
 using Utilities.Contants;
+using WEB.Adavigo.CMS.PQ.Service;
 using WEB.Adavigo.CMS.Service;
 using WEB.Adavigo.CMS.Service.ServiceInterface;
 using WEB.CMS.Customize;
 using WEB.CMS.Models;
+using ActionType = Utilities.Contants.ActionType;
 
 namespace WEB.Adavigo.CMS.Controllers
 {
@@ -63,11 +70,12 @@ namespace WEB.Adavigo.CMS.Controllers
         private readonly IInvoiceRepository _invoiceRepository;
         private readonly IPaymentRequestRepository _paymentRequestRepository;
         private APIService apiService;
+        private readonly IPassengerRepository _passengerRepository;
         private readonly List<int> list_order_status_not_allow_to_edit = new List<int>() { (int)OrderStatus.FINISHED, (int)OrderStatus.CANCEL, (int)OrderStatus.WAITING_FOR_ACCOUNTANT, (int)OrderStatus.WAITING_FOR_OPERATOR };
         public OrderController(IConfiguration configuration, IOrderRepository orderRepository, IClientRepository clientRepository, IHotelBookingRepositories hotelBookingRepositories, ManagementUser managementUser, IContractRepository contractRepository,
             IAllCodeRepository allcodeRepository, IContactClientRepository contactClientRepository, IOrderRepositor iOrderRepositories, IFlightSegmentRepository flightSegmentRepository, IBagageRepository bagageRepository, IContactClientRepository ContactClientRepository, IHotelBookingCodeRepository hotelBookingCodeRepository,
             IFlyBookingDetailRepository flyBookingDetailRepository, IUserRepository userRepository, IContractPayRepository contractPayRepository, IAttachFileRepository AttachFileRepository, ITourRepository tourRepository, IEmailService emailService, IAttachFileRepository attachFileRepository, IOtherBookingRepository otherBookingRepository,
-            IInvoiceRequestRepository invoiceRequestRepository, IVinWonderBookingRepository vinWonderBookingRepository, IWebHostEnvironment WebHostEnvironment, IInvoiceRepository invoiceRepository, IAccountClientRepository accountClientRepository, IPaymentRequestRepository paymentRequestRepository)
+            IInvoiceRequestRepository invoiceRequestRepository, IVinWonderBookingRepository vinWonderBookingRepository, IWebHostEnvironment WebHostEnvironment, IInvoiceRepository invoiceRepository, IAccountClientRepository accountClientRepository, IPaymentRequestRepository paymentRequestRepository, IPassengerRepository passengerRepository)
         {
             _invoiceRequestRepository = invoiceRequestRepository;
             _configuration = configuration;
@@ -97,6 +105,7 @@ namespace WEB.Adavigo.CMS.Controllers
             _invoiceRepository = invoiceRepository;
             _accountClientRepository = accountClientRepository;
             _paymentRequestRepository = paymentRequestRepository;
+            _passengerRepository = passengerRepository;
         }
 
 
@@ -268,7 +277,7 @@ namespace WEB.Adavigo.CMS.Controllers
                 //model = await _orderRepository.GetPagingList(searchModel, currentPage, pageSize);
                 // Add Invoice Code:
                 ViewBag.Invoice = new List<InvoiceRequestViewModel>();
-                if(model!=null && model.ListData!=null && model.ListData.Count > 0)
+                if (model != null && model.ListData != null && model.ListData.Count > 0)
                 {
                     var order_ids = string.Join(",", model.ListData.Select(x => x.OrderId));
                     ViewBag.Invoice = await _invoiceRepository.GetListInvoiceRequestbyOrderId(order_ids);
@@ -329,7 +338,7 @@ namespace WEB.Adavigo.CMS.Controllers
                                 }
                             }
                         }
-                    }   
+                    }
 
                     var ClientDetai = await _clientRepository.GetClientDetailByClientId((long)dataOrder.ClientId);
                     if (ClientDetai != null)
@@ -404,6 +413,10 @@ namespace WEB.Adavigo.CMS.Controllers
                     ViewBag.ListOrderStatusNotAllowEdit = new List<int>() { (int)OrderStatus.FINISHED, (int)OrderStatus.CANCEL, (int)OrderStatus.WAITING_FOR_ACCOUNTANT, (int)OrderStatus.WAITING_FOR_OPERATOR };
                     ViewBag.ListOrderStatusNotAllowToChangeDetail = new List<int>() { (int)OrderStatus.OPERATOR_DECLINE, (int)OrderStatus.ACCOUNTANT_DECLINE };
                     ViewBag.ListSaleRole = new List<int>() { (int)RoleType.SaleKd, (int)RoleType.SaleOnl, (int)RoleType.SaleTour, (int)RoleType.Admin, (int)RoleType.TPKS, (int)RoleType.TPTour, (int)RoleType.TPVe };
+                    if (dataOrder.ProductService != null && dataOrder.ProductService.Contains(((int)ServicesType.WaterSport).ToString()) == true)
+                    {
+                        ViewBag.WaterSport = 1;
+                    }
                     return View(result);
                 }
 
@@ -466,7 +479,7 @@ namespace WEB.Adavigo.CMS.Controllers
             try
             {
 
-                var rolelist = _clientRepository.GetClientType(ClientType.kl).Result;
+                var rolelist = _clientRepository.GetClientType(Utilities.Contants.ClientType.kl).Result;
                 if (!string.IsNullOrEmpty(name))
                 {
                     rolelist = rolelist.Where(s => StringHelpers.ConvertStringToNoSymbol(s.ClientName.Trim().ToLower())
@@ -652,7 +665,18 @@ namespace WEB.Adavigo.CMS.Controllers
 
                     if (Convert.ToInt32(systemtype) < 0 || systemtype == "")
                     {
-                        var data = await _orderESRepository.GetOrderNoSuggesstion(txt_search);
+                        var dataEs = await _orderESRepository.GetOrderNoSuggesstion(txt_search);
+                        var data = new List<SearchOrderElasticsearchViewModel>();
+                        if (dataEs != null)
+                        {
+                            foreach (var item in dataEs)
+                            {
+                                var dataitem = new SearchOrderElasticsearchViewModel();
+                                dataitem.orderno = item.orderno;
+                                data.Add(dataitem);
+                            }
+                        }
+
                         return Ok(new
                         {
                             status = (int)ResponseType.SUCCESS,
@@ -662,7 +686,17 @@ namespace WEB.Adavigo.CMS.Controllers
                     }
                     else
                     {
-                        var data = await _orderESRepository.GetOrderNoSuggesstion2(txt_search, Convert.ToInt32(systemtype));
+                        var dataEs = await _orderESRepository.GetOrderNoSuggesstion2(txt_search, Convert.ToInt32(systemtype));
+                        var data = new List<SearchOrderElasticsearchViewModel>();
+                        if (dataEs != null)
+                        {
+                            foreach (var item in dataEs)
+                            {
+                                var dataitem = new SearchOrderElasticsearchViewModel();
+                                dataitem.orderno = item.orderno;
+                                data.Add(dataitem);
+                            }
+                        }
                         return Ok(new
                         {
                             status = (int)ResponseType.SUCCESS,
@@ -704,7 +738,7 @@ namespace WEB.Adavigo.CMS.Controllers
                     {
                         if (dataOrder.AccountClientId != null)
                         {
-                            var UserCreateclient = await _clientRepository.GetClientDetailAsync((long)dataOrder.AccountClientId);
+                            var UserCreateclient = await _clientRepository.GetClientDetailByClientId((long)dataOrder.ClientId);
                             if (UserCreateclient != null)
                             {
                                 ViewBag.client = UserCreateclient;
@@ -728,7 +762,7 @@ namespace WEB.Adavigo.CMS.Controllers
             {
                 ViewBag.AllowToEdit = false;
                 ViewBag.IsAddMoreService = false;
-                
+
                 long _UserId = 0;
                 if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
                 {
@@ -798,7 +832,7 @@ namespace WEB.Adavigo.CMS.Controllers
                                     }
 
                                 }
-                                if (item.Type.Equals("Dịch vụ khác") )
+                                if (item.Type.Equals("Dịch vụ khác"))
                                 {
                                     item.OtherBooking = await _otherBookingRepository.GetDetailOtherBookingById(Convert.ToInt32(item.ServiceId));
                                     var note = await _hotelBookingRepositories.GetServiceDeclinesByServiceId(item.ServiceId, (int)ServicesType.Other);
@@ -850,7 +884,7 @@ namespace WEB.Adavigo.CMS.Controllers
                         {
                             ViewBag.paymentAmount = data2.Sum(s => s.AmountPay);
                         }
-                        if(dataOrder!=null && (dataOrder.OrderStatus == (int)OrderStatus.CREATED_ORDER|| dataOrder.OrderStatus == (int)OrderStatus.CONFIRMED_SALE))
+                        if (dataOrder != null && (dataOrder.OrderStatus == (int)OrderStatus.CREATED_ORDER || dataOrder.OrderStatus == (int)OrderStatus.CONFIRMED_SALE))
                         {
                             ViewBag.IsAddMoreService = true;
                         }
@@ -922,7 +956,8 @@ namespace WEB.Adavigo.CMS.Controllers
                 {
 
                     var dataOrder = _iOrderRepositories.GetByOrderId(orderId);
-
+                    var List_Passenger = await _passengerRepository.GetPassengerByOrderId(orderId);
+                    ViewBag.Passenger = List_Passenger;
                     if (dataOrder != null)
                     {
                         if (dataOrder.ContactClientId != null)
@@ -1354,7 +1389,7 @@ namespace WEB.Adavigo.CMS.Controllers
                                                 smg = "Dịch vụ khách sạn vượt quá hạn mức công nợ"
                                             });
                                         }
-                                        
+
                                     }
                                     break;
                                 case (int)ServicesType.FlyingTicket:
@@ -1372,7 +1407,7 @@ namespace WEB.Adavigo.CMS.Controllers
                                                 smg = "Dịch vụ vé máy bay vượt quá hạn mức công nợ"
                                             });
                                         }
-                                       
+
 
                                     }
                                     break;
@@ -1390,7 +1425,7 @@ namespace WEB.Adavigo.CMS.Controllers
                                                 smg = "Dịch vụ tour vượt quá hạn mức công nợ"
                                             });
                                         }
-                                        
+
                                     }
                                     break;
                                 case (int)ServicesType.VinWonder:
@@ -1407,7 +1442,7 @@ namespace WEB.Adavigo.CMS.Controllers
                                                 smg = "Dịch vụ VinWonder vượt quá hạn mức công nợ"
                                             });
                                         }
-                                        
+
                                     }
                                     break;
                                 case (int)ServicesType.VehicleRent:
@@ -1425,7 +1460,7 @@ namespace WEB.Adavigo.CMS.Controllers
                                                 smg = "Dịch vụ khác vượt quá hạn mức công nợ"
                                             });
                                         }
-                                     
+
                                     }
                                     break;
                             }
@@ -1966,13 +2001,13 @@ namespace WEB.Adavigo.CMS.Controllers
                         var serial_no = ws.Cells[row, 7].Value;
                         var product_name = ws.Cells[row, 8].Value;
                         var quanity = ws.Cells[row, 9].Value;
-                        var base_price = ws.Cells[row,10].Value;
+                        var base_price = ws.Cells[row, 10].Value;
                         var amount = ws.Cells[row, 11].Value;
                         var amount_before_vat = ws.Cells[row, 12].Value;
                         var vat_value = ws.Cells[row, 13].Value;
                         var note = ws.Cells[row, 14].Value;
                         var selected_service_type = new AllCode();
-                        if (all_code_ws!=null && all_code_ws.Count > 0)
+                        if (all_code_ws != null && all_code_ws.Count > 0)
                         {
                             selected_service_type = all_code_ws.FirstOrDefault(x => product_name != null && x.Description.ToLower().Contains(product_name.ToString().Trim().ToLower()));
                             if (selected_service_type == null) selected_service_type = new AllCode();
@@ -1983,10 +2018,10 @@ namespace WEB.Adavigo.CMS.Controllers
                             client_code = (client_code == null ? "" : client_code.ToString()),
                             label = (label == null ? "" : label.ToString()),
                             amount = (amount == null ? 0 : Convert.ToDouble(amount)),
-                            amount_before_vat= (amount_before_vat == null ? 0 : Convert.ToDouble(amount_before_vat)),
-                            base_price= base_price == null ? 0 : Convert.ToDouble(base_price),
-                            client_name= (client_name == null ? "" : client_name.ToString()),
-                            conf_no= conf_no == null ? "" : conf_no.ToString(),
+                            amount_before_vat = (amount_before_vat == null ? 0 : Convert.ToDouble(amount_before_vat)),
+                            base_price = base_price == null ? 0 : Convert.ToDouble(base_price),
+                            client_name = (client_name == null ? "" : client_name.ToString()),
+                            conf_no = conf_no == null ? "" : conf_no.ToString(),
                             note = note == null ? "" : note.ToString(),
                             product_name = product_name == null ? "" : product_name.ToString(),
                             quanity = quanity == null ? 0 : Convert.ToInt32(quanity),
@@ -1994,7 +2029,7 @@ namespace WEB.Adavigo.CMS.Controllers
                             serial_no = serial_no == null ? "" : serial_no.ToString(),
                             //used_date = used_date == null ? DateTime.MinValue : Convert.ToDateTime(used_date.ToString()),
                             vat_value = vat_value == null ? 0 : Convert.ToDouble(vat_value),
-                            service_type=selected_service_type.CodeValue
+                            service_type = selected_service_type.CodeValue
                         };
                         bool convert_date = false;
                         try
@@ -2051,7 +2086,7 @@ namespace WEB.Adavigo.CMS.Controllers
             try
             {
                 List<OrderWSExcelImportModel> data = new List<OrderWSExcelImportModel>();
-                if(model!=null && model != "")
+                if (model != null && model != "")
                 {
                     try
                     {
@@ -2069,23 +2104,23 @@ namespace WEB.Adavigo.CMS.Controllers
                 }
                 List<OrderWSExcelSQLModel> summit_model = new List<OrderWSExcelSQLModel>();
                 List<AllCode> ws_code = _allCodeRepository.GetListByType(AllCodeType.WATER_SPORT_TYPE);
-                if(data!=null && data.Count > 0)
+                if (data != null && data.Count > 0)
                 {
                     List<string> conf_no_list = data.Select(x => x.conf_no).ToList();
-                    if(conf_no_list!=null && conf_no_list.Count > 0)
+                    if (conf_no_list != null && conf_no_list.Count > 0)
                     {
                         conf_no_list = conf_no_list.Select(x => CommonHelper.RemoveUnicode(x.ToLower())).Distinct().ToList();
                         foreach (var conf_no in conf_no_list)
                         {
                             var data_by_order = data.Where(x => CommonHelper.RemoveUnicode(x.conf_no.ToLower()).Trim() == conf_no.Trim());
                             var client = await _clientRepository.GetClientByClientCode(data_by_order.First().client_code);
-                            long account_client_id =  0;
-                            long contract_id =  3;
+                            long account_client_id = 0;
+                            long contract_id = 3;
                             if (client != null && client.Id > 0)
                             {
-                                 account_client_id = (client != null && client.Id > 0 ? _accountClientRepository.GetMainAccountClientByClientId(client.Id) : 0);
-                                 var contract = await _contractRepository.GetActiveContractByClientId(client.Id);
-                                 contract_id = (contract != null && contract.ContractId > 0 ? contract.ContractId : 3);
+                                account_client_id = (client != null && client.Id > 0 ? _accountClientRepository.GetMainAccountClientByClientId(client.Id) : 0);
+                                var contract = await _contractRepository.GetActiveContractByClientId(client.Id);
+                                contract_id = (contract != null && contract.ContractId > 0 ? contract.ContractId : 3);
                             }
 
                             OrderWSExcelSQLModel item = new OrderWSExcelSQLModel()
@@ -2140,7 +2175,7 @@ namespace WEB.Adavigo.CMS.Controllers
                                     UtmSource = null,
                                     VerifyDate = DateTime.Now,
                                     VoucherId = null
-                                    
+
                                 },
                                 booking = new List<OtherBookingWSExcelSQLModel>(),
                                 ContactClient = new ContactClient()
@@ -2149,11 +2184,11 @@ namespace WEB.Adavigo.CMS.Controllers
                                     CreateDate = DateTime.Now,
                                     Email = "",
                                     Mobile = "",
-                                    Name = data_by_order.First() != null? data_by_order.First().client_name : "",
+                                    Name = data_by_order.First() != null ? data_by_order.First().client_name : "",
                                     OrderId = 0
                                 },
                             };
-                            var all_code= await  _allCodeRepository.GetIDIfValueExists(AllCodeType.SERVICE_TYPE_OTHER_MAIN, AllCodeDescription.WATER_SPORT);
+                            var all_code = await _allCodeRepository.GetIDIfValueExists(AllCodeType.SERVICE_TYPE_OTHER_MAIN, AllCodeDescription.WATER_SPORT);
                             var used_date = DateTime.ParseExact(data_by_order.First().used_date_str, "dd/MM/yyyy", null);
                             OtherBookingWSExcelSQLModel b = new OtherBookingWSExcelSQLModel()
                             {
@@ -2164,7 +2199,7 @@ namespace WEB.Adavigo.CMS.Controllers
                                     ConfNo = data_by_order.First().conf_no,
                                     CreatedBy = _UserLogin,
                                     CreatedDate = DateTime.Now,
-                                    EndDate = new DateTime(used_date.Year, used_date.Month, used_date.Day,23,59,59),
+                                    EndDate = new DateTime(used_date.Year, used_date.Month, used_date.Day, 23, 59, 59),
                                     Note = data_by_order.First().note,
                                     Id = 0,
                                     OperatorId = Convert.ToInt32(ReadFile.LoadConfig().WS_Operator_Id),
@@ -2175,7 +2210,7 @@ namespace WEB.Adavigo.CMS.Controllers
                                     RoomNo = data_by_order.First().room_no,
                                     SerialNo = data_by_order.First().serial_no,
                                     ServiceCode = "",
-                                    ServiceType = all_code!=null && all_code.Id>0? all_code.CodeValue: 28,
+                                    ServiceType = all_code != null && all_code.Id > 0 ? all_code.CodeValue : 28,
                                     StartDate = used_date,
                                     Status = 0,
                                     StatusOld = 0,
@@ -2183,26 +2218,26 @@ namespace WEB.Adavigo.CMS.Controllers
                                     UpdatedBy = _UserLogin,
                                     UpdatedDate = DateTime.Now
                                 },
-                                packages=new List<OtherBookingPackages>()
+                                packages = new List<OtherBookingPackages>()
                             };
-                            foreach(var package in data_by_order)
+                            foreach (var package in data_by_order)
                             {
                                 var selected_service = ws_code.FirstOrDefault(x => CommonHelper.RemoveUnicode(x.Description.ToLower().Trim()).Contains(CommonHelper.RemoveUnicode(package.product_name.ToLower().Trim())));
                                 b.packages.Add(new OtherBookingPackages()
                                 {
-                                    Amount=Convert.ToDecimal(package.amount),
-                                    BasePrice= Convert.ToDecimal(package.amount /package.quanity),
-                                    BookingId=0,
-                                    Id=0,
-                                    Name=package.client_name,
-                                    Profit= package.amount,
-                                    Quantity=package.quanity,
-                                    SalePrice=0,
-                                    ServiceType= selected_service==null ?0:selected_service.CodeValue,
-                                    UpdatedBy=_UserLogin,
-                                    UpdatedDate=DateTime.Now,
-                                    Note=package.note,
-                                    Commission= Convert.ToDecimal(package.vat_value)
+                                    Amount = Convert.ToDecimal(package.amount),
+                                    BasePrice = Convert.ToDecimal(package.amount / package.quanity),
+                                    BookingId = 0,
+                                    Id = 0,
+                                    Name = package.client_name,
+                                    Profit = package.amount,
+                                    Quantity = package.quanity,
+                                    SalePrice = 0,
+                                    ServiceType = selected_service == null ? 0 : selected_service.CodeValue,
+                                    UpdatedBy = _UserLogin,
+                                    UpdatedDate = DateTime.Now,
+                                    Note = package.note,
+                                    Commission = Convert.ToDecimal(package.vat_value)
                                 });
                             }
                             item.booking.Add(b);
@@ -2392,6 +2427,73 @@ namespace WEB.Adavigo.CMS.Controllers
                 smg = smg
             });
         }
+        [HttpPost]
+        public async Task<IActionResult> BillWaterSport(long orderid, long type = 0)
+        {
+            try
+            {
+                ViewBag.FLOATING_HOUSE = _allCodeRepository.GetListByType(AllCodeType.WATER_SPORT_FLOATING_HOUSE);
+                ViewBag.BANANA_BOAT = _allCodeRepository.GetListByType(AllCodeType.WATER_SPORT_BANANA_BOAT);
+                ViewBag.FLY_FISH = _allCodeRepository.GetListByType(AllCodeType.WATER_SPORT_FLY_FISH);
+                ViewBag.JETSKI = _allCodeRepository.GetListByType(AllCodeType.WATER_SPORT_JETSKI);
+                ViewBag.PARASAILING = _allCodeRepository.GetListByType(AllCodeType.WATER_SPORT_PARASAILING);
+                ViewBag.KAYAK = _allCodeRepository.GetListByType(AllCodeType.WATER_SPORT_KAYAK);
+
+                BillWaterSportService BillWaterSport_services = new BillWaterSportService(_configuration);
+                var count = BillWaterSport_services.BillWaterSportCount();
+
+                var current_date = DateTime.Now;
+                ViewBag.Orderid = orderid;
+                ViewBag.type = type;
+                var dataOrder = _iOrderRepositories.GetByOrderId(orderid);
+                var List_Passenger = await _passengerRepository.GetPassengerByOrderId(orderid);
+                if (List_Passenger != null && List_Passenger.Count > 0)
+                {
+                    ViewBag.client = List_Passenger[0].Name;
+                }
+
+                ViewBag.BillWaterSport = current_date.Day.ToString() + current_date.Month.ToString() + current_date.Year.ToString().Substring(current_date.Year.ToString().Length - 2, 2) + string.Format(String.Format("{0,3:000}", count + 1));
+                ViewBag.ServiceType = _allCodeRepository.GetListByType(AllCodeType.WATER_SPORT_TYPE);
+                var other_List = await _otherBookingRepository.getListOtherBookingByOrderId(orderid);
+                var list_optional = new List<OtherBookingPackages>();
+                if (other_List != null)
+                {
+                    ViewBag.RoomNo = other_List[0].RoomNo;
+                    other_List = other_List.Where(s => s.ServiceType == (int)ServicesType.Other_WaterSport).ToList();
+                    foreach (var item in other_List)
+                    {
+                        var optional_list = await _otherBookingRepository.GetWaterSportPackagesByBookingId(item.Id);
+
+                        if (optional_list != null)
+                        {
+                            list_optional.AddRange(optional_list);
+
+                        }
+                    }
+                    var model = new BillWaterSportViewCount
+                    {
+                        index = count,
+                        date = DateTime.Now
+                    };
+                    model.GenID();
+                    BillWaterSport_services.AddBillWaterSport(model);
+
+                }
+                if (list_optional != null)
+                {
+                    ViewBag.TotalAmount = list_optional.Sum(s => s.Amount).ToString("N0");
+                    ViewBag.TotalQuantity = list_optional.Sum(s => (int)s.Quantity).ToString("N0");
+                }
+                return PartialView(list_optional);
+
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("BillWaterSport - OrderController: " + ex);
+            }
+            return PartialView();
+        }
+
     }
 }
 

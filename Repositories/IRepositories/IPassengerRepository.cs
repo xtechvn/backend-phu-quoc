@@ -12,5 +12,6 @@ namespace Repositories.IRepositories
     {
         Task<List<Passenger>> GetByOrderID(long order_id, string group_fly);
         Task<List<Passenger>> GetPassengerByOrderId(long order_id);
+       int InsertPassenger(string name, long OrderId, long BookingId);
     }
 }

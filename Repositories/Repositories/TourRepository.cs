@@ -124,10 +124,12 @@ namespace Repositories.Repositories
                     }
                 }
                 int status = 0;
+                int StatusOld = (int)ServiceStatus.WaitingExcution;
                 var exists_tour = await tourDAL.GetTourById(data.tour_id);
                 if (exists_tour != null && exists_tour.Status != null)
                 {
                     status = (int)exists_tour.Status;
+                    StatusOld = (int)exists_tour.StatusOld;
                     /*
                     if ((status == (int)ServiceStatus.Decline && is_client_debt == (int)DebtType.DEBT_ACCEPTED) || (status == (int)ServiceStatus.Decline && client.ClientType == (int)ClientType.kl))
                     {
@@ -223,6 +225,7 @@ namespace Repositories.Repositories
                     SupplierId = tour_product.SupplierId,
                     Price = price,
                     Status = status,
+                    StatusOld = StatusOld,
                     Profit = profit- data.commission- data.other_amount,
                     Days = (data.end_date - data.start_date).Days > 0 ? (data.end_date - data.start_date).Days : 1,
                     Image = "",

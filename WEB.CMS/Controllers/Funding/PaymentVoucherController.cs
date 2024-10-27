@@ -382,7 +382,7 @@ namespace WEB.Adavigo.CMS.Controllers.Funding
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetRequestBySupplierId(int supplierId, string text = null, int paymentVoucherId = 0)
+        public async Task<IActionResult> GetRequestBySupplierId(int supplierId, string text = null, int paymentVoucherId = 0, string requestType = "1,2")
         {
             try
             {
@@ -393,10 +393,13 @@ namespace WEB.Adavigo.CMS.Controllers.Funding
                         message = "Thành công",
                         data = new List<PaymentRequestViewModel>()
                     });
-                var listOrder = _paymentRequestRepository.GetBySupplierId(supplierId, paymentVoucherId);
+                var listOrder = _paymentRequestRepository.GetBySupplierId(supplierId, paymentVoucherId, requestType);
                 if (!string.IsNullOrEmpty(text))
                     listOrder = listOrder.Where(n => n.PaymentCode.Contains(text.Trim())).ToList();
-
+                if (listOrder != null)
+                {
+                    listOrder=listOrder.OrderByDescending(s=>s.IsChecked).ToList();
+                }
                 return Ok(new
                 {
                     isSuccess = true,
@@ -429,6 +432,10 @@ namespace WEB.Adavigo.CMS.Controllers.Funding
                         data = new List<PaymentRequestViewModel>()
                     });
                 var listOrder = _paymentRequestRepository.GetByClientId(clientId, paymentVoucherId);
+                if (listOrder != null)
+                {
+                    listOrder = listOrder.OrderByDescending(s => s.IsChecked).ToList();
+                }
                 return Ok(new
                 {
                     isSuccess = true,

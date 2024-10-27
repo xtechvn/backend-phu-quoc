@@ -1,0 +1,274 @@
+﻿@using Entities.Models;
+@using Utilities.Contants;
+@{
+    List<Entities.Models.AllCode> list_service = (List<Entities.Models.AllCode>)ViewBag.ServiceType;
+    var i = 0;
+   
+    List<Entities.Models.AllCode> FLOATING_HOUSE = (List<Entities.Models.AllCode>)ViewBag.FLOATING_HOUSE;
+    List<Entities.Models.AllCode> BANANA_BOAT = (List<Entities.Models.AllCode>)ViewBag.BANANA_BOAT;
+    List<Entities.Models.AllCode> FLY_FISH = (List<Entities.Models.AllCode>)ViewBag.FLY_FISH;
+    List<Entities.Models.AllCode> JETSKI = (List<Entities.Models.AllCode>)ViewBag.JETSKI;
+    List<Entities.Models.AllCode> PARASAILING = (List<Entities.Models.AllCode>)ViewBag.PARASAILING;
+    List<Entities.Models.AllCode> KAYAK = (List<Entities.Models.AllCode>)ViewBag.KAYAK;
+}
+@model List<OtherBookingPackages>
+<!doctype html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Simple Email</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        table td {
+            padding: 6px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+
+<body style="background-color: #f6f6f6; font-family:Times New Roman; -webkit-font-smoothing: antialiased; font-size: 12px;color: #000000; line-height: 1.4;max-width: 450px; margin: 0 auto; padding: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;">
+
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0"
+           style="border-collapse: separate; width: 100%;">
+        <tr>
+            <td class="container"
+                style="padding: 0;background: #fff url(https://static-image.adavigo.com/uploads/images/email/pq-logo.jpg) no-repeat center;">
+                <div class="content"
+                     style="margin: 0 auto; max-width: 600px;box-sizing: border-box; display: block; padding: 15px 20px;">
+                    <table role="presentation" border="0" width="100%">
+                        <tr>
+                            <td style="">
+							<div style="text-align: center;font-size: 11px;margin-bottom: 5px;">
+                                    <div style="display: flex;gap: 20px; text-align: left;">
+                                        <img src="https://static-image.adavigo.com/uploads/images/logo.png" style="width:55px;" alt="" />
+                                        <div style="text-align:center;width:100%;">
+                                            <div style="font-size: 12px;"><b>CÔNG TY CỔ PHẦN ADAVIGO PHÚ QUỐC</b>,</div>
+                                            <div style="font-size: 10px;">Shophouse QT02-25 Grandworld, tổ 7, khu Bãi
+                                                Dài, xã Gành Dầu, tp Phú Quốc, Kiên Giang, VN</div>
+                                        </div>
+                                    </div>
+                                    <div style="margin-top: 15px;font-size: 16px;font-weight: bold; clear: both;">HOÁ ĐƠN BÁN LẺ</div>
+                                    <p style="font-size: 12px;">(RETAIL INVOICE)</p>
+                                    <div style="font-size: 11px;">Ngày(Date) @(DateTime.Now.Day) Tháng(Month) @(DateTime.Now.Month) Năm(Year) @(DateTime.Now.Year)
+                                    </div>
+                                    <div style="font-size: 11px;">No: @ViewBag.BillWaterSport </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="border: 0; border-spacing: 0; text-indent: 0; border-collapse: collapse; font-size: 13px; width: 100%; margin-bottom: 15px;"
+                           data-mce-style="border: 0; border-spacing: 0; text-indent: 0; border-collapse: collapse; font-size: 13px; width: 100%; margin-bottom: 15px;"
+                           class="mce-item-table" data-mce-selected="1">
+                        <tbody>
+                            <tr style="font-weight: 600;" data-mce-style="font-weight: 600;">
+                                <td colspan="3" style="padding: 5px 0;">
+                                    <div>
+                                        Tên khách hàng(Name of Guest): @ViewBag.client
+                                        &nbsp;&nbsp; Số phòng(No room): @ViewBag.RoomNo
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="padding: 5px 0;">
+                                    <div>
+                                        <p>Thanh toán (Pay by):</p>
+                                        <label> <input type="checkbox" /> Tính vào tiền phòng (Chagre Room)</label><br />
+                                        <label> <input type="checkbox" /> Tiên mặt (Cash)</label>
+                                    </div>
+                                </td>
+                            </tr>
+                            @if (Model != null)
+                            {
+                                <tr>
+                                    <td colspan="3" style="padding: 0;color: #00264D;">
+                                        <table role="presentation" border="0" width="100%"
+                                               style="border: 0; border-spacing: 0; text-indent: 0;text-align: center; border-collapse: collapse; font-size: 13px; width: 100%;">
+                                            <tr>
+                                                <th style="background: rgba(207, 217, 238, 0.4);border: 1px solid #CFD9EE">#</th>
+                                                <th style="background: rgba(207, 217, 238, 0.4);border: 1px solid #CFD9EE">Dịch vụ <br />(Service)</th>
+                                                <th style="background: rgba(207, 217, 238, 0.4);border: 1px solid #CFD9EE">Phân loại  <br />(Variation)</th>
+                                                <th style="background: rgba(207, 217, 238, 0.4);border: 1px solid #CFD9EE">Số lượng <br /> (Quanity)</th>
+                                                <th style="background: rgba(207, 217, 238, 0.4);border: 1px solid #CFD9EE">Thành tiền <br />(Amount)</th>
+                                            </tr>
+                                            @foreach (var item in Model)
+                                            {
+                                                i++;
+                                                <tr>
+                                                    <td style="border: 1px solid #CFD9EE">@i</td>
+                                                    <td style="border: 1px solid #CFD9EE">
+                                                        @{
+                                                            var select_service = list_service.FirstOrDefault(x => x.CodeValue == item.ServiceType);
+                                                            if (select_service != null && select_service.Id > 0)
+                                                            {
+                                                                <p>@select_service.Description</p>
+
+                                                            }
+                                                        }
+                                                    </td>
+                                                    <td style="border: 1px solid #CFD9EE">
+                                                        @switch ((int)item.ServiceType)
+                                                        {
+                                                            case WaterSportType.WATER_SPORT_FLOATING_HOUSE:
+                                                                {
+                                                                    foreach (var allcode in FLOATING_HOUSE)
+                                                                    {
+                                                                        if (allcode.CodeValue == (item.DurationType != null ? (int)item.DurationType : 1))
+                                                                        {
+                                                                            <p>@allcode.Description</p>
+                                                                        }
+
+                                                                    }
+
+                                                                }
+                                                                break;
+                                                            case WaterSportType.WATER_SPORT_JETSKI:
+                                                            case WaterSportType.WATER_SPORT_JETSKI2:
+                                                                {
+                                                                    foreach (var allcode in JETSKI)
+                                                                    {
+                                                                        if (allcode.CodeValue == (item.DurationType != null ? (int)item.DurationType : 1))
+                                                                        {
+                                                                            <p>@allcode.Description</p>
+                                                                        }
+
+                                                                    }
+                                                                }
+                                                                break;
+                                                            case WaterSportType.WATER_SPORT_PARASAILING:
+                                                                {
+                                                                    foreach (var allcode in PARASAILING)
+                                                                    {
+                                                                        if (allcode.CodeValue == (item.DurationType != null ? (int)item.DurationType : 1))
+                                                                        {
+                                                                            <p>@allcode.Description</p>
+                                                                        }
+
+                                                                    }
+                                                                }
+                                                                break;
+                                                            case WaterSportType.WATER_SPORT_FLY_FISH:
+                                                                {
+                                                                    foreach (var allcode in FLY_FISH)
+                                                                    {
+                                                                        if (allcode.CodeValue == (item.DurationType != null ? (int)item.DurationType : 1))
+                                                                        {
+                                                                            <p>@allcode.Description</p>
+                                                                        }
+
+                                                                    }
+                                                                }
+                                                                break;
+                                                            case WaterSportType.WATER_SPORT_BANANA_BOAT:
+                                                                {
+                                                                    foreach (var allcode in BANANA_BOAT)
+                                                                    {
+                                                                        if (allcode.CodeValue == (item.DurationType != null ? (int)item.DurationType : 1))
+                                                                        {
+                                                                            <p>@allcode.Description</p>
+                                                                        }
+
+                                                                    }
+                                                                }
+                                                                break;
+                                                            case WaterSportType.WATER_SPORT_KAYAK:
+                                                                {
+                                                                    foreach (var allcode in KAYAK)
+                                                                    {
+                                                                        if (allcode.CodeValue == (item.DurationType != null ? (int)item.DurationType : 1))
+                                                                        {
+                                                                            <p>@allcode.Description</p>
+                                                                        }
+                                                                       
+                                                                    }
+                                                                }
+                                                                break;
+                                                        }
+                                                    </td>
+                                                    <td style="border: 1px solid #CFD9EE"> @((item.Quantity == null || item.Quantity < 0 ? 1 : (int)item.Quantity).ToString("N0")) </td>
+                                                    <td style="border: 1px solid #CFD9EE"> @item.Amount.ToString("N0") đ </td>
+                                                </tr>
+                                            }
+
+
+
+                                            <tr>
+                                                <td colspan="2" style="border: 1px solid #CFD9EE">Total</td>
+                                                <td style="border: 1px solid #CFD9EE"></td>
+                                                <td style="border: 1px solid #CFD9EE">@ViewBag.TotalQuantity</td>
+                                                <td style="border: 1px solid #CFD9EE">@ViewBag.TotalAmount đ</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            }
+
+                            <tr>
+                                <td colspan="3" style="padding: 10px 0;">
+                                    <div>
+                                        Note:
+                                        .............................................................................
+                                        ......................................................................
+                                        ........
+                                        .............................................................................
+                                        ......
+                                        .............................................................................
+                                        ......
+                                        ............................................................................
+                                        ........
+                                        ...........................................................................
+                                        ........
+                                        ...........................................................................
+                                        ........
+                                        ...........................................................................
+                                        ........
+                                        ...........................................................................
+                                        ........
+                                        .........................................................................
+                                        ...........
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr style="text-align: center;font-weight: bold;padding:0 !important">
+                                <td >Chữ kí khách hàng</td>
+                                <td >Người lập</td>
+                                <td >Người duyệt</td>
+                            </tr>
+                            <tr style="text-align: center;">
+                                <td style="padding-bottom: 100px;">(Guest Signature)</td>
+                                <td style="padding-bottom: 100px;">(Prepared By)</td>
+                                <td style="padding-bottom: 100px;">(Approved By)</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="padding: 10px 0;">
+                                    <div style="display: flex;align-items: center;gap: 10px;">
+                                        <img src="images/graphics/warning.svg" alt="" />
+                                        <span style="color: #FF5B00;"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Thu tiền dịch vụ ngay</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="line-bottom" bis_skin_checked="1"></div>
+                    @if (ViewBag.type == 0)
+                    {
+                        <div class="text-right" bis_skin_checked="1">
+                            <button type="submit" id="cancel" class="btn btn-default cancel" onclick="$.magnificPopup.close();">Đóng</button>
+                            <button type="submit" id="printbtn" class="btn btn-default" onclick="_orderDetail.ConfirmBillWaterSport(@ViewBag.Orderid)">In</button>
+                        </div>
+                    }
+
+                </div>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>

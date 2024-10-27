@@ -13,6 +13,7 @@ namespace Entities.ViewModels.ElasticSearch
         public string phone { get; set; }
         public int clienttype { get; set; }
         public int userid { get; set; }
+        public int agencytype { get; set; }
     }
     public class ClientESViewModel
     {
@@ -27,6 +28,18 @@ namespace Entities.ViewModels.ElasticSearch
         public string unix_timestamp { get; set; }
         public string suggest_search { get; set; }
         public string userid { get; set; }
+
+    }
+    public class earchClientESViewModel
+    {
+
+        public string clientname { get; set; }
+        public string phone { get; set; }
+        public string email { get; set; }
+        public string id { get; set; }
+        public string clienttype { get; set; }
+        public string userid { get; set; }
+        public int agencytype { get; set; }
 
     }
 }

@@ -1,28 +1,53 @@
-﻿@{
+﻿@using Utilities.Contants;
+@{
     Layout = null;
     Entities.Models.OtherBooking booking = (Entities.Models.OtherBooking)ViewBag.Booking;
     List<Entities.Models.OtherBookingPackages> list = (List<Entities.Models.OtherBookingPackages>)ViewBag.ExtraList;
     List<Entities.Models.AllCode> list_service = (List<Entities.Models.AllCode>)ViewBag.ServiceType;
+    List<Entities.Models.AllCode> FLOATING_HOUSE = (List<Entities.Models.AllCode>)ViewBag.FLOATING_HOUSE;
+    List<Entities.Models.AllCode> BANANA_BOAT = (List<Entities.Models.AllCode>)ViewBag.BANANA_BOAT;
+    List<Entities.Models.AllCode> FLY_FISH = (List<Entities.Models.AllCode>)ViewBag.FLY_FISH;
+    List<Entities.Models.AllCode> JETSKI = (List<Entities.Models.AllCode>)ViewBag.JETSKI;
+    List<Entities.Models.AllCode> PARASAILING = (List<Entities.Models.AllCode>)ViewBag.PARASAILING;
+    List<Entities.Models.AllCode> KAYAK = (List<Entities.Models.AllCode>)ViewBag.KAYAK;
     double profit = list != null && list.Count > 0 ? list.Sum(x => (double)x.Profit) : 0;
     double amount = list != null && list.Count > 0 ? list.Sum(x => (double)x.Amount) : 0;
-    double commission = list != null && list.Count > 0 ? list.Sum(x => x.Commission!=null?(double)x.Commission:0) : 0;
+    double commission = list != null && list.Count > 0 ? list.Sum(x => x.Commission != null ? (double)x.Commission : 0) : 0;
     int index = 0;
 }
 <style>
-    .service-watersport-packages-note{
-        height:80px;
+    .service-watersport-packages-note {
+        height: 80px;
     }
 </style>
+<div class=" bold mb15 txt_14 " style="display:flex;">
+
+    @if (list_service != null)
+    {
+        foreach (var item in list_service)
+        {
+            if (ViewBag.ServiceTypeid.Contains(item.CodeValue.ToString()))
+            {
+                <input type="checkbox" checked class="checkbox-service" name="checkbox checkbox_@item.CodeValue" onclick="_order_detail_watersport.AddwatersportBookingpackages2(@item.CodeValue)" style="margin-right: 5px; margin-right: 10px;" value="@item.CodeValue">@item.Description
+            }
+            else
+            {
+                <input type="checkbox" class="checkbox-service" name="checkbox checkbox-service checkbox_@item.CodeValue" onclick="_order_detail_watersport.AddwatersportBookingpackages2(@item.CodeValue)" style="margin-left: 5px; margin-right: 10px;" value="@item.CodeValue">@item.Description
+            }
+        }
+    }
+</div>
 <table class="table table-nowrap">
     <thead>
         <tr>
             <th style="min-width: 70px;">STT</th>
-            <th style="min-width: 300px;">Sản phẩm</th>
-            <th class="text-right" style="min-width: 200px;">Đơn giá<sup class="red">*</sup></th>
+            <th style="min-width: 150px;">Sản phẩm</th>
+            <th style="min-width: 170px;">phân loại<sup class="red">*</sup></th>
+            <th class="text-right" style="min-width: 180px;">Đơn giá<sup class="red">*</sup></th>
             <th class="text-right" style="min-width:150px !important;">Số lượng</th>
             <th class="text-right" style="min-width: 300px !important;">Thành tiền giá bán</th>
-            <th class="text-right" style="min-width: 300px !important;">Hoa hồng</th>
-            <th class="text-center" style="min-width: 400px !important;">Ghi chú</th>
+            <th class="text-right" style="min-width: 150px !important;">Hoa hồng</th>
+            <th class="text-center" style="min-width: 300px !important;">Ghi chú</th>
             <th class="text-right"></th>
         </tr>
     </thead>
@@ -32,65 +57,186 @@
         {
             foreach (var item in list)
             {
-        <tr class="service-watersport-packages-row" data-extra-package-id="@item.Id">
-            <td class="service-watersport-packages-order">@(++index)</td>
-            <td>
-                <select class="select select2 service-watersport-service-type" name="service-watersport-service-type" style="width: 100%;">
+                <tr class="service-watersport-packages-row Row-packages-@item.ServiceType" data-extra-package-id="@item.Id">
+                    <td class="service-watersport-packages-order">@(++index)</td>
+                    <td>
+                        <select class="form-control select select2 service-watersport-service-type" name="service-watersport-service-type" style="width: 100%;" disabled>
 
+                            @{
+                                var select_service = list_service.FirstOrDefault(x => x.CodeValue == item.ServiceType);
+                                if (select_service != null && select_service.Id > 0)
+                                {
+                                    <option value="@(select_service.CodeValue)" selected="selected">@(select_service.Description)</option>
+
+                                }
+                            }
+                        </select>
+                    </td>
                     @{
-                        var select_service = list_service.FirstOrDefault(x => x.CodeValue == item.ServiceType);
-                        if (select_service != null && select_service.Id > 0)
-                        {
-                            <option value="@(select_service.CodeValue)" selected="selected">@(select_service.Description)</option>
-
-                        }
+                        double amount_sale_pre = (double)item.Amount / (double)item.Quantity;
                     }
-                </select>
-            </td>
-            @{
-                double amount_sale_pre = (double)item.Amount / (double)item.Quantity;
-            }
-            <td> <input class="form-control text-right currency service-watersport-packages-baseprice" type="text" name="service-watersport-packages-baseprice" value="@(((double)item.BasePrice).ToString("N0"))"></td>
-            <td> <input class="form-control text-right currency service-watersport-packages-quantity" type="text" name="service-watersport-packages-quantity" value="@(((int)item.Quantity).ToString("N0"))"></td>
-            <td class="text-right"> <input class="form-control text-right currency service-watersport-packages-amount" disabled style="background-color: lightgray;" value="@item.Amount.ToString("N0")"></td>
-            <td class="text-right"> <input class="form-control text-right currency service-watersport-packages-commission"  value="@((item.Commission!=null?(double) item.Commission:0).ToString("N0"))"></td>
-            <td><textarea class="form-control style-width2 textarea service-watersport-packages-note" >@item.Note</textarea></td>
+                    <td>
+                        <select class="form-control select select2 service-watersport-type" onchange="_order_detail_watersport.OnchangePrice($(this))" name="service-watersport-type" style="width: 100%;">
+                            @switch ((int)item.ServiceType)
+                            {
 
-            <td class="text-right">
-                <a class="fa fa-trash-o" href="javascript:;" onclick="_order_detail_watersport.DeletewatersportBookingpackages($(this));"></a>
-            </td>
-        </tr>
+                                case WaterSportType.WATER_SPORT_FLOATING_HOUSE:
+                                    {
+                                        foreach (var allcode in FLOATING_HOUSE)
+                                        {
+                                            if (allcode.CodeValue == (item.DurationType != null ? (int)item.DurationType : 1))
+                                            {
+                                                <option value="@(allcode.CodeValue)" selected>@(allcode.Description)</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@(allcode.CodeValue)">@(allcode.Description)</option>
+                                            }
+
+
+                                        }
+
+                                    }
+                                    break;
+                                case WaterSportType.WATER_SPORT_JETSKI:
+                                case WaterSportType.WATER_SPORT_JETSKI2:
+                                    {
+                                        foreach (var allcode2 in JETSKI)
+                                        {
+                                            if (allcode2.CodeValue == (item.DurationType != null ? (int)item.DurationType : 1))
+                                            {
+                                                <option value="@(allcode2.CodeValue)" selected>@(allcode2.Description) </option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@(allcode2.CodeValue)">@(allcode2.Description) </option>
+                                            }
+
+                                        }
+                                    }
+                                    break;
+                                case WaterSportType.WATER_SPORT_PARASAILING:
+                                    {
+                                        foreach (var allcode3 in PARASAILING)
+                                        {
+                                            if (allcode3.CodeValue == (item.DurationType != null ? (int)item.DurationType : 1))
+                                            {
+                                                <option value="@(allcode3.CodeValue)" selected>@(allcode3.Description)</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@(allcode3.CodeValue)">@(allcode3.Description)</option>
+                                            }
+
+                                        }
+                                    }
+                                    break;
+                                case WaterSportType.WATER_SPORT_FLY_FISH:
+                                    {
+                                        foreach (var allcode4 in FLY_FISH)
+                                        {
+                                            if (allcode4.CodeValue == (item.DurationType != null ? (int)item.DurationType : 1))
+                                            {
+                                                <option value="@(allcode4.CodeValue)" selected>@(allcode4.Description)</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@(allcode4.CodeValue)">@(allcode4.Description)</option>
+                                            }
+
+                                        }
+                                    }
+                                    break;
+                                case WaterSportType.WATER_SPORT_BANANA_BOAT:
+                                    {
+                                        foreach (var allcode5 in BANANA_BOAT)
+                                        {
+                                            if (allcode5.CodeValue == (item.DurationType != null ? (int)item.DurationType : 1))
+                                            {
+                                                <option value="@(allcode5.CodeValue)" selected>@(allcode5.Description)</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@(allcode5.CodeValue)">@(allcode5.Description)</option>
+                                            }
+
+                                        }
+                                    }
+                                    break;
+                                case WaterSportType.WATER_SPORT_KAYAK:
+                                    {
+                                        foreach (var allcode6 in KAYAK)
+                                        {
+                                            if (allcode6.CodeValue == (item.DurationType != null ? (int)item.DurationType : 1))
+                                            {
+                                                <option value="@(allcode6.CodeValue)" selected>@(allcode6.Description)</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@(allcode6.CodeValue)">@(allcode6.Description)</option>
+                                            }
+
+                                        }
+                                    }
+                                    break;
+                            }
+
+                        </select>
+                    </td>
+                    <td> <input class="form-control text-right currency service-watersport-packages-baseprice" type="text" name="service-watersport-packages-baseprice" value="@(((double)item.BasePrice).ToString("N0"))"></td>
+                    <td> <input class="form-control text-right currency service-watersport-packages-quantity" type="text" name="service-watersport-packages-quantity" value="@(((int)item.Quantity).ToString("N0"))"></td>
+                    <td class="text-right"> <input class="form-control text-right currency service-watersport-packages-amount" disabled style="background-color: lightgray;" value="@item.Amount.ToString("N0")"></td>
+                    <td class="text-right"> <input class="form-control text-right currency service-watersport-packages-commission" value="@((item.Commission!=null?(double) item.Commission:0).ToString("N0"))"></td>
+                    <td><textarea class="form-control style-width2 textarea service-watersport-packages-note">@item.Note</textarea></td>
+
+                    <td class="text-right">
+                        <a class="fa fa-trash-o" href="javascript:;" onclick="_order_detail_watersport.DeletewatersportBookingpackages($(this));"></a>
+                    </td>
+                </tr>
             }
         }
         else
         {
-    <tr class="service-watersport-packages-row" data-extra-package-id="0">
-        <td class="service-watersport-packages-order">@(++index)</td>
-        <td>
-            <select class="select select2 service-watersport-service-type" name="service-watersport-service-type" style="width: 100%;">
+            <tr class="service-watersport-packages-row Row-packages-1" data-extra-package-id="0">
+                <td class="service-watersport-packages-order">@(++index)</td>
+                <td>
+                    <select class="select select2 service-watersport-service-type" onchange="_order_detail_watersport.OnchangePrice($(this))" name="service-watersport-service-type" disabled style="width: 100%;">
 
-                @foreach (var allcode in list_service)
-                {
-                    <option value="@(allcode.CodeValue)">@(allcode.Description)</option>
+                        @foreach (var allcode in list_service)
+                        {
+                            <option value="@(allcode.CodeValue)">@(allcode.Description)</option>
 
-                }
+                        }
 
-            </select>
-        </td>
-        <td> <input class="form-control text-right currency service-watersport-packages-baseprice" type="text" name="service-watersport-packages-baseprice" value=""></td>
-        <td> <input class="form-control text-right currency service-watersport-packages-quantity" type="text" name="service-watersport-packages-quantity" value=""></td>
+                    </select>
+                </td>
+                <td>
+                    <select class="form-control select select2 service-watersport-type" onchange="_order_detail_watersport.OnchangePrice($(this))" name="service-watersport-type" style="width: 100%;">
+                        @if (FLOATING_HOUSE != null)
+                        {
+                            foreach (var allcode in FLOATING_HOUSE)
+                            {
+                                <option value="@(allcode.CodeValue)">@(allcode.Description)</option>
 
-        <td class="text-right"> <input class="form-control text-right currency service-watersport-packages-amount" style="background-color: lightgray;" disabled value=""></td>
-        <td class="text-right"> <input class="form-control text-right currency service-watersport-packages-commission"  value=""></td>
-        <td><textarea class="form-control style-width2 textarea service-watersport-packages-note"></textarea></td>
+                            }
+                        }
+                    </select>
+                </td>
+                <td> <input class="form-control text-right currency service-watersport-packages-baseprice" type="text" name="service-watersport-packages-baseprice" value="@ViewBag.price.ToString("N0")"></td>
+                <td> <input class="form-control text-right currency service-watersport-packages-quantity" type="text" name="service-watersport-packages-quantity" value=""></td>
 
-        <td class="text-right">
-            <a class="fa fa-trash-o" href="javascript:;" onclick="_order_detail_watersport.DeletewatersportBookingpackages($(this));"></a>
-        </td>
-    </tr>
+                <td class="text-right"> <input class="form-control text-right currency service-watersport-packages-amount" style="background-color: lightgray;" disabled value=""></td>
+                <td class="text-right"> <input class="form-control text-right currency service-watersport-packages-commission" value=""></td>
+                <td><textarea class="form-control style-width2 textarea service-watersport-packages-note"></textarea></td>
+
+                <td class="text-right">
+                    <a class="fa fa-trash-o" href="javascript:;" onclick="_order_detail_watersport.DeletewatersportBookingpackages($(this));"></a>
+                </td>
+            </tr>
         }
 
         <tr class="service-watersport-packages-summary-row">
+            <td></td>
             <td></td>
             <td>
                 <a href="javascript:;" class="blue ml-2 mb10" onclick="_order_detail_watersport.AddwatersportBookingpackages();"><i class="fa fa-plus-circle green"></i> Thêm dịch vụ</a>

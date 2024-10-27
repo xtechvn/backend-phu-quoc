@@ -26,32 +26,68 @@
                         <input id="id_ClientType" value="@dataModel.ClientType" style="display:none" />
                         <input id="ClientCode" value="@dataModel.ClientCode" style="display:none" />
                         <input id="JoinDate" value="@dataModel.JoinDate.ToString("yyyy/MM/dd HH:mm:ss")" style="display:none" />
-                        @if (dataModel.AgencyType == 0)
+                        @switch (dataModel.AgencyType)
                         {
-                            <label class="radio mr-3">
-                                <input type="radio" value="0" id="optradio" name="optradio" disabled checked="checked">
-                                <span class="checkmark"></span>
-                                Tổ chức
-                            </label>
-                            <label class="radio mr-3">
-                                <input value="1" type="radio" id="optradio" disabled name="optradio">
-                                <span class="checkmark"></span>
-                                Cá nhân
-                            </label>
+                            case 0:
+                                {
+                                    <label class="radio mr-3">
+                                        <input type="radio" value="0" id="optradio" name="optradio"  checked="checked">
+                                        <span class="checkmark"></span>
+                                        Tổ chức
+                                    </label>
+                                    <label class="radio mr-3">
+                                        <input value="1" type="radio" id="optradio"  name="optradio">
+                                        <span class="checkmark"></span>
+                                        Cá nhân
+                                    </label>
+                                    <label class="radio mr-3">
+                                        <input value="2" type="radio" id="optradio"  name="optradio">
+                                        <span class="checkmark"></span>
+                                        Người đại diện
+                                    </label>
+                                }
+                                break;
+                            case 1:
+                                {
+                                    <label class="radio mr-3">
+                                        <input type="radio" value="0" id="optradio"  name="optradio">
+                                        <span class="checkmark"></span>
+                                        Tổ chức
+                                    </label>
+                                    <label class="radio mr-3">
+                                        <input value="1" type="radio" id="optradio"  name="optradio" checked="checked">
+                                        <span class="checkmark"></span>
+                                        Cá nhân
+                                    </label>
+                                    <label class="radio mr-3">
+                                        <input value="2" type="radio" id="optradio"  name="optradio">
+                                        <span class="checkmark"></span>
+                                        Người đại diện
+                                    </label>
+                                }
+                                break;
+                            case 2:
+                                {
+                                    <label class="radio mr-3">
+                                        <input type="radio" value="0" id="optradio"  name="optradio">
+                                        <span class="checkmark"></span>
+                                        Tổ chức
+                                    </label>
+                                    <label class="radio mr-3">
+                                        <input value="1" type="radio" id="optradio"  name="optradio" >
+                                        <span class="checkmark"></span>
+                                        Cá nhân
+                                    </label>
+                                    <label class="radio mr-3">
+                                        <input value="2" type="radio" id="optradio"  name="optradio" checked="checked">
+                                        <span class="checkmark"></span>
+                                        Người đại diện
+                                    </label>
+                                }
+                                break;
                         }
-                        else
-                        {
-                            <label class="radio mr-3">
-                                <input type="radio" value="0" id="optradio" disabled name="optradio">
-                                <span class="checkmark"></span>
-                                Tổ chức
-                            </label>
-                            <label class="radio mr-3">
-                                <input value="1" type="radio" id="optradio" disabled name="optradio" checked="checked">
-                                <span class="checkmark"></span>
-                                Cá nhân
-                            </label>
-                        }
+                       
+                        
 
                     </div>
                     <div class="col-md-4 mb10"><label class="lbl mt5 mb0">Tên khách hàng <sup class="red">*</sup></label></div>
@@ -65,7 +101,7 @@
                         <div class="col-md-4 mb10"><label id="sothue_cmnd" class="lbl mt5 mb0">Mã số thuế </label></div>
                     }
                     else
-                    {
+                        {
                         <div class="col-md-4 mb10"><label id="sothue_cmnd" class="lbl mt5 mb0">Số CCCD </label></div>
                     }
 
@@ -95,26 +131,26 @@
                             @if (ClientType != null)
                             {
 
-                                foreach (var item in ClientType)
+                            foreach (var item in ClientType)
+                            {
+                                if (item.CodeValue == dataModel.ClientType)
                                 {
-                                    if (item.CodeValue == dataModel.ClientType)
+                                    if (item.CodeValue == Utilities.Contants.ClientType.kl)
                                     {
-                                        if (item.CodeValue == Utilities.Contants.ClientType.kl)
-                                        {
                                             <option value="@item.CodeValue" selected="selected"> @item.Description</option>
                                         }
-                                        else
-                                        {
-                                            <option value="@item.CodeValue" selected="selected"> @item.Description</option>
-                                        }
-                                    }
                                     else
                                     {
+                                            <option value="@item.CodeValue" selected="selected"> @item.Description</option>
+                                        }
+                                }
+                                else
+                                {
                                         <option value="@item.CodeValue"> @item.Description</option>
 
                                     }
-                                }
                             }
+                        }
                         </select>
                         <label id="id_loaikhach_err" class="lbl mt5 red"> </label>
                     </div>
@@ -124,19 +160,19 @@
                             <option value="-1">Tất cả nhóm khách hàng</option>
                             @if (PermisionType != null)
                             {
-                                foreach (var item in PermisionType)
+                            foreach (var item in PermisionType)
+                            {
+                                if (item.CodeValue == dataModel.PermisionType)
                                 {
-                                    if (item.CodeValue == dataModel.PermisionType)
-                                    {
                                         <option value="@item.CodeValue" selected="selected">@item.Description</option>
                                     }
-                                    else
-                                    {
+                                else
+                                {
                                         <option value="@item.CodeValue">@item.Description</option>
                                     }
 
-                                }
                             }
+                        }
 
 
                         </select>
@@ -166,7 +202,7 @@
     </div>
     }
     else
-    {
+                        {
     <div class="grid grid__2 grid-don-hang gap10 mb20">
         <div class="grid-item border">
             <div class="lb-form">Thông tin khách hàng cơ bản</div>
@@ -184,6 +220,11 @@
                             <input value="1" type="radio" id="optradio" name="optradio">
                             <span class="checkmark"></span>
                             Cá nhân
+                        </label>
+                        <label class="radio mr-3" onclick="_customer_manager.Showlabel(2)">
+                            <input value="2" type="radio" id="optradio" name="optradio">
+                            <span class="checkmark"></span>
+                            Người đại diện
                         </label>
                     </div>
                     <div class="col-md-4 mb10"><label class="lbl mt5 mb0">Tên khách hàng <sup class="red">*</sup></label></div>
@@ -223,18 +264,19 @@
                             @if (ClientType != null)
                                 {
 
-                                    foreach (var item in ClientType)
-                                    {
+                            foreach (var item in ClientType)
+                            {
 
-                                        if (item.CodeValue != Utilities.Contants.ClientType.Saller)
-                                        {
-                                            
-                                        
+                                if (item.CodeValue != Utilities.Contants.ClientType.Saller)
+                                {
+
+
+
                                             <option value="@item.CodeValue"> @item.Description</option>
                                         }
-                                    }
+                            }
 
-                                }
+                        }
                         </select>
 
                     </div>
@@ -244,11 +286,11 @@
                             <option value="">Tất cả nhóm khách hàng</option>
                             @if (PermisionType != null)
                                 {
-                                    foreach (var item in PermisionType)
-                                    {
+                            foreach (var item in PermisionType)
+                            {
                             <option value="@item.CodeValue">@item.Description</option>
                                     }
-                                }
+                        }
                         </select>
 
                     </div>
