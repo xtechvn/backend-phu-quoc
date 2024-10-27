@@ -75,6 +75,9 @@ var _noti = {
 
     UpdateNotifyAll: function () {
         var id = $('#lst_id_not_seen').val()
+        var list_id = id.split(',');
+        var slice_id = list_id.slice(0, 20);
+        id = slice_id.toString();
         if (id != "" && id != undefined) {
             $.ajax({
                 url: "/menu/updateNotify",

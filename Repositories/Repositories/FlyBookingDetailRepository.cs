@@ -238,10 +238,12 @@ namespace Repositories.Repositories
                 if (data.go != null)
                 {
                     int status = 0;
+                    int StatusOld = (int)ServiceStatus.WaitingExcution;
                     var exists_fly = await flyBookingDetailDAL.GetFlyBookingById(data.go.id);
                     if(exists_fly!=null && exists_fly.Status != null)
                     {
                         status = (int)exists_fly.Status;
+                        StatusOld = exists_fly.StatusOld== null? (int)exists_fly.Status : (int)exists_fly.StatusOld;
                         /*
                         if ((status == (int)ServiceStatus.Decline && is_client_debt == (int)DebtType.DEBT_ACCEPTED) || (status == (int)ServiceStatus.Decline && client.ClientType == (int)ClientType.kl))
                         {
@@ -288,6 +290,7 @@ namespace Repositories.Repositories
                         StartDate = data.start_date,
                         StartPoint = data.start_point,
                         Status = status,
+                        StatusOld = StatusOld,
                         TaxAdt = 0,
                         TaxChd = 0,
                         TaxInf = 0,

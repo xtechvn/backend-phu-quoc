@@ -21,7 +21,7 @@
     HINHTHUCTTb: true,
     YcHoaDon: false,
     MaHoaDon: false,
-    
+
 }
 let cookieName = 'orderFields_transactionsms';
 let cookieFilterName = 'orderFields_filter';
@@ -76,7 +76,7 @@ $(document).ready(function () {
     $("#OrderNo").select2({
         theme: 'bootstrap4',
         placeholder: "Mã đơn hàng",
-       /* tags: true,*/
+        /* tags: true,*/
         ajax: {
             url: "/Order/OrderNoSuggestion",
             type: "post",
@@ -99,14 +99,14 @@ $(document).ready(function () {
                     })
                 };
             },
-/*            createTag: function (params) {
-                let term = $.trim(params.term);
-                return {
-                    id: term,
-                    text: term,
-                    newTag: true,
-                }
-            },*/
+            /*            createTag: function (params) {
+                            let term = $.trim(params.term);
+                            return {
+                                id: term,
+                                text: term,
+                                newTag: true,
+                            }
+                        },*/
             cache: true
         }
     });
@@ -360,7 +360,7 @@ $(document).ready(function () {
                 if (id.includes('HINHTHUCTT_data_')) {
                     checked_list.push(checked[i]);
                 }
-      
+
                 listHINHTHUCTT.push((id.replace('HINHTHUCTT_data_', '')))
             }
             if (listHINHTHUCTT && listHINHTHUCTT.length > 0) {
@@ -373,7 +373,7 @@ $(document).ready(function () {
 });
 
 var _ordersCMS = {
-    FirstLoading:false,
+    FirstLoading: false,
     Init: function () {
 
         var today = new Date();
@@ -383,7 +383,7 @@ var _ordersCMS = {
         if (dd < 10) dd = '0' + dd;
         if (mm < 10) mm = '0' + mm;
         var min_range = '01/01/2020';
-        var max_range = dd + '/' + mm + '/' + (yyyy+5);
+        var max_range = dd + '/' + mm + '/' + (yyyy + 5);
 
         $('.date-range-filter').each(function (index, item) {
             var element = $(item)
@@ -409,10 +409,10 @@ var _ordersCMS = {
 
         let _searchModel = {
             OrderNo: null,
-            StartDateFrom:null,
+            StartDateFrom: null,
             StartDateTo: null,
             EndDateFrom: null,
-            EndDateTo:null,
+            EndDateTo: null,
             Note: null,
             UtmSource: listServiceType,
             ServiceType: listService,
@@ -421,7 +421,7 @@ var _ordersCMS = {
             CreateName: null,
             HINHTHUCTT: listHINHTHUCTT,
             Sale: null,
-            sysTemType:-1,
+            sysTemType: -1,
             StatusTab: 99,
         };
 
@@ -432,8 +432,8 @@ var _ordersCMS = {
         };
         if (!_ordersCMS.FirstLoading) {
             _ordersCMS.FirstLoading = true
-/*            objSearch.searchModel.Status=[0,1,2,3,4,5,6,7]*/
-           
+            /*            objSearch.searchModel.Status=[0,1,2,3,4,5,6,7]*/
+
         }
 
         this.SearchParam = objSearch;
@@ -441,23 +441,23 @@ var _ordersCMS = {
     },
 
     Search: function (input) {
-        
+
         if (_ordersCMS.getCookie(cookieFilterName) != null) {
             let cookie = _ordersCMS.getCookie(cookieFilterName)
             input = JSON.parse(cookie)
             this.SearchParam = input
             if (input.searchModel.Status.length > 0) {
-                var btnTextstatus= document.querySelector(".btn-text-status");
+                var btnTextstatus = document.querySelector(".btn-text-status");
                 btnTextstatus.innerText = `${input.searchModel.Status.length} Selected`;
                 for (var i = 0; i < input.searchModel.Status.length; i++) {
-                    $('#status_data_'+input.searchModel.Status[i]+'').addClass('checked')
+                    $('#status_data_' + input.searchModel.Status[i] + '').addClass('checked')
                 }
-            } 
+            }
             if (input.searchModel.ServiceType.length > 0) {
-               var btnTextservice = document.querySelector(".btn-text-service");
+                var btnTextservice = document.querySelector(".btn-text-service");
                 btnTextservice.innerText = `${input.searchModel.ServiceType.length} Selected`;
                 for (var i = 0; i < input.searchModel.ServiceType.length; i++) {
-                    $('#service_data_' + input.searchModel.ServiceType[i]+'').addClass('checked')
+                    $('#service_data_' + input.searchModel.ServiceType[i] + '').addClass('checked')
                 }
             }
             if (input.searchModel.HINHTHUCTT.length > 0) {
@@ -476,14 +476,14 @@ var _ordersCMS = {
                 var cookie2 = window.localStorage.getItem(cookieOperatorName)
                 var SaleName = JSON.parse(cookie2)
                 $('#OperatorId').html('<option selected value = ' + SaleName.id + '> ' + SaleName.nameselect + '</option>')
-              
+
             }
             if (window.localStorage.getItem(cookieOrderNo) != null) {
                 var cookie3 = window.localStorage.getItem(cookieOrderNo)
                 var SaleName = JSON.parse(cookie3)
                 $('#OrderNo').html('<option selected value = ' + SaleName.id + '> ' + SaleName.nameselect + '</option>')
                 $('.reset-order-no').show()
-      
+
             }
             if (window.localStorage.getItem(cookieClient) != null) {
                 var cookie4 = window.localStorage.getItem(cookieClient)
@@ -492,7 +492,7 @@ var _ordersCMS = {
 
             }
         }
-       
+
         $('#imgLoading').show();
         $.ajax({
             url: "/order/search",
@@ -537,19 +537,19 @@ var _ordersCMS = {
         this.Search(searchModel);
         this.changeSetting(15);
         $(document).load().scrollTop(0);
-   
+
     },
     getModel: function () {
         var CreateName_data = $('#CreateName').select2("val");
         var OperatorId_data = $('#OperatorId').select2("val");
         var OrderNo_data = $('#OrderNo').select2("val");
         var ClientId_data = $('#ClientId').select2("val");
-        
+
         var objSearch = this.SearchParam;
         objSearch.searchModel.sysTemType = $('input[name="SysTemType"]:checked').val()
         objSearch.searchModel.HINHTHUCTT = listHINHTHUCTT;
         objSearch.searchModel.OrderNo = $('#OrderNo').find(':selected').val() == undefined || $('#OrderNo').find(':selected').val().trim() == '' ? '' : $('#OrderNo').find(':selected').val().trim(),
-        objSearch.searchModel.ClientId = null;
+            objSearch.searchModel.ClientId = null;
         var today = new Date();
         var yyyy = today.getFullYear();
         var mm = today.getMonth() + 1; // Months start at 0!
@@ -557,7 +557,7 @@ var _ordersCMS = {
         if (dd < 10) dd = '0' + dd;
         if (mm < 10) mm = '0' + mm;
         var min_range = '01/01/2020 00:00';
-        var max_range = dd + '/' + mm + '/' + (yyyy + 5) +' 00:00';
+        var max_range = dd + '/' + mm + '/' + (yyyy + 5) + ' 00:00';
 
         var start_date_from = _global_function.GetDayText($('#fromDate').data('daterangepicker').startDate._d);
         var start_date_to = _global_function.GetDayText($('#fromDate').data('daterangepicker').endDate._d);
@@ -581,7 +581,7 @@ var _ordersCMS = {
             objSearch.searchModel.EndDateTo = _global_function.GetDayText($('#toDate').data('daterangepicker').endDate._d, true);
         }
 
-     
+
 
         objSearch.searchModel.Note = $('#Note').val().trim();
         objSearch.searchModel.UtmSource = listServiceType;
@@ -605,12 +605,12 @@ var _ordersCMS = {
         }
         if (OperatorId_data != null) {
             objSearch.searchModel.OperatorId = OperatorId_data[0]
-            cookiename  = {
+            cookiename = {
                 id: OperatorId_data[0],
-                 nameselect: $('#OperatorId').select2('data')[0].text
+                nameselect: $('#OperatorId').select2('data')[0].text
             }
             _ordersCMS.eraseCookie(cookieOperatorName)
-           
+
             window.localStorage.setItem(cookieOperatorName, JSON.stringify(cookiename))
         }
         else {
@@ -623,7 +623,7 @@ var _ordersCMS = {
                 nameselect: $('#OrderNo').select2('data')[0].text
             }
             _ordersCMS.eraseCookie(cookieOrderNo)
-    
+
             window.localStorage.setItem(cookieOrderNo, JSON.stringify(cookiename))
         }
         else {
@@ -657,9 +657,9 @@ var _ordersCMS = {
         objSearch.currentPage = PageIndex;
         objSearch.pageSize = $("#selectPaggingOptions").find(':selected').val()
         _ordersCMS.eraseCookie(cookieFilterName)
-  
-      
-      
+
+
+
         return objSearch;
     },
     setValueFilter: function () {
@@ -785,7 +785,7 @@ var _ordersCMS = {
                 this.eraseCookie(cookieName);
                 this.setCookie(cookieName, JSON.stringify(orderFields), 10);
                 break;
-      
+
             case 22:
                 if ($('#HINHTHUCTTb').is(":checked")) {
                     orderFields.HINHTHUCTTb = true
@@ -1076,12 +1076,12 @@ var _ordersCMS = {
                     required: true,
                     email: true,
                 },
-               
+
 
             },
             messages: {
                 "Name": "Tên khách hàng không được bỏ trống",
-              
+
                 "Mobile": {
                     required: "Số điện thoại không được bỏ trống",
                     number: "Nhập đúng định dạng số",
@@ -1093,7 +1093,7 @@ var _ordersCMS = {
             }
         });
         if (FromCreate.valid()) {
-          
+
             var model = {
                 id: $('#Id').val(),
                 client_id: $('#ClientId').val(),
@@ -1118,7 +1118,7 @@ var _ordersCMS = {
                 }
             });
         }
-    
+
     },
     OpenPopupAddSale: function (id) {
         let title = 'Chọn nhân viên phụ trách';
@@ -1142,12 +1142,12 @@ var _ordersCMS = {
         if (FromCreate.valid()) {
             var UserId_new = $('#UserId_new').select2("val");
             var UserId = UserId_new[0];
-           
+
             var order_id = $('#order_id').val();
             $.ajax({
                 url: '/Order/ChangeOrderSaler',
                 type: "post",
-                data: { order_id: order_id, saleid: UserId},
+                data: { order_id: order_id, saleid: UserId },
                 success: function (result) {
                     if (result.status == 0) {
                         _msgalert.success(result.msg);
@@ -1164,7 +1164,7 @@ var _ordersCMS = {
 
     },
     Export: function () {
-     
+
         $('#btnExport').prop('disabled', true);
         $('#icon-export').removeClass('fa-file-excel-o');
         $('#icon-export').addClass('fa-spinner fa-pulse');
@@ -1176,7 +1176,7 @@ var _ordersCMS = {
         $.ajax({
             url: "/Order/ExportExcel",
             type: "Post",
-            data: { searchModel: objSearch.searchModel , field: orderFields},
+            data: { searchModel: objSearch.searchModel, field: orderFields },
             success: function (result) {
                 _global_function.RemoveLoading()
                 $('#btnExport').prop('disabled', false);
@@ -1227,5 +1227,5 @@ var _order_manual = {
             $('#create_order_manual').remove();
         }, 300);
     },
-   
+
 }

@@ -1,8 +1,15 @@
-﻿@{
+﻿@using Utilities.Contants;
+@{
     Layout = null;
     Entities.Models.OtherBooking? booking = (Entities.Models.OtherBooking?)ViewBag.Booking;
     List<Entities.Models.OtherBookingPackages> list = (List<Entities.Models.OtherBookingPackages>)ViewBag.ExtraList;
     List<Entities.Models.AllCode> list_service = (List<Entities.Models.AllCode>)ViewBag.ServiceType;
+    List<Entities.Models.AllCode> FLOATING_HOUSE = (List<Entities.Models.AllCode>)ViewBag.FLOATING_HOUSE;
+    List<Entities.Models.AllCode> BANANA_BOAT = (List<Entities.Models.AllCode>)ViewBag.BANANA_BOAT;
+    List<Entities.Models.AllCode> FLY_FISH = (List<Entities.Models.AllCode>)ViewBag.FLY_FISH;
+    List<Entities.Models.AllCode> JETSKI = (List<Entities.Models.AllCode>)ViewBag.JETSKI;
+    List<Entities.Models.AllCode> PARASAILING = (List<Entities.Models.AllCode>)ViewBag.PARASAILING;
+    List<Entities.Models.AllCode> KAYAK = (List<Entities.Models.AllCode>)ViewBag.KAYAK;
 
     double profit = list != null && list.Count > 0 ? list.Sum(x => (double)x.Profit) : 0;
     double amount = list != null && list.Count > 0 ? list.Sum(x => (double)x.Amount) : 0;
@@ -16,7 +23,7 @@
     </div>
 </div>
 <div class="row row_min">
-    
+
     <div class="col-xl-2 col-lg-3 col-md-6 mb15">
         <label class="lbl mb5">Ngày đi <sup class="red">*</sup></label>
         <div class="datepicker-wrap" style="width:100%">
@@ -47,6 +54,7 @@
             <tr>
                 <th style="width: 70px;">STT</th>
                 <th style="min-width: 200px;">Sản phẩm</th>
+                <th style="min-width: 150px;">Phân loại</th>
                 <th class="text-right" style="min-width: 150px;">Giá nhập<sup class="red">*</sup></th>
                 <th class="text-right" style="min-width: 150px;">Giá bán<sup class="red">*</sup></th>
                 <th class="text-right" style="width:150px !important;">Số lượng</th>
@@ -79,12 +87,119 @@
                             if (item.SalePrice != amount_sale_pre) item.SalePrice = amount_sale_pre;
 
                         }
+                        <td>
+                            <select class="form-control select select2 service-watersport-type" name="service-watersport-type" style="width: 100%; background-color: lightgray;" disabled="disabled">
+                                @switch ((int)item.ServiceType)
+                                {
+                                    case WaterSportType.WATER_SPORT_FLOATING_HOUSE:
+                                        {
+                                            foreach (var allcode in FLOATING_HOUSE)
+                                            {
+                                                if (allcode.CodeValue == (item.DurationType != null ? (int)item.DurationType : 1))
+                                                {
+                                                    <option value="@(allcode.CodeValue)" selected="selected">@(allcode.Description)</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@(allcode.CodeValue)">@(allcode.Description)</option>
+                                                }
+
+
+                                            }
+
+                                        }
+                                        break;
+                                    case WaterSportType.WATER_SPORT_JETSKI:
+                                    case WaterSportType.WATER_SPORT_JETSKI2:
+                                        {
+                                            foreach (var allcode in JETSKI)
+                                            {
+                                                if (allcode.CodeValue == (item.DurationType != null ? (int)item.DurationType : 1))
+                                                {
+                                                    <option value="@(allcode.CodeValue)" selected="selected">@(allcode.Description)</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@(allcode.CodeValue)">@(allcode.Description)</option>
+                                                }
+
+                                            }
+                                        }
+                                        break;
+                                    case WaterSportType.WATER_SPORT_PARASAILING:
+                                        {
+                                            foreach (var allcode in PARASAILING)
+                                            {
+                                                if (allcode.CodeValue == (item.DurationType != null ? (int)item.DurationType : 1))
+                                                {
+                                                    <option value="@(allcode.CodeValue)" selected="selected">@(allcode.Description)</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@(allcode.CodeValue)">@(allcode.Description)</option>
+                                                }
+
+                                            }
+                                        }
+                                        break;
+                                    case WaterSportType.WATER_SPORT_FLY_FISH:
+                                        {
+                                            foreach (var allcode in FLY_FISH)
+                                            {
+                                                if (allcode.CodeValue == (item.DurationType != null ? (int)item.DurationType : 1))
+                                                {
+                                                    <option value="@(allcode.CodeValue)" selected="selected">@(allcode.Description)</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@(allcode.CodeValue)">@(allcode.Description)</option>
+                                                }
+
+                                            }
+                                        }
+                                        break;
+                                    case WaterSportType.WATER_SPORT_BANANA_BOAT:
+                                        {
+                                            foreach (var allcode in BANANA_BOAT)
+                                            {
+                                                if (allcode.CodeValue == (item.DurationType != null ? (int)item.DurationType : 1))
+                                                {
+                                                    <option value="@(allcode.CodeValue)" selected="selected">@(allcode.Description)</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@(allcode.CodeValue)">@(allcode.Description)</option>
+                                                }
+
+                                            }
+                                        }
+                                        break;
+                                    case WaterSportType.WATER_SPORT_KAYAK:
+                                        {
+                                            foreach (var allcode in KAYAK)
+                                            {
+                                                if (allcode.CodeValue == (item.DurationType != null ? (int)item.DurationType : 1))
+                                                {
+                                                    <option value="@(allcode.CodeValue)" selected="selected">@(allcode.Description)</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@(allcode.CodeValue)">@(allcode.Description)</option>
+                                                }
+
+                                            }
+                                        }
+                                        break;
+                                }
+
+                            </select>
+                        </td>
                         <td> <input class="form-control text-right currency service-other-readonly-baseprice" disabled style="background-color: lightgray;" type="text" name="service-other-readonly-baseprice" value="@(((double)item.BasePrice).ToString("N0"))"></td>
-                        <td> <input class="form-control text-right currency service-other-readonly-saleprice"disabled style="background-color: lightgray;" type="text" name="service-other-readonly-saleprice" value="@((item.SalePrice ==null? amount_sale_pre: (double)item.SalePrice).ToString("N0"))"></td>
-                        <td> <input class="form-control text-right currency service-other-readonly-quantity"disabled style="background-color: lightgray;" type="text" name="service-other-readonly-quantity" value="@(((int)item.Quantity).ToString("N0"))"></td>
+                        <td> <input class="form-control text-right currency service-other-readonly-saleprice" disabled style="background-color: lightgray;" type="text" name="service-other-readonly-saleprice" value="@((item.SalePrice ==null? amount_sale_pre: (double)item.SalePrice).ToString("N0"))"></td>
+                        <td> <input class="form-control text-right currency service-other-readonly-quantity" disabled style="background-color: lightgray;" type="text" name="service-other-readonly-quantity" value="@(((int)item.Quantity).ToString("N0"))"></td>
                         <td class="text-right"> <input class="form-control text-right currency service-other-readonly-amount" disabled style="background-color: lightgray;" value="@item.Amount.ToString("N0")"></td>
-                       
-                      
+
+
                     </tr>
                 }
             }

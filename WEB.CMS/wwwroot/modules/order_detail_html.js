@@ -137,7 +137,7 @@
     confirmbox_delete_service_description: "Các thông tin về dịch vụ này sẽ bị xóa. Bạn có chắc chắn không?",
     html_service_watersport_new_packages:`
 
-<tr class="service-watersport-packages-row" data-extra-package-id="0">
+<tr class="service-watersport-packages-row @(classname)" data-extra-package-id="0">
             <td class="service-watersport-packages-order">@(++index)</td>
             <td>
                 <select  class="select select2 service-watersport-service-type service-watersport-service-type-new" name="service-watersport-service-type" style="width: 100%;">
@@ -146,16 +146,22 @@
 
                 </select>
             </td>
-            <td> <input class="form-control text-right currency service-watersport-packages-baseprice" type="text" name="service-watersport-packages-baseprice" value=""></td>
+             <td>
+                <select  class="form-control select select2 service-watersport-type service-watersport-type-new-add service-watersport-type-new-{price-name}" onchange="_order_detail_watersport.OnchangePrice($(this))" name="service-watersport-type" style="width: 100%;">
+ 
+                </select>
+            </td>
+            <td> <input class="form-control text-right currency service-watersport-packages-baseprice service-watersport-packages-baseprice-newadd price-name-{price-name}" type="text" name="service-watersport-packages-baseprice" value=""></td>
             <td> <input class="form-control text-right currency service-watersport-packages-quantity" type="text" name="service-watersport-packages-quantity" value=""></td>
 
 
             <td class="text-right"> <input class="form-control text-right currency service-watersport-packages-amount" style="background-color: lightgray;" disabled value=""></td>
            <td class="text-right"> <input class="form-control text-right currency service-watersport-packages-commission"  value=""></td>
-
+            <td><textarea class="form-control style-width2 textarea service-watersport-packages-note"></textarea></td>
             <td class="text-right">
                 <a class="fa fa-trash-o" href="javascript:;" onclick="_order_detail_watersport.DeletewatersportBookingpackages($(this));"></a>
             </td>
         </tr>
 `,
+   
 }

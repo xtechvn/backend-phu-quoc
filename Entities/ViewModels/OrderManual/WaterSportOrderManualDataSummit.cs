@@ -27,6 +27,7 @@ namespace Entities.ViewModels.OrderManual
     {
         public long id { get; set; }
         public int service_type { get; set; }
+        public int duration_type { get; set; }
         public double base_price { get; set; }
         public int quantity { get; set; }
         public double amount { get; set; }

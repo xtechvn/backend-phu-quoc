@@ -16,6 +16,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Utilities;
+using Utilities.Contants;
 
 namespace Repositories.Repositories
 {
@@ -130,10 +131,12 @@ namespace Repositories.Repositories
                     }
                 }
                 int status = 0;
+                int StatusOld = (int)ServiceStatus.WaitingExcution;
                 var exists_booking =  _vinWonderBookingDAL.GetVinWonderBookingById(data.id);
                 if (exists_booking != null && exists_booking.Status != null)
                 {
                     status = (int)exists_booking.Status;
+                    StatusOld = (int)exists_booking.StatusOld;
                    
                 }
                 var booking_by_servicecode = _vinWonderBookingDAL.GetVinWonderByServiceCode(data.service_code);
@@ -148,6 +151,7 @@ namespace Repositories.Repositories
                     CreatedDate = DateTime.Now,
                     ServiceCode = data.service_code,
                     Status = 0,
+                    StatusOld = StatusOld,
                     SupplierId = 0,
                     UpdatedBy = user_id,
                     UpdatedDate = DateTime.Now,

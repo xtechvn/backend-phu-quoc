@@ -40,6 +40,12 @@ namespace Utilities.Contants
         public static string PROGRAM_STATUS = "PROGRAM_STATUS";
         public static string WATER_SPORT_TYPE = "WATER_SPORT_TYPE";
         public static string SERVICE_TYPE_OTHER_MAIN = "SERVICE_TYPE_OTHER_MAIN";
+        public static string WATER_SPORT_KAYAK = "WATER_SPORT_KAYAK";
+        public static string WATER_SPORT_BANANA_BOAT = "WATER_SPORT_BANANA_BOAT";
+        public static string WATER_SPORT_PARASAILING = "WATER_SPORT_PARASAILING";
+        public static string WATER_SPORT_JETSKI = "WATER_SPORT_JETSKI";
+        public static string WATER_SPORT_FLOATING_HOUSE = "WATER_SPORT_FLOATING_HOUSE";
+        public static string WATER_SPORT_FLY_FISH = "WATER_SPORT_FLY_FISH";
 
 
     }

@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using OfficeOpenXml;
 using Repositories.IRepositories;
+using Repositories.Repositories;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -65,13 +66,13 @@ namespace WEB.Adavigo.CMS.Controllers.Order
         private APIService apiService;
         private readonly TourESRepository _tourESRepository;
         private readonly IHotelBookingCodeRepository _hotelBookingCodeRepository;
-
+        private readonly ISportWaterGuestsRepository _sportWaterGuestsRepository;
         public OrderController(IConfiguration configuration, IOrderRepository orderRepository, IClientRepository clientRepository, IAllCodeRepository allcodeRepository, IUserRepository userRepository, IIdentifierServiceRepository identifierServiceRepository
                 , IAccountClientRepository accountClientRepository, IHotelBookingRepositories hotelBookingRepository, IHotelBookingRoomRepository hotelBookingRoomRepository, IHotelBookingRoomRatesRepository hotelBookingRoomRatesRepository,
                 IHotelBookingRoomExtraPackageRepository hotelBookingRoomExtraPackageRepository, IHotelBookingGuestRepository hotelBookingGuestRepository, IFlyBookingDetailRepository flyBookingDetailRepository, IAirlinesRepository airlinesRepository,
                  IPassengerRepository passengerRepository, IProvinceRepository provinceRepository, INationalRepository nationalRepository, ManagementUser managementUser, IOtherBookingRepository otherBookingRepository,
                  ITourRepository tourRepository, ISupplierRepository supplierRepository, IContractRepository contractRepository, IAttachFileRepository attachFileRepository, IVinWonderBookingRepository vinWonderBookingRepository,
-                 IGroupProductRepository groupProductRepository, IHotelBookingCodeRepository hotelBookingCodeRepository)
+                 IGroupProductRepository groupProductRepository, IHotelBookingCodeRepository hotelBookingCodeRepository, ISportWaterGuestsRepository sportWaterGuestsRepository)
         {
             _configuration = configuration;
             _orderRepository = orderRepository;
@@ -107,6 +108,7 @@ namespace WEB.Adavigo.CMS.Controllers.Order
             _groupProductRepository = groupProductRepository;
             _tourESRepository = new TourESRepository(_configuration["DataBaseConfig:Elastic:Host"]);
             _hotelBookingCodeRepository = hotelBookingCodeRepository;
+            _sportWaterGuestsRepository = sportWaterGuestsRepository;
 
         }
 
@@ -2301,12 +2303,14 @@ namespace WEB.Adavigo.CMS.Controllers.Order
                 ViewBag.AllowToEdit = true;
                 if (order_id > 0)
                 {
+                   
                     long _UserId = 0;
                     if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
                     {
                         _UserId = Convert.ToInt64(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                     }
-
+                    var List_Passenger = await _passengerRepository.GetByOrderID(order_id, booking_id.ToString());
+                    ViewBag.Passenger = List_Passenger;
 
                     var order = await _orderRepository.GetOrderByID(order_id);
                     if (order != null)
@@ -2357,11 +2361,26 @@ namespace WEB.Adavigo.CMS.Controllers.Order
         [HttpPost]
         public async Task<IActionResult> AddWaterSportServicePackages(long booking_id)
         {
+            ViewBag.FLOATING_HOUSE = _allCodeRepository.GetListByType(AllCodeType.WATER_SPORT_FLOATING_HOUSE);
+            ViewBag.BANANA_BOAT = _allCodeRepository.GetListByType(AllCodeType.WATER_SPORT_BANANA_BOAT);
+            ViewBag.FLY_FISH = _allCodeRepository.GetListByType(AllCodeType.WATER_SPORT_FLY_FISH);
+            ViewBag.JETSKI = _allCodeRepository.GetListByType(AllCodeType.WATER_SPORT_JETSKI);
+            ViewBag.PARASAILING = _allCodeRepository.GetListByType(AllCodeType.WATER_SPORT_PARASAILING);
+            ViewBag.KAYAK = _allCodeRepository.GetListByType(AllCodeType.WATER_SPORT_KAYAK);
+
             ViewBag.ExtraList = new List<OtherBookingPackages>();
             ViewBag.ServiceType = new List<AllCode>();
             ViewBag.Booking = new OtherBooking();
+            ViewBag.ServiceTypeid = "1";
             try
             {
+                ViewBag.price = 0;
+                var ListSportWaterPackages = await _sportWaterGuestsRepository.GetListSportWaterPackages();
+                if (ListSportWaterPackages != null)
+                {
+                    var detail = ListSportWaterPackages.FirstOrDefault(s => s.SportWaterId == 1 && s.DurationType == 1);
+                    ViewBag.price = detail.Price;
+                }
                 ViewBag.ServiceType = _allCodeRepository.GetListByType(AllCodeType.WATER_SPORT_TYPE);
                 ViewBag.Booking = await _otherBookingRepository.GetWaterSportById(booking_id);
 
@@ -2371,7 +2390,9 @@ namespace WEB.Adavigo.CMS.Controllers.Order
                     if (list != null)
                     {
                         ViewBag.ExtraList = list;
+                        
                     }
+                    ViewBag.ServiceTypeid = list != null ? string.Join(",", list.Select(s => s.ServiceType).ToList()) : "1";
                 }
             }
             catch (Exception ex)

@@ -119,6 +119,7 @@ builder.Services.AddTransient<IInvoiceRepository, InvoiceRepository>();
 builder.Services.AddTransient<IOtherBookingRepository, OtherBookingRepository>();
 builder.Services.AddTransient<IVinWonderBookingRepository, VinWonderBookingRepository>();
 builder.Services.AddTransient<IReportRepository, ReportRepository>();
+builder.Services.AddTransient<ISportWaterGuestsRepository, SportWaterGuestsRepository>();
 // Setting Redis                     
 builder.Services.AddSingleton<RedisConn>();
 var app = builder.Build();

@@ -20,7 +20,7 @@
                             <option selected="selected" value="">Chọn nhân viên</option>
                             @foreach (var item in dataclient)
                             {
-                                if (item.Id == ViewBag.SalerId)
+                                if (item.Id == ViewBag.SalerId && ViewBag.SalerId > 0)
                                 {
                                     <option selected="selected" value="@item.Id">@item.FullName - @item.UserName</option> }
                                 else

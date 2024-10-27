@@ -1,10 +1,10 @@
 ﻿@{
     Layout = null;
     Entities.Models.AllCode? service = (Entities.Models.AllCode?)ViewBag.Service;
-
+    List<Entities.Models.AllCode> list_service = (List<Entities.Models.AllCode>)ViewBag.ServiceType;
     Entities.Models.User user = (Entities.Models.User)ViewBag.User;
     Entities.Models.OtherBooking? booking = (Entities.Models.OtherBooking?)ViewBag.Booking;
-
+    var listPassenger = (List<Entities.Models.Passenger>)ViewBag.Passenger;
     bool is_order_manual = ViewBag.IsOrderManual == null? false:(bool)ViewBag.IsOrderManual;
     bool is_allow_to_edit=(bool)ViewBag.AllowToEdit;
 
@@ -77,6 +77,7 @@
 
                         <div>
                             <div class="bold mb15 txt_14">Bảng kê dịch vụ <small>((Đơn giá đã bao gồm thuế phí + Phí dịch vụ Adavigo))</small></div>
+                      
                             <div class="table-responsive table-gray service-watersport-packages" data-watersport-booking-id="">
                                 <img src="/images/icons/loading.gif" style="width: 55px;height: 55px;margin-left: 10px;margin-bottom: 10px;" class="img_loading_summit coll">
                             </div>
@@ -97,7 +98,43 @@
 
 
                     </form>
-                    <div class="attachment-file-block"  style="padding-top: 20px; margin-top:10px;">
+                    <div class="attachment-file-block" style="padding-top: 20px; margin-top:10px;">
+
+                    </div>
+                    <div class="border bg-white mb20">
+
+                        <div class="flex space-between row-main-head pd10">
+                            <div class="bold">Thông tin Khách hàng</div>
+
+                        </div>
+                        <div class="line-bottom pb0"></div>
+                        <div class="pd10 ">
+                            <div class="table-responsive table-gray ">
+                                <table class="table table-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Họ và tên</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (listPassenger != null)
+                                        {
+                                            var i = 0;
+                                            @foreach (var item in listPassenger)
+                                            {
+                                                i++;
+                                                <tr>
+                                                    <td>@i</td>
+                                                    <td>@item.Name</td>
+                                                </tr>
+                                            }
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
 
                     </div>
                     <div style="padding-top: 20px; margin-top:10px;">

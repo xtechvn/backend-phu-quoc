@@ -56,6 +56,7 @@ namespace DAL.StoreProcedure
         public const string SP_GetAllServiceByServiceCode = "SP_GetAllServiceByServiceCode";
         public const string SP_GetListContractPayByServiceId = "SP_GetListContractPayByServiceId";
         public const string SP_CheckExistsPaymentVoucherByRequestId = "SP_CheckExistsPaymentVoucherByRequestId";
+        public const string SP_GetAllSubServiceBySupplierIdForReturn = "SP_GetAllSubServiceBySupplierIdForReturn";
     }
     
 }

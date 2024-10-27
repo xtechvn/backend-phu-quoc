@@ -157,11 +157,11 @@ else
                             <td>
                                 @if (VIEW_PHIEU_CHI == 1)
                                 {
-                                    <a href="/PaymentVoucher/Detail?paymentVoucherId=@item.PaymentVoucherId"><span class="blue"> @item.PaymentVoucherNo</span></a>
+                                    <a href="/PaymentVoucher/Detail?paymentVoucherId=@item.PaymentVoucherId"><span class="blue"> @item.PaymentVoucherCode</span></a>
                                 }
                                 else
                                 {
-                                    @item.PaymentVoucherNo
+                                    @item.PaymentVoucherCode
                                 }
                             </td>
                             <td class="text-right">

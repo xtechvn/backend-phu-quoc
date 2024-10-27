@@ -595,7 +595,18 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Fly
                 }
                 if (txt_search != null)
                 {
-                    var data = await _orderESRepository.GetOrderNoSuggesstion(txt_search);
+                    var dataEs = await _orderESRepository.GetOrderNoSuggesstion(txt_search);
+                    var data = new List<SearchOrderElasticsearchViewModel>();
+                    if (dataEs != null)
+                    {
+                        foreach (var item in dataEs)
+                        {
+                            var dataitem = new SearchOrderElasticsearchViewModel();
+                            dataitem.orderno = item.orderno;
+                            dataitem.id = item.orderid.ToString();
+                            data.Add(dataitem);
+                        }
+                    }
                     return Ok(new
                     {
                         status = (int)ResponseType.SUCCESS,

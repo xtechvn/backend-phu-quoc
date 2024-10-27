@@ -12,6 +12,7 @@ using Entities.ViewModels.Contract;
 using Entities.ViewModels.ElasticSearch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Repositories.IRepositories;
 using Utilities;
@@ -243,7 +244,7 @@ namespace WEB.Adavigo.CMS.Controllers
                 return PartialView();
             }
         }
-        public async Task<IActionResult> ClientSuggestion(string txt_search)
+        public async Task<IActionResult> ClientSuggestion(string txt_search ,int type=0)
         {
 
             try
@@ -273,11 +274,21 @@ namespace WEB.Adavigo.CMS.Controllers
 
                     JObject jsonObject = JObject.Parse(data_hotel);
                     var hits = (JArray)jsonObject["hits"]["hits"];
-                    var hotel_result = new List<JObject>();
+                    var hotel_result = new List<earchClientESViewModel>();
                     foreach (var hit in hits)
                     {
-                        JObject source = (JObject)hit["_source"];
-                        hotel_result.Add(source);
+                        var source = JsonConvert.DeserializeObject<earchClientESViewModel>(hit["_source"].ToString());
+                        if(type == AgencyType.NGUOI_DD)
+                        {
+                           if( source.agencytype == AgencyType.NGUOI_DD){
+                                hotel_result.Add(source);
+                            }
+                        }
+                        else
+                        {
+                            hotel_result.Add(source);
+                        }
+                       
                     }
 
                     return Ok(new
@@ -391,12 +402,12 @@ namespace WEB.Adavigo.CMS.Controllers
                 {
                     JObject jsonObject = JObject.Parse(data_client);
                     var hits = (JArray)jsonObject["hits"]["hits"];
-                    var client_result = new List<JObject>();
+                    var client_result = new List<earchClientESViewModel>();
                     if (current_user.Role.Contains(((int)RoleType.Admin).ToString()))
                     {
                         foreach (var hit in hits)
                         {
-                            JObject source = (JObject)hit["_source"];
+                            var source = JsonConvert.DeserializeObject<earchClientESViewModel>(hit["_source"].ToString());
                             client_result.Add(source);
                         }
                     }
@@ -404,9 +415,9 @@ namespace WEB.Adavigo.CMS.Controllers
                     {
                         foreach (var hit in hits)
                         {
-                            JObject source = (JObject)hit["_source"];
+                            var source = JsonConvert.DeserializeObject<earchClientESViewModel>(hit["_source"].ToString());
 
-                            if ((current_user == null ? saleid : current_user.UserUnderList).Contains(source["userid"].ToString()))
+                            if ((current_user == null ? saleid : current_user.UserUnderList).Contains(source.userid))
                             {
                                 client_result.Add(source);
                             }

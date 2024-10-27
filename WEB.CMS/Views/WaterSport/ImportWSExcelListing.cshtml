@@ -1,0 +1,47 @@
+﻿@{
+    Layout = null;
+}
+@using Entities.ViewModels
+@model List<WaterSportExcelImportModel>
+
+@if (Model != null && Model.Any())
+{
+    var ready_checked = false;
+    if (ViewBag.CheckedAll != null) ready_checked = (bool)ViewBag.CheckedAll;
+
+    <div class="table-responsive table-default table-gray table-modal mb20" style="max-height:500px;">
+        <table class="table table-nowrap">
+            <thead>
+                <tr>
+                    <th>Số phòng</th>
+                    <th>Họ tên</th>
+                    <th>Quốc tịch</th>
+                    <th>Ngày đến</th>
+                    <th>Ngày đi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="roomno">@item.roomno</td>
+                        <td class="username">@item.username</td>
+                        <td class="national_code" data-id="@item.national_id">@item.national_code</td>
+                        <td class="startDate">@(item.startDate == DateTime.MinValue ? "" : item.startDate.ToString("dd/MM/yyyy"))</td>
+                        <td class="endDate">@(item.endDate == DateTime.MinValue ? "" : item.endDate.ToString("dd/MM/yyyy"))</td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="text-right">Tổng cộng:  @Model.Count bản ghi </div>
+}
+else
+{
+
+    <div class="red p-3 rounded mb20" style="background: #F3DFDF;">
+        Lỗi xảy ra: File upload không đúng quy định, Hệ thống không nhận biết được cột @ViewBag.msg
+    </div>
+}

@@ -21,7 +21,7 @@ namespace WEB.Adavigo.CMS.Service
                 var db = MongodbService.GetDatabase();
 
                 total = 0;
-                var collection = db.GetCollection<TransactionSMS>("TransactionSMS");
+                var collection = db.GetCollection<TransactionSMS>("BankTransferSMS_PQ");
                 var filter = Builders<TransactionSMS>.Filter.Empty;
                 if (searchModel.Amount != -1)
                 {

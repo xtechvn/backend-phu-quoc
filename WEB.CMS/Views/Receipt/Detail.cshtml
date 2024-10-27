@@ -315,25 +315,25 @@
                                                                 @if (item.ServiceType == (int)ServiceType.BOOK_HOTEL_ROOM_VIN)
                                                                 {
                                                                     <a class="blue" href="/SetService/VerifyHotelServiceDetai/@item.ServiceId">
-                                                                        @item.ServiceCode
+                                                                        @(item.PackageName != null ? item.PackageName : item.ServiceCode)
                                                                     </a>
                                                                 }
                                                                 @if (item.ServiceType == (int)ServiceType.PRODUCT_FLY_TICKET)
                                                                 {
                                                                     <a class="blue" href="/SetService/fly/detail/@item.GroupBookingId">
-                                                                        @item.ServiceCode
+                                                                        @(item.PackageName != null ? item.PackageName : item.ServiceCode)
                                                                     </a>
                                                                 }
                                                                 @if (item.ServiceType == (int)ServiceType.Tour)
                                                                 {
                                                                     <a class="blue" href="/SetService/Tour/Detail/@item.ServiceId">
-                                                                        @item.ServiceCode
+                                                                        @(item.PackageName != null ? item.PackageName : item.ServiceCode)
                                                                     </a>
                                                                 }
                                                                 @if (item.ServiceType == (int)ServiceType.Other)
                                                                 {
                                                                     <a class="blue" href="/SetService/Others/Detail/@item.ServiceId">
-                                                                        @item.ServiceCode
+                                                                        @(item.PackageName != null ? item.PackageName : item.ServiceCode)
                                                                     </a>
                                                                 }
                                                             </td>
@@ -347,13 +347,14 @@
                                                             <td>@item.Amount.ToString("N0")</td>
                                                             <td>@item.AmountPayDetail.ToString("N0")</td>
                                                         </tr>
-                                                        <tr>
+                                                      
+                                                    }
+                                                      <tr>
                                                             <td class="text-right" colspan="5">
                                                                 Tổng
                                                             </td>
                                                             <td>@Model.ContractPayDetail.Sum(n => n.AmountPayDetail).ToString("N0")</td>
-                                                        </tr>
-                                                    }
+                                                      </tr>
                                             </table>
                                         </div>
                                     }

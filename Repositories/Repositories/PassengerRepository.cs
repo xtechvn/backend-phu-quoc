@@ -1,12 +1,15 @@
 ﻿using DAL;
+using DAL.StoreProcedure;
 using Entities.ConfigModels;
 using Entities.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
 using Repositories.IRepositories;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Utilities;
+using Utilities.Contants;
 
 namespace Repositories.Repositories
 {
@@ -42,8 +45,32 @@ namespace Repositories.Repositories
             }
             catch (Exception ex)
             {
-                LogHelper.InsertLogTelegram("GetPassengerByOrderId - PassengerDAL. " + ex.ToString());
+                LogHelper.InsertLogTelegram("GetPassengerByOrderId - PassengerRepository. " + ex.ToString());
                 return new List<Passenger>();
+            }
+        }
+        public int InsertPassenger(string name , long OrderId,long BookingId)
+        {
+            try
+            {
+                var list = name.Split("/");
+                foreach(var item in list)
+                {
+                    var model = new Passenger();
+                    model.Name = item.Trim();
+                    model.OrderId = OrderId;
+                    model.GroupBookingId = BookingId.ToString();
+                    model.PersonType = "ADT";
+                    model.Gender = true;
+                    var InsertPassenger = _passengerDAL.InsertPassenger(model);
+                }
+             
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("InsertPassenger - PassengerRepository: " + ex);
+                return 0;
             }
         }
     }

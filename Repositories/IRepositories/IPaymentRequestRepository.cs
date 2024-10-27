@@ -23,7 +23,7 @@ namespace Repositories.IRepositories
         List<PaymentRequestViewModel> GetServiceListBySupplierId(long supplierId, int requestId = 0, int serviceId = 0);
         List<PaymentRequestViewModel> GetServiceListByClientId(long clientId, int requestId = 0);
         List<PaymentRequestViewModel> GetByClientId(long clientId, int paymentVoucherId = 0);
-        List<PaymentRequestViewModel> GetBySupplierId(long supplierId, int paymentVoucherId = 0);
+        List<PaymentRequestViewModel> GetBySupplierId(long supplierId, int paymentVoucherId = 0, string requestType = "1,2");
         List<PaymentRequestViewModel> GetByServiceId(long serviceId, int type);
         List<PaymentRequestViewModel> GetRequestByClientId(long clientId, long orderid = 0);
         List<OrderPaymentRequest> GetListPaymentRequestByOrderId(int Orderid);
