@@ -13,6 +13,7 @@
     },
     DynamicBind: function () {
         $('body').on('keyup', '.service-watersport-packages-baseprice, .service-watersport-packages-quantity', function () {
+            servicemanual - watersport - service - profit
             var element = $(this)
             var row_element = element.closest('.service-watersport-packages-row')
             var table_element = element.closest('.service-watersport-packages-tbody')
@@ -337,7 +338,8 @@
         var other_amount = _global_function.GetAmountFromCurrencyInput($('.servicemanual-watersport-others-amount'))
         var discount = _global_function.GetAmountFromCurrencyInput($('.servicemanual-watersport-commission'))
 
-        var total_profit = profit - discount - other_amount
+        /*var total_profit = profit - discount - other_amount*/
+        var total_profit = 0
         $('.servicemanual-watersport-service-profit').html((total_profit >= 0 ? '' : '-') + _global_function.Comma(total_profit)).change();
     },
 
