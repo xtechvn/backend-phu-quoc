@@ -28,7 +28,7 @@ namespace Repositories.Repositories
         private readonly OperatorReportDAL operatorReportDAL;
         private readonly DepartmentDAL departmentDAL;
         private readonly string _UrlStaticImage;
-
+        private readonly PassengerDAL passengerDAL;
         public ReportRepository(IOptions<DataBaseConfig> dataBaseConfig, IOptions<DomainConfig> domainConfig)
         {
             orderDal = new OrderDAL(dataBaseConfig.Value.SqlServer.ConnectionString);
@@ -38,7 +38,7 @@ namespace Repositories.Repositories
             invoiceDAL = new InvoiceDAL(dataBaseConfig.Value.SqlServer.ConnectionString);
             departmentDAL = new DepartmentDAL(dataBaseConfig.Value.SqlServer.ConnectionString);
             _UrlStaticImage = domainConfig.Value.ImageStatic;
-
+            passengerDAL = new PassengerDAL(dataBaseConfig.Value.SqlServer.ConnectionString);
         }
         public async Task<GenericViewModel<OperatorReportViewModel>> GetOperatorReport(OperatorReportSearchModel searchModel, int currentPage = 1, int pageSize = 20)
         {
@@ -895,7 +895,8 @@ namespace Repositories.Repositories
                     cell.SetColumnWidth(13, 25);
                     cell.SetColumnWidth(14, 25);
                     cell.SetColumnWidth(15, 25);
-
+                    cell.SetColumnWidth(16, 25);
+                    cell.SetColumnWidth(17, 25);
                     // Set header value
 
                     ws.Cells["A1"].PutValue("Mã khách hàng");
@@ -913,12 +914,13 @@ namespace Repositories.Repositories
                     ws.Cells["M1"].PutValue("Hoa hồng" + (searchModel.VAT <= 0 ? " "+ (Math.Round(searchModel.VAT *100).ToString("N0") + "%") : " "));
                     ws.Cells["N1"].PutValue("Ghi chú" );
                     ws.Cells["O1"].PutValue("Tên khách hàng");
-
+                    ws.Cells["P1"].PutValue("khách hàng sử dụng");
+                    ws.Cells["Q1"].PutValue("Mã đơn hàng");
                     #endregion
 
                     #region Body
 
-                    range = cell.CreateRange(1, 0, model.ListData.Count, 15);
+                    range = cell.CreateRange(1, 0, model.ListData.Count, 17);
                     style = ws.Cells["A3"].GetStyle();
                     style.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
                     style.Borders[BorderType.TopBorder].Color = Color.Black;
@@ -947,6 +949,7 @@ namespace Repositories.Repositories
 
                     foreach (var item in model.ListData)
                     {
+                        var List_Passenger = await passengerDAL.GetPassengerByOrderId(item.OrderId);
                         RowIndex++;
                         ws.Cells["A" + RowIndex].PutValue(item.ClientCode);
                         ws.Cells["A" + RowIndex].SetStyle(alignCenterStyle);
@@ -956,7 +959,7 @@ namespace Repositories.Repositories
 
                         ws.Cells["C" + RowIndex].PutValue(item.StartDate.ToString("dd/MM/yyyy"));
 
-                        ws.Cells["D" + RowIndex].PutValue(item.ClientName);
+                        ws.Cells["D" + RowIndex].PutValue("Adavigo");
 
                         ws.Cells["E" + RowIndex].PutValue(item.ConfNo);
                         ws.Cells["F" + RowIndex].PutValue(item.RoomNo);
@@ -972,8 +975,17 @@ namespace Repositories.Repositories
                         ws.Cells["M" + RowIndex].PutValue((item.Commission != null ? (double)item.Commission : 0).ToString("N0"));
 
                         ws.Cells["N" + RowIndex].PutValue(item.Note);
-                        ws.Cells["O" + RowIndex].PutValue(item.EndUserName);
-
+                      
+                        ws.Cells["O" + RowIndex].PutValue(item.ClientName);
+                        if (List_Passenger != null && List_Passenger.Count > 0)
+                        {
+                            ws.Cells["P" + RowIndex].PutValue(List_Passenger.Select(s => s.Name).ToString());
+                        }
+                        else
+                        {
+                            ws.Cells["P" + RowIndex].PutValue("");
+                        }
+                        ws.Cells["Q" + RowIndex].PutValue(item.OrderNo);
                         ws.Cells["I" + RowIndex].SetStyle(numberStyle);
                         ws.Cells["J" + RowIndex].SetStyle(numberStyle);
                         ws.Cells["K" + RowIndex].SetStyle(numberStyle);
@@ -985,7 +997,12 @@ namespace Repositories.Repositories
                     ws.Cells.InsertColumn(4);
                     ws.Cells.CopyColumn(ws.Cells, ws.Cells.Columns[15].Index, ws.Cells.Columns[4].Index);
                     ws.Cells.DeleteColumn(15);
-
+                    ws.Cells.InsertColumn(5);
+                    ws.Cells.CopyColumn(ws.Cells, ws.Cells.Columns[16].Index, ws.Cells.Columns[5].Index);
+                    ws.Cells.DeleteColumn(16);
+                    ws.Cells.InsertColumn(3);
+                    ws.Cells.CopyColumn(ws.Cells, ws.Cells.Columns[17].Index, ws.Cells.Columns[3].Index);
+                    ws.Cells.DeleteColumn(17);
 
                     wb.Save(full_path);
                 }

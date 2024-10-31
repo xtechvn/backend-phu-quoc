@@ -35,7 +35,8 @@ namespace Entities.ViewModels.Report
         public string EndUserName { get; set; }
         public double? Commission { get; set; }
         public string Name { get; set; }
-
+        public long OrderId { get; set; }
+        public string OrderNo { get; set; }
 
     }
     public class WSReportTotalViewModel
