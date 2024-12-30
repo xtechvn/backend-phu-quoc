@@ -13,6 +13,8 @@ let contractpay_type_other = 5
 let object_type = 1
 var bankingAccountId = 0
 var listBankAccount = []
+var totalNeedPaymentOrder = 0
+var is_admin = false
 var _contract_pay_create_new = {
     Initialization: function () {
         $('#divSupplier').hide()
@@ -24,6 +26,8 @@ var _contract_pay_create_new = {
         $('#lblBankAccountRequired').show()
         $('#lblBankAccount').hide()
         $('input').attr('autocomplete', 'off');
+        if ($('#is_admin').val() == '1')
+            is_admin = true
         $("#client-select").select2({
             theme: 'bootstrap4',
             placeholder: "Tên KH, Điện Thoại, Email",
@@ -213,7 +217,6 @@ var _contract_pay_create_new = {
                 cache: true
             }
         });
-
     },
     FormatNumber: function () {
         var amount = $('#amount').val()
@@ -261,24 +264,19 @@ var _contract_pay_create_new = {
         }
         $('#total_amount_need_pay').html(_contract_pay_create_new.FormatNumberStr(totalAmount))
         //var amount = $('#amount').val()
-        if (totalAmount > parseFloat($('#amount').val().replaceAll('.', '').replaceAll(',', ''))) {
-            _msgalert.error(' Tổng tiền cần giải trừ không được lớn hơn số tiền của phiếu thu');
+        if (!is_admin) {
+            if (totalAmount > parseFloat($('#amount').val().replaceAll('.', '').replaceAll(',', ''))) {
+                _msgalert.error(' Tổng tiền cần giải trừ không được lớn hơn số tiền của phiếu thu');
+            }
         }
     },
     UpdateAmountService: function (serviceId) {
         var totalAmount = 0
         for (var i = 0; i < listServiceRefundDetail.length; i++) {
-            if (listServiceRefundDetail[i].serviceId == serviceId) {
-                var amount_input = parseFloat($('#amount_service_' + listServiceRefundDetail[i].serviceCode).val().replaceAll('.', '').replaceAll(',', ''))
-                listServiceRefundDetail[i].amount = amount_input
-                if (amount_input > listServiceRefundDetail[i].totalNeedPayment)
-                    listServiceRefundDetail[i].amount = listContractPayDetail[i].totalNeedPayment
-            }
-            if (listServiceRefundDetail[i].amount !== undefined && listServiceRefundDetail[i].amount !== null && listServiceRefundDetail[i].amount) {
-                var checked = $('#service_ckb_' + listServiceRefundDetail[i].serviceCode).is(":checked")
-                if (checked) {
-                    totalAmount += listServiceRefundDetail[i].amount
-                }
+            var checked = $('#service_ckb_' + listServiceRefundDetail[i].serviceCode).is(":checked")
+            if (checked) {
+                listServiceRefundDetail[i].amount = parseFloat($('#amount_service_' + listServiceRefundDetail[i].serviceCode).val().replaceAll('.', '').replaceAll(',', ''))
+                totalAmount += listServiceRefundDetail[i].amount
             }
         }
         $('#total_amount_need_pay').html(_contract_pay_create_new.FormatNumberStr(totalAmount))
@@ -303,15 +301,16 @@ var _contract_pay_create_new = {
     },
     GetDataBySupplierId: function (supplierId, isEdit = false) {
         var contract_type = $('#contract-type').val()
-        if (contract_type !== null && contract_type !== '' && parseInt(contract_type) == contractpay_type_other) return
         if (supplierId == null || supplierId == undefined || supplierId == '') {
-            var supplierId = $('#supplier-select').val()
-            //if (supplier !== null && supplier !== undefined && supplier !== '') {
-            //    supplierId = supplier[0]
-            //}
+            var supplier = $('#supplier-select').val()
+            if (supplier !== null && supplier !== undefined && supplier !== '') {
+                supplierId = supplier[0]
+            }
         }
-        _contract_pay_create_new.GetListBankAccountBySupplierID(supplierId)
+        _contract_pay_create_new.GetListBankAccountAdavigo(supplierId)
+        if (contract_type !== null && contract_type !== '' && parseInt(contract_type) == contractpay_type_other) return
         if (parseInt(contract_type) === 3) {
+
             _contract_pay_create_new.GetServiceListBySupplierId(supplierId, isEdit);
         }
         if (parseInt(contract_type) === 4) {
@@ -424,6 +423,7 @@ var _contract_pay_create_new = {
                 _contract_pay_create_new.OnCheckBoxService();
             }, 1000)
         }
+        _contract_pay_create_new.AddItemToInputserviceCodeCommissionFilter(result.data);
     },
     GenderSupplierCommissionTable: function (result, isEdit) {
         var totalAmount = 0
@@ -449,7 +449,7 @@ var _contract_pay_create_new = {
                 "<tr id='service_" + i + "'>" +
                 "<td>" +
                 "<label class='check-list number'>" +
-                " <input type='checkbox' id='service_ckb_" + result.data[i].serviceCode + "' name='service_ckb' onclick='_contract_pay_create_new.OnCheckBoxService(" + i + ");'>" +
+                " <input type='checkbox' id='service_ckb_" + result.data[i].serviceCode + "' name='service_ckb' onclick='_contract_pay_create_new.OnCheckBoxService(" + i + ");scroll(0, 0);'>" +
                 " <span class='checkmark'></span>" + (i + 1) +
                 "  </label>" +
                 "<td>" +
@@ -527,7 +527,6 @@ var _contract_pay_create_new = {
                 var totalNeedPayment = 0
                 var totalPayment = 0
                 $("#body_order_list").empty();
-                debu
                 for (var i = 0; i < result.data.length; i++) {
                     $('#order-relate-table').find('tbody').append(
                         "<tr id='order_" + i + "'>" +
@@ -588,7 +587,7 @@ var _contract_pay_create_new = {
                 if (isEdit) {
                     setTimeout(function () {
                         $('#total_amount_need_pay').html(_contract_pay_create_new.FormatNumberStr(totalPayment))
-                        _contract_pay_create_new.OnCheckBoxService();
+                        _contract_pay_create_new.OnCheckBox();
                     }, 1000)
                 }
                 _contract_pay_create_new.SetValueToOrderCodeInput()
@@ -666,7 +665,7 @@ var _contract_pay_create_new = {
         var contract_type = $('#contract-type').val()
         if (contract_type !== null && contract_type !== '' && (parseInt(contract_type) == contractpay_type_order
             || parseInt(contract_type) == contractpay_type_deposit)) {
-            if ($('#client-select').val() == undefined || $('#client-select').val() == null || $('#client-select').val() == '') {
+            if (($('#client-select').val() == undefined || $('#client-select').val() == null || $('#client-select').val() == '') && !is_admin) {
                 _msgalert.error('Vui lòng chọn khách hàng');
                 return false;
             }
@@ -674,7 +673,7 @@ var _contract_pay_create_new = {
 
         if (contract_type !== null && contract_type !== '' && (parseInt(contract_type) == contractpay_type_supplier_commision
             || parseInt(contract_type) == contractpay_type_supplier_refund)) {
-            if ($('#supplier-select').val() == undefined || $('#supplier-select').val() == null || $('#supplier-select').val() == '') {
+            if (($('#supplier-select').val() == undefined || $('#supplier-select').val() == null || $('#supplier-select').val() == '') && !is_admin) {
                 _msgalert.error('Vui lòng chọn nhà cung cấp');
                 return false;
             }
@@ -687,7 +686,7 @@ var _contract_pay_create_new = {
             _msgalert.error('Vui lòng chọn tài khoản ngân hàng nhận');
             return false;
         }
-        if ($('#amount').val() == undefined || $('#amount').val() == null || $('#amount').val() == '') {
+        if (($('#amount').val() == undefined || $('#amount').val() == null || $('#amount').val() == '') && totalNeedPaymentOrder > 0) {
             _msgalert.error('Vui lòng nhập số tiền');
             return false;
         }
@@ -711,24 +710,24 @@ var _contract_pay_create_new = {
                 var checked = $('#order_ckb_' + listContractPayDetail[i].orderCode).is(":checked")
                 if (checked) {
                     totalInputAmount += listContractPayDetail[i].amount
-                    if (listContractPayDetail[i].amount === 0) {
-                        _msgalert.error('Vui lòng nhập số tiền giải trừ lớn hơn 0');
+                    if (listContractPayDetail[i].amount === 0 && listContractPayDetail[i].totalNeedPayment > 0 && !is_admin) {
+                        _msgalert.error('Vui lòng nhập số tiền giải trừ lớn hơn 0 cho đơn hàng: ' + listContractPayDetail[i].orderCode);
                         return false;
                     }
                     flag = true
                 }
             }
-            if (!flag) {
+            if (!flag && !is_admin) {
                 _msgalert.error('Vui lòng tích chọn đơn hàng cần giải trừ');
                 return false;
             }
-            if (totalInputAmount === 0) {
+            if ((totalInputAmount === 0 && totalNeedPaymentOrder > 0) && !is_admin) {
                 _msgalert.error('Vui lòng nhập số tiền giải trừ lớn hơn 0');
                 return false;
             }
             var amountContract = parseFloat($('#amount').val().replaceAll('.', '').replaceAll(',', ''))
 
-            if (totalInputAmount > amountContract) {
+            if (totalInputAmount > amountContract && !is_admin) {
                 _msgalert.error(' Tổng tiền cần giải trừ không được lớn hơn số tiền của phiếu thu');
                 return false;
             }
@@ -814,7 +813,10 @@ var _contract_pay_create_new = {
             contractPayDetails = []
             for (var i = 0; i < listContractPayDetail.length; i++) {
                 var checked = $('#order_ckb_' + listContractPayDetail[i].orderCode).is(":checked")
+
                 if (checked) {
+                    if (listContractPayDetail[i].amount == null || isNaN(listContractPayDetail[i].amount))
+                        listContractPayDetail[i].amount = 0
                     contractPayDetails.push(listContractPayDetail[i])
                 }
             }
@@ -824,6 +826,7 @@ var _contract_pay_create_new = {
             for (var i = 0; i < listContractPayDetail.length; i++) {
                 var checked = $('#order_radio_' + i).is(":checked")
                 if (checked) {
+                    listContractPayDetail[i].amount = parseFloat($('#amount').val().replaceAll('.', '').replaceAll(',', ''))
                     contractPayDetails.push(listContractPayDetail[i])
                 }
             }
@@ -840,6 +843,8 @@ var _contract_pay_create_new = {
         }
         var formData = new FormData();
         const file = document.querySelector('input[name=imagefile]').files[0];
+        if ($('#amount').val() == undefined || $('#amount').val() == null || $('#amount').val() == '')
+            $('#amount').val(0)
         let obj = {
             'type': parseInt($('#contract-type').val()),
             'payType': parseInt($('#contract-pay-type').val()),
@@ -905,11 +910,9 @@ var _contract_pay_create_new = {
                 $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
                 isPickerCreateAddContract = true;
             });
-            //var client_id = $('#client-select').val()
-            //if (client_id !== null && client_id !== undefined && client_id !== '') {
-            //    //this.GetDataByClientId(client_id[0])
-            //    _contract_pay_create_new.GetOrderListByClientId(clientId, isEdit);
-            //}
+            //var newOption = new Option('Thuy TT74', 201, true, true);
+            //$('#client-select').append(newOption).trigger('change');
+            //_contract_pay_create_new.GetOrderListByClientId(201);
         }
         if (contract_type !== null && contract_type !== '' && parseInt(contract_type) == contractpay_type_deposit) {//thu tiền ký quỹ
             $('#divSupplier').hide()
@@ -926,11 +929,9 @@ var _contract_pay_create_new = {
             $('#deposit-relate').show()
             $('#supplier-refund-relate').hide()
             $('#supplier-commision-relate').hide()
-            //var client_id = $('#client-select').val()
-            //if (client_id !== null && client_id !== undefined && client_id !== '') {
-            //    //this.GetDataByClientId(client_id[0])
-            //    _contract_pay_create_new.GetDepositListByClientId(clientId);
-            //}
+            //var newOption = new Option('Cường', 182, true, true);
+            //$('#client-select').append(newOption).trigger('change');
+            //_contract_pay_create_new.GetDepositListByClientId(182);
         }
         if (contract_type !== null && contract_type !== '' && parseInt(contract_type) == contractpay_type_supplier_refund) {//thu tiền NCC hoàn trả
             $('#divSupplier').show()
@@ -1097,10 +1098,12 @@ var _contract_pay_create_new = {
                 var newOption = new Option($('#supplier_name_hide').val(), supplierId, true, true);
                 $('#supplier-select').append(newOption).trigger('change');
             }, 500)
-            _contract_pay_create_new.GetListBankAccountBySupplierID(supplierId)
+            _contract_pay_create_new.GetListBankAccountAdavigo(supplierId)
             if (supplierId !== null && supplierId !== undefined && supplierId !== '') {
                 _contract_pay_create_new.GetServiceListBySupplierId(supplierId, true)
             }
+            $('#amount').attr('disabled', false)
+            $('#amount').removeClass('background-disabled')
         }
         if (contract_type !== null && contract_type !== '' && parseInt(contract_type) == contractpay_type_supplier_commision) {//thu tiền hoa hồng NCC
             $('#divSupplier').show()
@@ -1121,10 +1124,12 @@ var _contract_pay_create_new = {
                 var newOption = new Option($('#supplier_name_hide').val(), supplierId, true, true);
                 $('#supplier-select').append(newOption).trigger('change');
             }, 500)
-            _contract_pay_create_new.GetListBankAccountBySupplierID(supplierId)
+            _contract_pay_create_new.GetListBankAccountAdavigo(supplierId)
             if (supplierId !== null && supplierId !== undefined && supplierId !== '') {
                 _contract_pay_create_new.GetServiceListBySupplierId(supplierId, true, true)
             }
+            $('#amount').attr('disabled', false)
+            $('#amount').removeClass('background-disabled')
         }
         if (contract_type !== null && contract_type !== '' && parseInt(contract_type) == contractpay_type_other) {//thu tiền khác
             $('#order-relate').hide()
@@ -1154,7 +1159,7 @@ var _contract_pay_create_new = {
                     var newOption = new Option($('#client_name_hide').val(), client_id, true, true);
                     $('#client-select').append(newOption).trigger('change');
                 }, 500)
-                _contract_pay_create_new.GetListBankAccountByClientID(client_id)
+                _contract_pay_create_new.GetListBankAccountAdavigo(client_id)
             }
             if (objectType == 2) {
                 $('#divSupplier').show()
@@ -1164,7 +1169,7 @@ var _contract_pay_create_new = {
                     var newOption = new Option($('#supplier_name_hide').val(), supplierId, true, true);
                     $('#supplier-select').append(newOption).trigger('change');
                 }, 500)
-                _contract_pay_create_new.GetListBankAccountBySupplierID(supplierId)
+                _contract_pay_create_new.GetListBankAccountAdavigo(supplierId)
             }
             if (objectType == 3) {
                 $('#divEmployee').show()
@@ -1197,6 +1202,8 @@ var _contract_pay_create_new = {
             for (var i = 0; i < listContractPayDetail.length; i++) {
                 var checked = $('#order_ckb_' + listContractPayDetail[i].orderCode).is(":checked")
                 if (checked) {
+                    if (listContractPayDetail[i].amount == null || isNaN(listContractPayDetail[i].amount))
+                        listContractPayDetail[i].amount = 0
                     contractPayDetails.push(listContractPayDetail[i])
                 }
             }
@@ -1206,6 +1213,7 @@ var _contract_pay_create_new = {
             for (var i = 0; i < listContractPayDetail.length; i++) {
                 var checked = $('#order_radio_' + i).is(":checked")
                 if (checked) {
+                    listContractPayDetail[i].amount = parseFloat($('#amount').val().replaceAll('.', '').replaceAll(',', ''))
                     contractPayDetails.push(listContractPayDetail[i])
                 }
             }
@@ -1222,6 +1230,8 @@ var _contract_pay_create_new = {
         }
         var formData = new FormData();
         const file = document.querySelector('input[name=imagefile]').files[0];
+        if ($('#amount').val() == undefined || $('#amount').val() == null || $('#amount').val() == '')
+            $('#amount').val(0)
         let obj = {
             'payId': parseInt($('#payId').val()),
             'billNo': $('#billNo').val(),
@@ -1241,6 +1251,7 @@ var _contract_pay_create_new = {
         }
         formData.append('imagefile', file);
         formData.append('jsonData', JSON.stringify(obj))
+
         _global_function.AddLoading()
         $.ajax({
             url: "/Receipt/Update",
@@ -1299,21 +1310,34 @@ var _contract_pay_create_new = {
     OnCheckBox: function (index) {
         var contract_type = $('#contract-type').val()
         if (contract_type !== null && contract_type !== '' && parseInt(contract_type) == contractpay_type_order) { // thu tiền đơn hàng
+            //check số tiền chưa giải trừ, nếu >0 thì cần check số tiền, nếu <=0 thì cho phép tạo phiếu thu 0đ
+            totalNeedPaymentOrder = 0
+            for (var i = 0; i < listContractPayDetail.length; i++) {
+                if (listContractPayDetail[i].isDisabled)
+                    continue
+                var checked = $('#order_ckb_' + listContractPayDetail[i].orderCode).is(":checked")
+                if (checked) {
+                    totalNeedPaymentOrder += listContractPayDetail[i].totalNeedPayment
+                }
+            }
+
             //calculate automatic amount
-            var amount_contract = parseFloat($('#amount').val().replaceAll('.', '').replaceAll(',', ''))
-            if (amount_contract === undefined || amount_contract === '' || amount_contract === null
-                || parseFloat(amount_contract) === 0 || isNaN(amount_contract)) {
-                if ($('#amount').val() == undefined || $('#amount').val() == null || $('#amount').val() == '') {
-                    _msgalert.error('Vui lòng nhập số tiền');
-                    $("#orderCodeFilter").empty()
+            if (totalNeedPaymentOrder > 0) {
+                var amount_contract = parseFloat($('#amount').val().replaceAll('.', '').replaceAll(',', ''))
+                if (amount_contract === undefined || amount_contract === '' || amount_contract === null
+                    || parseFloat(amount_contract) === 0 || isNaN(amount_contract)) {
+                    if (!is_admin) {
+                        _msgalert.error('Vui lòng nhập số tiền');
+                        $("#orderCodeFilter").empty()
+                        for (var i = 0; i < listContractPayDetail.length; i++) {
+                            $('#order_ckb_' + listContractPayDetail[i].orderCode).attr("checked", false)
+                            $('#amount_order_' + listContractPayDetail[i].orderCode).attr('disabled', true)
+                            $('#amount_order_' + listContractPayDetail[i].orderCode).addClass('background-disabled')
+                            $('#amount_order_' + listContractPayDetail[i].orderCode).val('')
+                        }
+                        return
+                    }
                 }
-                for (var i = 0; i < listContractPayDetail.length; i++) {
-                    $('#order_ckb_' + listContractPayDetail[i].orderCode).attr("checked", false)
-                    $('#amount_order_' + listContractPayDetail[i].orderCode).attr('disabled', true)
-                    $('#amount_order_' + listContractPayDetail[i].orderCode).addClass('background-disabled')
-                    $('#amount_order_' + listContractPayDetail[i].orderCode).val('')
-                }
-                return
             }
             var totalAmount = 0
             for (var i = 0; i < listContractPayDetail.length; i++) {
@@ -1344,7 +1368,9 @@ var _contract_pay_create_new = {
                             $('#amount_order_' + listContractPayDetail[i].orderCode).attr('disabled', true)
                             $('#amount_order_' + listContractPayDetail[i].orderCode).addClass('background-disabled')
                             $('#amount_order_' + listContractPayDetail[i].orderCode).val('')
-                            _msgalert.error('Tổng tiền cần giải trừ đã bằng số tiền phiếu thu');
+                            if (!is_admin) {
+                                _msgalert.error('Tổng tiền cần giải trừ đã bằng số tiền phiếu thu');
+                            }
                             isSuccess = false
                         } else {
                             $('#amount_order_' + listContractPayDetail[i].orderCode).val(_contract_pay_create_new.FormatNumberStr(totalNeedPayment))
@@ -1373,7 +1399,9 @@ var _contract_pay_create_new = {
                 if (listServiceRefundDetail[i].isDisabled)
                     continue
                 var checked = $('#service_ckb_' + listServiceRefundDetail[i].serviceCode).is(":checked")
-                if (checked) {
+                if (checked || listServiceRefundDetail[i].isChecked) {
+
+                    listServiceRefundDetail[i].isChecked = true
                     $('#amount_service_' + listServiceRefundDetail[i].serviceCode).attr('disabled', false)
                     $('#amount_service_' + listServiceRefundDetail[i].serviceCode).removeClass('background-disabled')
                     var amount = $('#amount_service_' + listServiceRefundDetail[i].serviceCode).val().replaceAll('.', '').replaceAll(',', '')
@@ -1382,16 +1410,11 @@ var _contract_pay_create_new = {
                         totalAmountServiceInput += listServiceRefundDetail[i].totalNeedPayment
                         listServiceRefundDetail[i].amount = listServiceRefundDetail[i].totalNeedPayment
                     } else {
-                        if (parseFloat(amount) > listServiceRefundDetail[i].totalNeedPayment) {
-                            $('#amount_service_' + listServiceRefundDetail[i].serviceCode).val(_contract_pay_create_new.FormatNumberStr(listServiceRefundDetail[i].totalNeedPayment))
-                            totalAmountServiceInput += listServiceRefundDetail[i].totalNeedPayment
-                            listServiceRefundDetail[i].amount = listServiceRefundDetail[i].totalNeedPayment
-                        } else {
-                            totalAmountServiceInput += parseFloat(amount)
-                            listServiceRefundDetail[i].amount = parseFloat(amount)
-                        }
+                        totalAmountServiceInput += parseFloat(amount)
+                        listServiceRefundDetail[i].amount = parseFloat(amount)
                     }
                 } else {
+                    listServiceRefundDetail[i].isChecked = false
                     $('#amount_service_' + listServiceRefundDetail[i].serviceCode).attr('disabled', true)
                     $('#amount_service_' + listServiceRefundDetail[i].serviceCode).addClass('background-disabled')
                     $('#amount_service_' + listServiceRefundDetail[i].serviceCode).val('')
@@ -1400,6 +1423,8 @@ var _contract_pay_create_new = {
         }
         $('#amount').val(_contract_pay_create_new.FormatNumberStr(totalAmountServiceInput))
         $('#total_amount_need_pay').html(_contract_pay_create_new.FormatNumberStr(totalAmountServiceInput))
+        _contract_pay_create_new.AddItemToInputserviceCodeCommissionFilter(listServiceRefundDetail)
+        _contract_pay_create_new.GenderSupplierCommissionTable2(listServiceRefundDetail, isEdit, true)
     },
     OnRadioButton: function (index) {
         var contract_type = $('#contract-type').val()
@@ -1434,8 +1459,10 @@ var _contract_pay_create_new = {
             }
         }
         $('#total_amount_need_pay').html(_contract_pay_create_new.FormatNumberStr(totalAmount))
-        if (totalAmount > parseFloat($('#amount').val().replaceAll('.', '').replaceAll(',', ''))) {
-            _msgalert.error(' Tổng tiền cần giải trừ không được lớn hơn số tiền của phiếu thu');
+        if (!is_admin) {
+            if (totalAmount > parseFloat($('#amount').val().replaceAll('.', '').replaceAll(',', ''))) {
+                _msgalert.error(' Tổng tiền cần giải trừ không được lớn hơn số tiền của phiếu thu');
+            }
         }
     },
     FormatDate: function (date) {
@@ -1628,7 +1655,7 @@ var _contract_pay_create_new = {
         var contract_type = $('#contract-type').val()
         if (contract_type !== null && contract_type !== '' && parseInt(contract_type) == contractpay_type_order) { // thu tiền đơn hàng
             var currentAmomunt = parseFloat($('#amount').val().replaceAll('.', '').replaceAll(',', ''))
-            if (currentAmomunt < amountEdit) {
+            if (currentAmomunt < amountEdit && !is_admin) {
                 _msgalert.error('Vui lòng nhập số tiền lớn hơn hoặc bằng số tiền ban đầu');
                 $('#amount').val(_contract_pay_create_new.FormatNumberStr(amountEdit))
                 return false;
@@ -1735,5 +1762,113 @@ var _contract_pay_create_new = {
             }
         });
     },
+    OnCheckedSupplier: function (isClearDate = false) {
 
+        if (listServiceRefundDetail.length == 0) return
+
+        var requestChoose = $('#serviceCodeFilter').val()
+
+        for (var i = 0; i < listServiceRefundDetail.length; i++) {
+            if ((requestChoose !== undefined && requestChoose !== null && requestChoose !== '' && requestChoose.includes(listServiceRefundDetail[i].serviceId + ''))) {
+                listServiceRefundDetail[i].isChecked = true
+                $('#service_ckb_' + listServiceRefundDetail[i].serviceCode).prop('checked', true)
+            } else {
+                listServiceRefundDetail[i].isChecked = false
+                $('#service_ckb_' + listServiceRefundDetail[i].serviceCode).prop('checked', false)
+            }
+        }
+        _contract_pay_create_new.GenderSupplierCommissionTable2(listServiceRefundDetail, isEdit, true)
+        setTimeout(_contract_pay_create_new.OnCheckBoxService(), 1000)
+    },
+    AddItemToInputserviceCodeCommissionFilter: function (data) {
+        $("#serviceCodeFilter").empty()
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].isChecked) {
+                var newOption = new Option(data[i].serviceCode, data[i].serviceId, true, true);
+                $('#serviceCodeFilter').append(newOption)
+            }
+        }
+        /*   $('#serviceCodeFilter').trigger('change');*/
+    },
+    GenderSupplierCommissionTable2: function (result, isEdit) {
+        var totalAmount = 0
+        var totalDisarmed = 0
+        var totalNeedPayment = 0
+        var totalPayment = 0
+        var order = { true: 1, null: 2, false: 3 };
+        result = result.sort((a, b) => order[a.isChecked] - order[b.isChecked])
+
+        $("#body_supplier_refund_list").empty();
+        for (var i = 0; i < result.length; i++) {
+            var urlService = ''
+            if (result[i].serviceType == 1) { //Khách sạn
+                urlService = "/SetService/VerifyHotelServiceDetai/" + result[i].serviceId
+            }
+            if (result[i].serviceType == 3) { // vé máy bay
+                urlService = "/SetService/fly/detail/" + result[i].groupBookingId
+            }
+            if (result[i].serviceType == 5) { //tour
+                urlService = "/SetService/Tour/Detail/" + result[i].serviceId
+            }
+            if (result[i].serviceType == 9) { //other
+                urlService = "/SetService/Others/Detail/" + result[i].serviceId
+            }
+            $('#supplier-refund-relate-table').find('tbody').append(
+                "<tr id='service_" + i + "'>" +
+                "<td>" +
+                "<label class='check-list number'>" +
+                " <input type='checkbox' id='service_ckb_" + result[i].serviceCode + "' name='service_ckb' onclick='_contract_pay_create_new.OnCheckBoxService(" + i + ")'>" +
+                " <span class='checkmark'></span>" + (i + 1) +
+                "  </label>" +
+                "<td>" +
+                " <a class='blue' href='" + urlService + "'> " + result[i].serviceCode + " </a>"
+                + "</td>" +
+                "<td>" + result[i].startDateStr + " - " + result[i].endDateStr + "</td>" +
+                "<td>" +
+                " <a class='blue' href='/Order/Orderdetails?id=" + result[i].orderId + "'> " + result[i].orderNo + " </a>"
+                + "</td>" +
+                "<td  >" + result[i].salerName + "</td>" +
+                "<td class='text-right' >" + _contract_pay_create_new.FormatNumberStr(result[i].totalAmount) + "</td>" +
+                "<td class='text-right' >" + _contract_pay_create_new.FormatNumberStr(result[i].totalDisarmed) + "</td>" +
+                "<td class='text-right'>" + _contract_pay_create_new.FormatNumberStr(result[i].totalNeedPayment) + "</td>" +
+                "<td class='text-right' >" + "<input type='text' id='amount_service_" + result[i].serviceCode + "' class='background-disabled text-right' maxlength='15'  autocomplete='off' style='min-width: 100px;' disabled  onkeyup='_contract_pay_create_new.FormatNumberService(this);' onchange='_contract_pay_create_new.UpdateAmountService(" + result[i].serviceId + ")' >" + "</td>" +
+                "</tr>"
+            );
+            totalAmount += result[i].totalAmount
+            totalDisarmed += result[i].totalDisarmed
+            totalNeedPayment += result[i].totalNeedPayment
+            if (result[i].isChecked) {
+                totalPayment += result[i].payment
+                let index = result[i].serviceCode
+                let payment = result[i].payment
+
+                $('#amount_service_' + index).val(_contract_pay_create_new.FormatNumberStr(payment))
+                $('#amount_service_' + index).attr('disabled', false)
+                $('#amount_service_' + index).removeClass('background-disabled')
+                $('#service_ckb_' + index).prop('checked', true)
+            }
+            if (result[i].isDisabled) {
+                let index = result[i].serviceCode
+                setTimeout(function () {
+                    $('#service_ckb_' + index).attr('disabled', true)
+                    $('#amount_service_' + index).attr('disabled', true)
+                    $('#amount_service_' + index).addClass('background-disabled')
+                    $('#service_' + index).addClass('background-disabled')
+                }, 1000)
+            }
+        }
+        $('#supplier-refund-relate-table').find('tbody').append(
+            "<tr style='font-weight:bold !important;'>" +
+            "<td class='text-right' colspan='5'> Tổng </td>" +
+            "<td class='text-right' >" + _contract_pay_create_new.FormatNumberStr(totalAmount) + "</td>" +
+            "<td class='text-right'>" + _contract_pay_create_new.FormatNumberStr(totalDisarmed) + "</td>" +
+            "<td class='text-right' >" + _contract_pay_create_new.FormatNumberStr(totalNeedPayment) + "</td>" +
+            "<td class='text-right' id='total_amount_need_pay'>0</td>" +
+            "</tr>"
+        );
+        setTimeout(function () {
+            $('#total_amount_need_pay').html(_contract_pay_create_new.FormatNumberStr(totalPayment))
+
+        }, 1000)
+    },
 }

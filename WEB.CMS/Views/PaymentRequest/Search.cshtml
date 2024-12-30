@@ -142,6 +142,12 @@ else
                                             <a class="blue" href="/SetService/Others/Detail/@dataNo.DataId">
                                                 @dataNo.DataNo
                                             </a>
+                                        } 
+                                        @if (dataNo.ServiceType == (int)ServiceType.Ws)
+                                        {
+                                            <a class="blue" href="/SetService/WaterSport/Detail/@dataNo.DataId">
+                                                @dataNo.DataNo
+                                            </a>
                                         }
                                         @if (counterContent < item.ListServiceCodeAndType.Count)
                                         {

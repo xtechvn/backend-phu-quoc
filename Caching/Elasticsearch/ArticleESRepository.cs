@@ -11,7 +11,7 @@ namespace Caching.Elasticsearch
    public class ArticleESRepository : ESRepository<ArticleESViewModel>
     {
         public ArticleESRepository(string Host) : base(Host) { }
-        public async Task<List<ArticleESViewModel>> GetArticleSuggesstion(string txt_search, string index_name = "news_store")
+        public async Task<List<ArticleESViewModel>> GetArticleSuggesstion(string txt_search, string index_name = "adavigo_phuquoc_sp_getarticle")
         {
             List<ArticleESViewModel> result = new List<ArticleESViewModel>();
             try
@@ -24,8 +24,8 @@ namespace Caching.Elasticsearch
                 if (txt_search == null)
                 {
                     var result_all = elasticClient.Search<ArticleESViewModel>(s => s
+                          .Index(index_name)
 
-                         .Index(index_name + (_company_type.Trim() == "0" ? "" : "_" + _company_type.Trim()))
                           .Size(top)
                           .Query(q => q
                            .QueryString(qs => qs

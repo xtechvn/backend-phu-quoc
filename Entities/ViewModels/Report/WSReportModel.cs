@@ -17,6 +17,7 @@ namespace Entities.ViewModels.Report
     {
         
         public double BasePrice { get; set; }
+        public double SalePrice { get; set; }
         public int Quantity { get; set; }
         public double Profit { get; set; }
         public int? ServiceType { get; set; }
@@ -37,6 +38,8 @@ namespace Entities.ViewModels.Report
         public string Name { get; set; }
         public long OrderId { get; set; }
         public string OrderNo { get; set; }
+        public string PassengerName { get; set; }
+
 
     }
     public class WSReportTotalViewModel

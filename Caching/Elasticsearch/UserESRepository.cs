@@ -12,7 +12,7 @@ namespace Caching.Elasticsearch
     {
         public UserESRepository(string Host) : base(Host) { }
 
-        public async Task<List<UserESViewModel>> GetUserSuggesstion(string txt_search, string index_name = "user")
+        public async Task<List<UserESViewModel>> GetUserSuggesstion(string txt_search, string index_name = "adavigo_phuquoc_sp_getuser")
         {
             List<UserESViewModel> result = new List<UserESViewModel>();
             try
@@ -24,7 +24,7 @@ namespace Caching.Elasticsearch
                 var elasticClient = new ElasticClient(connectionSettings);
 
                 var search_response = elasticClient.Search<UserESViewModel>(s => s
-                          .Index(index_name + (_company_type.Trim() == "0" ? "" : "_" + _company_type.Trim()))
+                          .Index(index_name)
                           .Size(top)
                           .Query(q => q
                            .QueryString(qs => qs
@@ -50,7 +50,7 @@ namespace Caching.Elasticsearch
             }
 
         }
-        public async Task<UserESViewModel> GetUserByID(string id, string index_name = "user")
+        public async Task<UserESViewModel> GetUserByID(string id, string index_name = "adavigo_phuquoc_sp_getuser")
         {
             List<UserESViewModel> result = new List<UserESViewModel>();
             try
@@ -62,7 +62,7 @@ namespace Caching.Elasticsearch
                 var elasticClient = new ElasticClient(connectionSettings);
 
                 var search_response = elasticClient.Search<UserESViewModel>(s => s
-                          .Index(index_name + (_company_type.Trim() == "0" ? "" : "_" + _company_type.Trim()))
+                          .Index(index_name)
                           .Size(top)
                           .Query(q => q
                            .Match(qs => qs
@@ -87,5 +87,6 @@ namespace Caching.Elasticsearch
             }
 
         }
+       
     }
 }

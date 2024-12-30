@@ -10,6 +10,7 @@
     List<Entities.Models.AllCode> JETSKI = (List<Entities.Models.AllCode>)ViewBag.JETSKI;
     List<Entities.Models.AllCode> PARASAILING = (List<Entities.Models.AllCode>)ViewBag.PARASAILING;
     List<Entities.Models.AllCode> KAYAK = (List<Entities.Models.AllCode>)ViewBag.KAYAK;
+    List<Entities.Models.AllCode> FLYCAM = (List<Entities.Models.AllCode>)ViewBag.FLYCAM;
 
     double profit = list != null && list.Count > 0 ? list.Sum(x => (double)x.Profit) : 0;
     double amount = list != null && list.Count > 0 ? list.Sum(x => (double)x.Amount) : 0;
@@ -44,6 +45,11 @@
     <div class="col-xl-2 col-lg-3 col-md-6 mb15">
         <label class="lbl mb5">Hoa hồng CTV </label>
         <input id="servicemanual-vinwonder-discount" class="form-control currency text-right servicemanual-vinwonder-discount" disabled type="text" name="servicemanual-vinwonder-discount" placeholder="Nhập chiết khấu" value="@(booking.Commission!=null ? ((double)booking.Commission).ToString("N0"):"0")">
+
+    </div> 
+    <div class="col-xl-2 col-lg-3 col-md-6 mb15">
+        <label class="lbl mb5">Chiết khấu </label>
+        <input id="servicemanual-vinwonder-discount" class="form-control currency text-right servicemanual-vinwonder-discount" disabled type="text" name="servicemanual-vinwonder-discount" placeholder="Nhập chiết khấu" value="@(booking.Discount!=null ? ((double)booking.Discount).ToString("N0"):"0")">
 
     </div>
 </div>
@@ -177,6 +183,22 @@
                                     case WaterSportType.WATER_SPORT_KAYAK:
                                         {
                                             foreach (var allcode in KAYAK)
+                                            {
+                                                if (allcode.CodeValue == (item.DurationType != null ? (int)item.DurationType : 1))
+                                                {
+                                                    <option value="@(allcode.CodeValue)" selected="selected">@(allcode.Description)</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@(allcode.CodeValue)">@(allcode.Description)</option>
+                                                }
+
+                                            }
+                                        }
+                                        break;
+                                    case WaterSportType.WATER_SPORT_BAY_FLYCAM:
+                                        {
+                                            foreach (var allcode in FLYCAM)
                                             {
                                                 if (allcode.CodeValue == (item.DurationType != null ? (int)item.DurationType : 1))
                                                 {

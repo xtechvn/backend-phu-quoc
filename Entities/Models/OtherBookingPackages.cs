@@ -19,5 +19,6 @@ namespace Entities.Models
         public string Note { get; set; }
         public decimal? Commission { get; set; }
         public int? DurationType { get; set; }
+        public double? Discount { get; set; }
     }
 }

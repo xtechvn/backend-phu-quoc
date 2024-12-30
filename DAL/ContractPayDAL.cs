@@ -610,7 +610,7 @@ namespace DAL
                 SqlParameter[] objParam_contractPay = new SqlParameter[16];
                 objParam_contractPay[0] = new SqlParameter("@BillNo", model.BillNo);
                 if (model.ClientId == null || model.ClientId == 0)
-                    objParam_contractPay[1] = new SqlParameter("@ClientId", DBNull.Value);
+                    objParam_contractPay[1] = new SqlParameter("@ClientId", Convert.ToInt32(0));
                 else
                     objParam_contractPay[1] = new SqlParameter("@ClientId", model.ClientId);
                 objParam_contractPay[2] = new SqlParameter("@Note", model.Note);

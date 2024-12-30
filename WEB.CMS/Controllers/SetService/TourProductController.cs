@@ -38,7 +38,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService
             _configuration = configuration;
             _redisService = new RedisConn(configuration);
             _redisService.Connect();
-            _tourESRepository = new TourESRepository(_configuration["DataBaseConfig:Elastic:Host"]);
+            _tourESRepository = new TourESRepository(_configuration["DataBaseConfig:Elastic:Host"], configuration);
         }
 
         public async Task<IActionResult> Index()

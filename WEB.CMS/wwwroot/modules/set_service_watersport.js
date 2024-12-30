@@ -77,12 +77,14 @@ var _set_service_ws = {
 
     },
     Search: function (input) {
+        _global_function.AddLoading()
         window.scrollTo(0, 0);
         $.ajax({
             url: "/SetService/WaterSportSearch",
             type: "Post",
             data: input,
             success: function (result) {
+                _global_function.RemoveLoading()
                 $('#search_data_grid').html(result);
                 _common_function_ws.OrderNoSuggesstion($('.set-service-ws-search-orderno'))
                 _common_function_ws.ServiceCodeSuggesstion($('.set-service-ws-search-servicecode'))

@@ -1,4 +1,5 @@
 ﻿using AntiXssMiddleware.Middleware;
+using APP_CHECKOUT.RabitMQ;
 using Caching.Elasticsearch;
 using Entities.Models;
 using Entities.ViewModels;
@@ -6,6 +7,7 @@ using Entities.ViewModels.Attachment;
 using Entities.ViewModels.Contract;
 using Entities.ViewModels.HotelBookingCode;
 using Entities.ViewModels.Invoice;
+using Entities.ViewModels.Mongo;
 using Entities.ViewModels.OrderManual;
 using Entities.ViewModels.SetServices;
 using ENTITIES.ViewModels.ElasticSearch;
@@ -71,7 +73,9 @@ namespace WEB.Adavigo.CMS.Controllers
         private readonly IPaymentRequestRepository _paymentRequestRepository;
         private APIService apiService;
         private readonly IPassengerRepository _passengerRepository;
+        private readonly WorkQueueClient workQueueClient;
         private readonly List<int> list_order_status_not_allow_to_edit = new List<int>() { (int)OrderStatus.FINISHED, (int)OrderStatus.CANCEL, (int)OrderStatus.WAITING_FOR_ACCOUNTANT, (int)OrderStatus.WAITING_FOR_OPERATOR };
+        private LogActionMongoService LogActionMongo;
         public OrderController(IConfiguration configuration, IOrderRepository orderRepository, IClientRepository clientRepository, IHotelBookingRepositories hotelBookingRepositories, ManagementUser managementUser, IContractRepository contractRepository,
             IAllCodeRepository allcodeRepository, IContactClientRepository contactClientRepository, IOrderRepositor iOrderRepositories, IFlightSegmentRepository flightSegmentRepository, IBagageRepository bagageRepository, IContactClientRepository ContactClientRepository, IHotelBookingCodeRepository hotelBookingCodeRepository,
             IFlyBookingDetailRepository flyBookingDetailRepository, IUserRepository userRepository, IContractPayRepository contractPayRepository, IAttachFileRepository AttachFileRepository, ITourRepository tourRepository, IEmailService emailService, IAttachFileRepository attachFileRepository, IOtherBookingRepository otherBookingRepository,
@@ -84,7 +88,7 @@ namespace WEB.Adavigo.CMS.Controllers
             _allCodeRepository = allcodeRepository;
             _contactClientRepository = contactClientRepository;
             _iOrderRepositories = iOrderRepositories;
-            _orderESRepository = new OrderESRepository(_configuration["DataBaseConfig:Elastic:Host"]);
+            _orderESRepository = new OrderESRepository(_configuration["DataBaseConfig:Elastic:Host"], configuration);
             _flyBookingDetailRepository = flyBookingDetailRepository;
             _hotelBookingRepositories = hotelBookingRepositories;
             _userRepository = userRepository;
@@ -106,6 +110,8 @@ namespace WEB.Adavigo.CMS.Controllers
             _accountClientRepository = accountClientRepository;
             _paymentRequestRepository = paymentRequestRepository;
             _passengerRepository = passengerRepository;
+            LogActionMongo = new LogActionMongoService(configuration);
+            workQueueClient = new WorkQueueClient(configuration);
         }
 
 
@@ -299,10 +305,16 @@ namespace WEB.Adavigo.CMS.Controllers
                 var result = id;
                 if (id != 0)
                 {
+                    ViewBag.OrderClosing = false;
+                    var ListOrderBookClosing = await _orderRepository.GetListOrderBookClosingByOrderId(id);
                     ViewBag.ServiceStatus = 0;
                     ViewBag.IsDeclineOrder = false;
                     var current_user = _ManagementUser.GetCurrentUser();
                     IEnumerable<int> menu_ids = new List<int>();
+                    if (ListOrderBookClosing != null && ListOrderBookClosing.Count > 0)
+                    {
+                        ViewBag.OrderClosing = true;
+                    }
                     if (current_user != null && current_user.Role != null)
                     {
                         List<int> role = new List<int>();
@@ -318,6 +330,7 @@ namespace WEB.Adavigo.CMS.Controllers
                     }
                     var dataOrder = _iOrderRepositories.GetByOrderId(id);
                     var dataOrderService = await _orderRepository.GetAllServiceByOrderId(dataOrder.OrderId);
+                    ViewBag.IsLock = dataOrder != null ? dataOrder.IsLock : false;
                     bool triggered = false;
                     if (dataOrderService != null && dataOrderService.Count > 0)
                     {
@@ -662,45 +675,28 @@ namespace WEB.Adavigo.CMS.Controllers
                 }
                 if (txt_search != null)
                 {
+                    var data_order = new List<OrderSelectViewModel>();
 
                     if (Convert.ToInt32(systemtype) < 0 || systemtype == "")
                     {
-                        var dataEs = await _orderESRepository.GetOrderNoSuggesstion(txt_search);
-                        var data = new List<SearchOrderElasticsearchViewModel>();
-                        if (dataEs != null)
-                        {
-                            foreach (var item in dataEs)
-                            {
-                                var dataitem = new SearchOrderElasticsearchViewModel();
-                                dataitem.orderno = item.orderno;
-                                data.Add(dataitem);
-                            }
-                        }
-
+                        var data = await _orderESRepository.GetOrderNoSuggesstion(txt_search);
+                        data_order.AddRange(data.Select(s => new OrderSelectViewModel { orderid = s.id, orderno = s.orderno }));
                         return Ok(new
                         {
                             status = (int)ResponseType.SUCCESS,
-                            data = data,
+                            data = data_order,
                             selected = _UserId
                         });
                     }
                     else
                     {
-                        var dataEs = await _orderESRepository.GetOrderNoSuggesstion2(txt_search, Convert.ToInt32(systemtype));
-                        var data = new List<SearchOrderElasticsearchViewModel>();
-                        if (dataEs != null)
-                        {
-                            foreach (var item in dataEs)
-                            {
-                                var dataitem = new SearchOrderElasticsearchViewModel();
-                                dataitem.orderno = item.orderno;
-                                data.Add(dataitem);
-                            }
-                        }
+                        var data = await _orderESRepository.GetOrderNoSuggesstion2(txt_search, Convert.ToInt32(systemtype));
+                        data_order.AddRange(data.Select(s => new OrderSelectViewModel { orderid = s.id, orderno = s.orderno }));
+
                         return Ok(new
                         {
                             status = (int)ResponseType.SUCCESS,
-                            data = data,
+                            data = data_order,
                             selected = _UserId
                         });
                     }
@@ -710,7 +706,7 @@ namespace WEB.Adavigo.CMS.Controllers
                     return Ok(new
                     {
                         status = (int)ResponseType.SUCCESS,
-                        data = new List<OrderElasticsearchViewModel>()
+                        data = new List<OrderSelectViewModel>()
                     });
                 }
             }
@@ -720,7 +716,7 @@ namespace WEB.Adavigo.CMS.Controllers
                 return Ok(new
                 {
                     status = (int)ResponseType.SUCCESS,
-                    data = new List<OrderElasticsearchViewModel>()
+                    data = new List<OrderSelectViewModel>()
                 });
             }
 
@@ -889,6 +885,7 @@ namespace WEB.Adavigo.CMS.Controllers
                             ViewBag.IsAddMoreService = true;
                         }
                         ViewBag.data = data;
+                        ViewBag.DiscountDV = data!=null? data.Sum(s=>s.DiscountDV):0;
                         return PartialView(data);
 
                     }
@@ -1107,9 +1104,11 @@ namespace WEB.Adavigo.CMS.Controllers
             {
                 if (orderId != 0)
                 {
+                    ViewBag.orderId = orderId;
                     var dataOrder = _iOrderRepositories.GetByOrderId(orderId);
                     if (dataOrder != null)
                     {
+                        ViewBag.OrderNo = dataOrder.OrderNo;
                         if (dataOrder.CreatedBy != null)
                             ViewBag.UserCreateId = dataOrder.CreatedBy;
                         if (dataOrder.CreateTime != null)
@@ -1636,6 +1635,8 @@ namespace WEB.Adavigo.CMS.Controllers
                                 order_id = (long)hotel.OrderId;
                             }
                             var success = await _hotelBookingRepositories.DeleteHotelBookingByID(hotel_booking_id);
+                            workQueueClient.SyncES(hotel_booking_id, _configuration["DataBaseConfig:Elastic:SP:sp_GetHotelBooking"], _configuration["DataBaseConfig:Elastic:Index:HotelBooking"], ProjectType.ADAVIGO_CMS_PQ, "DeleteService OrderController");
+
                             break;
                         }
                     case (int)ServiceType.PRODUCT_FLY_TICKET:
@@ -1645,6 +1646,12 @@ namespace WEB.Adavigo.CMS.Controllers
                             if (fly != null && fly.Count > 0 && fly[0].Id > 0)
                             {
                                 order_id = (long)fly[0].OrderId;
+                                workQueueClient.SyncES(fly[0].Id, _configuration["DataBaseConfig:Elastic:SP:SP_GetDetailFlyBookingDetail"], _configuration["DataBaseConfig:Elastic:Index:FlyBookingDetail"], ProjectType.ADAVIGO_CMS_PQ, "DeleteService OrderController");
+                                if (fly.Count > 1)
+                                {
+                                    workQueueClient.SyncES(fly[1].Id, _configuration["DataBaseConfig:Elastic:SP:SP_GetDetailFlyBookingDetail"], _configuration["DataBaseConfig:Elastic:Index:FlyBookingDetail"], ProjectType.ADAVIGO_CMS_PQ, "DeleteService OrderController");
+
+                                }
                             }
                             var success = await _flyBookingDetailRepository.DeleteFlyBookingByID(id);
 
@@ -1664,6 +1671,8 @@ namespace WEB.Adavigo.CMS.Controllers
                                 order_id = (long)tour.OrderId;
                             }
                             var success = await _tourRepository.DeleteTourByID(tour_id);
+                            workQueueClient.SyncES(tour_id, _configuration["DataBaseConfig:Elastic:SP:sp_GetTour"], _configuration["DataBaseConfig:Elastic:Index:TourBooking"], ProjectType.ADAVIGO_CMS_PQ);
+
                             break;
                         }
                     case (int)ServiceType.Other:
@@ -1769,6 +1778,8 @@ namespace WEB.Adavigo.CMS.Controllers
                                 //        _contractPayRepository.UndoContractPayByCancelService(contract.PayId, (long)hotel.OrderId, _UserLogin);
                                 //    }
                                 //}
+                                workQueueClient.SyncES(hotel_booking_id, _configuration["DataBaseConfig:Elastic:SP:sp_GetHotelBooking"], _configuration["DataBaseConfig:Elastic:Index:HotelBooking"], ProjectType.ADAVIGO_CMS_PQ, "CancelService OrderController");
+
                             }
 
                             break;
@@ -1781,7 +1792,12 @@ namespace WEB.Adavigo.CMS.Controllers
                             {
                                 order_id = (long)fly[0].OrderId;
                                 var success = await _flyBookingDetailRepository.CancelHotelBookingByID(id, _UserLogin);
+                                workQueueClient.SyncES(fly[0].Id, _configuration["DataBaseConfig:Elastic:SP:SP_GetDetailFlyBookingDetail"], _configuration["DataBaseConfig:Elastic:Index:FlyBookingDetail"], ProjectType.ADAVIGO_CMS_PQ, "CancelService OrderController");
+                                if (fly.Count > 1)
+                                {
+                                    workQueueClient.SyncES(fly[1].Id, _configuration["DataBaseConfig:Elastic:SP:SP_GetDetailFlyBookingDetail"], _configuration["DataBaseConfig:Elastic:Index:FlyBookingDetail"], ProjectType.ADAVIGO_CMS_PQ, "CancelService OrderController");
 
+                                }
                             }
                             break;
                         }
@@ -1798,6 +1814,7 @@ namespace WEB.Adavigo.CMS.Controllers
                             {
                                 order_id = (long)tour.OrderId;
                                 var success = await _tourRepository.CancelTourByID(tour_id, _UserLogin);
+                                workQueueClient.SyncES(tour_id, _configuration["DataBaseConfig:Elastic:SP:sp_GetTour"], _configuration["DataBaseConfig:Elastic:Index:TourBooking"], ProjectType.ADAVIGO_CMS_PQ, "CancelService OrderController");
 
                             }
                             break;
@@ -2169,7 +2186,7 @@ namespace WEB.Adavigo.CMS.Controllers
                                     SupplierId = Convert.ToInt32(ReadFile.LoadConfig().SUPPLIERID_ADAVIGO),
                                     SystemType = 1,
                                     UpdateLast = DateTime.Now,
-                                    Passenger = null,
+                                    //Passenger = null,
                                     UserUpdateId = _UserLogin,
                                     UserVerify = _UserLogin,
                                     UtmSource = null,
@@ -2493,7 +2510,105 @@ namespace WEB.Adavigo.CMS.Controllers
             }
             return PartialView();
         }
+        [HttpPost]
+        public async Task<IActionResult> UpdateOrderIsLock(long OrderId, long IsLock)
+        {
+            var status = (int)ResponseType.SUCCESS;
+            var smg = "Mở sổ đơn hàng không thành công";
+            try
+            {
+                if (OrderId != 0)
+                {
+                    long UpdatedBy = int.Parse(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                    var orderDetail = await _orderRepository.GetOrderByID(OrderId);
+                    var user = await _userRepository.GetById(UpdatedBy);
+                    var update = await _orderRepository.UpdateBookClosingByOrderId(OrderId, IsLock, UpdatedBy);
+                    if (update > 0)
+                    {
+                        var model = new LogActionModel();
+                        model.Type = (int)AttachmentType.OrderDetail;
+                        model.LogId = OrderId;
+                        model.CreatedUserName = user.FullName;
+                        if (IsLock > 0)
+                        {
 
+                            smg = "khóa sổ đơn hàng thành công";
+                            model.Log = "khóa sổ đơn hàng";
+                            model.Note = user.FullName + " khóa sổ đơn hàng " + ((double)orderDetail.Amount).ToString("N0");
+                            //var ListOrderBookClosing= await _orderRepository.GetListOrderBookClosingByOrderId(OrderId);
+
+                            //  var OrderBookClosing = new OrderBookClosingViewModel
+                            //  {
+                            //      FromDateStr = ListOrderBookClosing[0].FromDate.ToString("dd/MM/yyyy"),
+                            //      ToDateStr = ListOrderBookClosing[0].ToDate.ToString("dd/MM/yyyy"),
+                            //      UserFinalize= UpdatedBy,
+                            //  };
+                            //  var date = DateUtil.StringToDate(OrderBookClosing.ToDateStr);
+                            //  OrderBookClosing.ToDate = ((DateTime)date).AddHours(23).AddMinutes(59).AddSeconds(59);
+                            //  var Request = await _orderRepository.OrderBookClosing(OrderBookClosing);
+
+                            LogActionMongo.InsertLog(model);
+                        }
+                        else
+                        {
+                            smg = "Mở sổ đơn hàng thành công";
+                            model.Log = "Mở sổ đơn hàng";
+                            model.Note = user.FullName + " Mở sổ đơn hàng " + ((double)orderDetail.Amount).ToString("N0");
+                            LogActionMongo.InsertLog(model);
+                        }
+                    }
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("UpdateOrderIsLock - OrderController: " + ex);
+                status = (int)ResponseType.ERROR;
+                smg = "Đã xảy ra lỗi, vui lòng liên hệ IT";
+            }
+
+            return Ok(new
+            {
+                status = status,
+                smg = smg
+            });
+        }
+        public async Task<IActionResult> GetLogOrderIsLock(long orderid)
+        {
+
+            try
+            {
+                var ListOrderBookClosing = await _orderRepository.GetListOrderBookClosingByOrderId(orderid);
+                return PartialView(ListOrderBookClosing);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("GetLogOrderIsLock - OrderController: " + ex.ToString());
+
+            }
+            return PartialView();
+        }
+        public async Task<IActionResult> getLog(long orderid)
+        {
+
+            try
+            {
+
+                var model = new LogActionModel();
+                model.Type = (int)AttachmentType.OrderDetail;
+                model.LogId = orderid;
+                var data = LogActionMongo.GetListLogActions(model);
+
+                return PartialView(data);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("getLog - OrderController: " + ex.ToString());
+
+            }
+            return PartialView();
+        }
     }
 }
 

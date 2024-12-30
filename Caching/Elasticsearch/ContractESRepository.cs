@@ -12,7 +12,7 @@ namespace Caching.Elasticsearch
    public class ContractESRepository:ESRepository<ContractNoESViewModel>
     {
         public ContractESRepository(string Host) : base(Host) { }
-        public async Task<List<ContractNoESViewModel>> GetContractNoSuggesstion(string txt_search, string index_name = "contract_store")
+        public async Task<List<ContractNoESViewModel>> GetContractNoSuggesstion(string txt_search, string index_name = "adavigo_phuquoc_sp_getclient")
         {
             List<ContractNoESViewModel> result = new List<ContractNoESViewModel>();
             try
@@ -24,7 +24,8 @@ namespace Caching.Elasticsearch
                 var elasticClient = new ElasticClient(connectionSettings);
 
                 var search_response = elasticClient.Search<ContractNoESViewModel>(s => s
-                          .Index(index_name + (_company_type.Trim() == "0" ? "" : "_" + _company_type.Trim()))
+                          .Index(index_name)
+
                           .Size(top)
                           .Query(q =>
                              q.QueryString(qs => qs

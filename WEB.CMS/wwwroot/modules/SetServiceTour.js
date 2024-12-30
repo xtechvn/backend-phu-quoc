@@ -21,7 +21,7 @@
                     results: $.map(response.data, function (item) {
                         return {
                             text: item.orderno,
-                            id: item.id,
+                            id: item.orderid,
                         }
                     })
                 };

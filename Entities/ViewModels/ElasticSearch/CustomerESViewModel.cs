@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nest;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,18 +8,22 @@ namespace Entities.ViewModels.ElasticSearch
     public class CustomerESViewModel
     {
         public long _id { get; set; } // ID ElasticSearch
+        [PropertyName("id")]
         public long id { get; set; } // ID customer
+        [PropertyName("clientname")]
         public string clientname { get; set; }
+        [PropertyName("clientcode")]
+        public string clientcode { get; set; }
+        [PropertyName("email")]
         public string email { get; set; }
         public string phone { get; set; }
         public int clienttype { get; set; }
-        public int userid { get; set; }
-        public int agencytype { get; set; }
+        public int? userid { get; set; }
     }
     public class ClientESViewModel
     {
       
-        public long _id { get; set; } // ID customer
+        public long id { get; set; } // ID customer
         public string ClientName { get; set; }
         public string Email { get; set; }
         public int Status { get; set; }
@@ -27,7 +32,7 @@ namespace Entities.ViewModels.ElasticSearch
         public int ClientType { get; set; }
         public string unix_timestamp { get; set; }
         public string suggest_search { get; set; }
-        public string userid { get; set; }
+        public int? userid { get; set; }
 
     }
     public class earchClientESViewModel
@@ -38,7 +43,7 @@ namespace Entities.ViewModels.ElasticSearch
         public string email { get; set; }
         public string id { get; set; }
         public string clienttype { get; set; }
-        public string userid { get; set; }
+        public int? userid { get; set; }
         public int agencytype { get; set; }
 
     }

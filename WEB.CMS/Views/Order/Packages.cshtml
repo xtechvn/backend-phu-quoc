@@ -400,6 +400,17 @@
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td class="bold">Chiết khấu dịch vụ</td>
+                            <td class=" text-right"> @(ViewBag.DiscountDV != null&& ViewBag.DiscountDV > 0? ViewBag.DiscountDV.ToString("N0"):"0") </td>
+                            <td>
+                            </td>
+                        </tr>
+
+                        <tr class="no-border hidden-tablet">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
                             <td class="bold">Hoàn trả khách hàng</td>
                             @if (Model[0].Refund != 0)
                             {

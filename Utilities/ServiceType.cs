@@ -14,7 +14,8 @@ namespace Utilities
         VinWonder =6,
        // AmusementParkTickets = 7,
       //  FoodandBeverageService = 8,
-        Other = 9
+        Other = 9,
+        Ws = 28
     }
     public enum EmailType
     {

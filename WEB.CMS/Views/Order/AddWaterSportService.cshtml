@@ -73,6 +73,11 @@
                                 <input id="servicemanual-watersport-commission" class="form-control currency text-right servicemanual-watersport-commission" type="text" name="servicemanual-watersport-commission" placeholder="Nhập chiết khấu" value="@(booking!=null && booking.Id>0&& booking.Commission!=null?((double)booking.Commission).ToString("N0"):"0")">
 
                             </div>
+                            <div class="col-xl-2 col-lg-3 col-md-6 mb15">
+                                <label class="lbl mb5">Chiết khấu </label>
+                                <input id="servicemanual-watersport-discount" class="form-control currency text-right servicemanual-watersport-discount" type="text" name="servicemanual-watersport-discount" placeholder="Nhập chiết khấu" value="@(booking!=null && booking.Id>0&& booking.Discount!=null?((double)booking.Discount).ToString("N0"):"0")">
+
+                            </div>
                         </div>
 
                         <div>
@@ -140,7 +145,7 @@
                     <div style="padding-top: 20px; margin-top:10px;">
                         <div id="service-watersport-button-div" class="text-right ">
                             <div class="btn btn-default btn btn-default cancel" onclick="_order_detail_watersport.Close()">Bỏ qua</div>
-                            @if (is_order_manual && is_allow_to_edit)
+                            @if (is_order_manual && is_allow_to_edit && (ViewBag.IsLock == null || ViewBag.IsLock == false))
                             {
                                 <div class="btn btn-default btn btn-summit-service-watersport" onclick="_order_detail_watersport.Summit()">@(booking!=null && booking.Id>0?"Sửa":"Thêm")</div>
 

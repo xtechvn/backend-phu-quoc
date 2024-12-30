@@ -8,6 +8,7 @@ using Entities.ViewModels;
 using Entities.ViewModels.Report;
 using Microsoft.Extensions.Options;
 using Repositories.IRepositories;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -29,6 +30,7 @@ namespace Repositories.Repositories
         private readonly DepartmentDAL departmentDAL;
         private readonly string _UrlStaticImage;
         private readonly PassengerDAL passengerDAL;
+
         public ReportRepository(IOptions<DataBaseConfig> dataBaseConfig, IOptions<DomainConfig> domainConfig)
         {
             orderDal = new OrderDAL(dataBaseConfig.Value.SqlServer.ConnectionString);
@@ -39,6 +41,7 @@ namespace Repositories.Repositories
             departmentDAL = new DepartmentDAL(dataBaseConfig.Value.SqlServer.ConnectionString);
             _UrlStaticImage = domainConfig.Value.ImageStatic;
             passengerDAL = new PassengerDAL(dataBaseConfig.Value.SqlServer.ConnectionString);
+
         }
         public async Task<GenericViewModel<OperatorReportViewModel>> GetOperatorReport(OperatorReportSearchModel searchModel, int currentPage = 1, int pageSize = 20)
         {
@@ -178,7 +181,7 @@ namespace Repositories.Repositories
                     Style style = ws.Cells["A1"].GetStyle();
 
                     #region Header
-                    range = cell.CreateRange(0, 0, 2, 23);
+                    range = cell.CreateRange(0, 0, 2, 25);
                     style = ws.Cells["A1"].GetStyle();
                     style.Font.IsBold = true;
                     style.IsTextWrapped = true;
@@ -200,9 +203,9 @@ namespace Repositories.Repositories
 
                     // Set column width
                     cell.SetColumnWidth(0, 8);
-                    cell.SetColumnWidth(1, 20);
-                    cell.SetColumnWidth(2, 40);
-                    cell.SetColumnWidth(3, 20);
+                    cell.SetColumnWidth(1, 30);
+                    cell.SetColumnWidth(2, 20);
+                    cell.SetColumnWidth(3, 50);
                     cell.SetColumnWidth(4, 20);
                     cell.SetColumnWidth(5, 30);
                     cell.SetColumnWidth(6, 30);
@@ -216,71 +219,88 @@ namespace Repositories.Repositories
                     cell.SetColumnWidth(14, 25);
                     cell.SetColumnWidth(15, 25);
                     cell.SetColumnWidth(16, 25);
-                    cell.SetColumnWidth(17, 50);
-                    cell.SetColumnWidth(18, 75);
+                    cell.SetColumnWidth(17, 25);
+                    cell.SetColumnWidth(18, 25);
                     cell.SetColumnWidth(19, 25);
-                    cell.SetColumnWidth(20, 75);
+                    cell.SetColumnWidth(20, 25);
                     cell.SetColumnWidth(21, 25);
-                    cell.SetColumnWidth(22, 50);
+                    cell.SetColumnWidth(22, 25);
+                    cell.SetColumnWidth(23, 25);
+                    cell.SetColumnWidth(24, 25);
+                    cell.SetColumnWidth(25, 25);
+                    cell.SetColumnWidth(26, 25);
+                    cell.SetColumnWidth(27, 25);
 
 
                     // Set header value
-                    ws.Cells["G1"].PutValue("Doanh thu (Tổng thu của khách hàng)");
-                    cell.Merge(0, 5, 1, 3);
-                    ws.Cells["J1"].PutValue("Giá vốn  (Tổng chi cho nhà cung cấp)");
-                    cell.Merge(0, 8, 1, 3);
+                    ws.Cells["K1"].PutValue("Doanh thu (Tổng thu của khách hàng)");
+                    cell.Merge(0, 10, 1, 3);
+                    ws.Cells["N1"].PutValue("Giá vốn  (Tổng chi cho nhà cung cấp)");
+                    cell.Merge(0, 13, 1, 4);
 
                     ws.Cells["A2"].PutValue("STT");
                     ws.Cells["B2"].PutValue("Phòng ban");
-                    ws.Cells["C2"].PutValue("Mã đơn hàng");
-                    ws.Cells["D2"].PutValue("Ngày in");
-                    ws.Cells["E2"].PutValue("Ngày out");
-                  
+                    //--Replace
+                    ws.Cells["C2"].PutValue("Chi nhánh");
+                    ws.Cells["D2"].PutValue("Nhãn đơn hàng");
+                    ws.Cells["E2"].PutValue("Mã khách hàng");
 
-                    ws.Cells["L2"].PutValue("Hoa hồng CTV");
-                    ws.Cells["M2"].PutValue("Lợi nhuận (có VAT)");
-                    ws.Cells["N2"].PutValue("Trạng thái");
-                    ws.Cells["O2"].PutValue("Số hóa đơn");
-                    ws.Cells["P2"].PutValue("Ngày xuất hóa đơn");
-                    ws.Cells["Q2"].PutValue("Người phụ trách chính");
-                    ws.Cells["R2"].PutValue("Điều hành");
-                    ws.Cells["S2"].PutValue("Ngân hàng nhận tiền");
-                    ws.Cells["T2"].PutValue("Mã khách hàng");
-                    ws.Cells["U2"].PutValue("Nhãn đơn hàng");
-                    ws.Cells["V2"].PutValue("Chi nhánh");
-                    ws.Cells["W2"].PutValue("Tên khách hàng");
-                    
+                    ws.Cells["F2"].PutValue("Tên khách hàng");
+
+                    ws.Cells["G2"].PutValue("Mã đơn hàng");
+                    ws.Cells["H2"].PutValue("dịch vụ");
+                    ws.Cells["I2"].PutValue("Ngày in");
+                    ws.Cells["J2"].PutValue("Ngày out");
+
+                    ws.Cells["R2"].PutValue("Lợi nhuận thực tế");
+                    ws.Cells["S2"].PutValue("Hoa hồng CTV");
+                    ws.Cells["T2"].PutValue("Lợi nhuận (có VAT)");
+                    ws.Cells["U2"].PutValue("Trạng thái");
+                    ws.Cells["V2"].PutValue("Số hóa đơn");
+                    ws.Cells["W2"].PutValue("Ngày xuất hóa đơn");
+                    ws.Cells["X2"].PutValue("Người phụ trách chính");
+                    ws.Cells["Y2"].PutValue("Điều hành");
+                    ws.Cells["Z2"].PutValue("Ngân hàng nhận tiền");
+                    ws.Cells["AA2"].PutValue("Chiết khấu");
+                 
+
                     cell.Merge(0, 0, 2, 1);
                     cell.Merge(0, 1, 2, 1);
                     cell.Merge(0, 2, 2, 1);
                     cell.Merge(0, 3, 2, 1);
                     cell.Merge(0, 4, 2, 1);
-                    
-                    cell.Merge(0, 11, 2, 1);
-                    cell.Merge(0, 12, 2, 1);
-                    cell.Merge(0, 13, 2, 1);
-                    cell.Merge(0, 14, 2, 1);
-                    cell.Merge(0, 15, 2, 1);
-                    cell.Merge(0, 16, 2, 1);
+                    cell.Merge(0, 5, 2, 1);
+                    cell.Merge(0, 6, 2, 1);
+                    cell.Merge(0, 7, 2, 1);
+                    cell.Merge(0, 8, 2, 1);
+                    cell.Merge(0, 9, 2, 1);
+
+
                     cell.Merge(0, 17, 2, 1);
                     cell.Merge(0, 18, 2, 1);
                     cell.Merge(0, 19, 2, 1);
                     cell.Merge(0, 20, 2, 1);
                     cell.Merge(0, 21, 2, 1);
                     cell.Merge(0, 22, 2, 1);
+                    cell.Merge(0, 23, 2, 1);
+                    cell.Merge(0, 24, 2, 1);
+                    cell.Merge(0, 25, 2, 1);
+                    cell.Merge(0, 26, 2, 1);
+                    cell.Merge(0, 27, 2, 1);
 
-                    ws.Cells["F2"].PutValue("Tổng tiền");
-                    ws.Cells["G2"].PutValue("Đã thu");
-                    ws.Cells["H2"].PutValue("Còn phải thu");
+                    ws.Cells["K2"].PutValue("Tổng tiền");
+                    ws.Cells["L2"].PutValue("Đã thu");
+                    ws.Cells["M2"].PutValue("Còn phải thu");
 
-                    ws.Cells["I2"].PutValue("Tổng tiền");
-                    ws.Cells["J2"].PutValue("Đã thanh toán");
-                    ws.Cells["K2"].PutValue(" Còn phải thanh toán");
+                    ws.Cells["N2"].PutValue("Tổng tiền");
+                    ws.Cells["O2"].PutValue("Đã thanh toán");
+                    ws.Cells["P2"].PutValue("NCC Hoàn trả");
+                    ws.Cells["Q2"].PutValue("Còn phải thanh toán");
                     #endregion
 
                     #region Body
 
-                    range = cell.CreateRange(1, 0, model.ListData.Count + 1, 23);
+                    range = cell.CreateRange(1, 0, model.ListData.Count + 1, 28);
                     style = ws.Cells["A3"].GetStyle();
                     style.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
                     style.Borders[BorderType.TopBorder].Color = Color.Black;
@@ -299,13 +319,16 @@ namespace Repositories.Repositories
                     Style alignRightStyle = ws.Cells["A3"].GetStyle();
                     alignCenterStyle.HorizontalAlignment = TextAlignmentType.Right;
                     alignCenterStyle.VerticalAlignment = TextAlignmentType.Center;
-                    ws.Cells["F2"].SetStyle(alignRightStyle);
-                    ws.Cells["G2"].SetStyle(alignRightStyle);
-                    ws.Cells["H2"].SetStyle(alignRightStyle);
 
-                    ws.Cells["I2"].SetStyle(alignRightStyle);
-                    ws.Cells["J2"].SetStyle(alignRightStyle);
+
                     ws.Cells["K2"].SetStyle(alignRightStyle);
+                    ws.Cells["L2"].SetStyle(alignRightStyle);
+                    ws.Cells["M2"].SetStyle(alignRightStyle);
+
+                    ws.Cells["N2"].SetStyle(alignRightStyle);
+                    ws.Cells["O2"].SetStyle(alignRightStyle);
+                    ws.Cells["P2"].SetStyle(alignRightStyle);
+                    ws.Cells["Q2"].SetStyle(alignRightStyle);
 
                     Style numberStyle = ws.Cells["A3"].GetStyle();
                     numberStyle.Number = 3;
@@ -322,17 +345,29 @@ namespace Repositories.Repositories
                         ws.Cells["A" + RowIndex].SetStyle(alignCenterStyle);
 
                         ws.Cells["B" + RowIndex].PutValue(item.DepartmentName);
-                        ws.Cells["C" + RowIndex].PutValue(item.OrderNo);
+                        //Replace:
+                        ws.Cells["C" + RowIndex].PutValue(item.BranchName != null ? item.BranchName : "");
+                        ws.Cells["D" + RowIndex].PutValue(item.Label != null ? item.Label : "");
+                        ws.Cells["E" + RowIndex].PutValue(item.ClientCode ?? "");
+                        ws.Cells["F" + RowIndex].PutValue(item.ClientName ?? "");
 
-                        ws.Cells["D" + RowIndex].PutValue(item.StartDate.ToString("dd/MM/yyyy HH:mm"));
-                        ws.Cells["E" + RowIndex].PutValue(item.EndDate.ToString("dd/MM/yyyy HH:mm"));
 
-                        ws.Cells["F" + RowIndex].PutValue(item.Amount);
-                        ws.Cells["G" + RowIndex].PutValue(item.AmountPay == null ? 0 : ((double)item.AmountPay));
-                        ws.Cells["H" + RowIndex].PutValue(item.AmountRemain == null ? item.Amount : ((double)item.AmountRemain));
+                        ws.Cells["G" + RowIndex].PutValue(item.OrderNo);
+                        ws.Cells["H" + RowIndex].PutValue(item.ServiceName);
 
-                        ws.Cells["I" + RowIndex].PutValue(item.Price == null ? 0 : ((double)item.Price));
-                        ws.Cells["J" + RowIndex].PutValue(item.PricePay == null ? 0 : ((double)item.PricePay));
+                        ws.Cells["I" + RowIndex].PutValue(item.StartDate.ToString("dd/MM/yyyy HH:mm"));
+                        ws.Cells["J" + RowIndex].PutValue(item.EndDate.ToString("dd/MM/yyyy HH:mm"));
+
+                        ws.Cells["K" + RowIndex].PutValue(item.Amount);
+
+                        ws.Cells["L" + RowIndex].PutValue(item.AmountPay == null ? 0 : ((double)item.AmountPay));
+
+                        ws.Cells["M" + RowIndex].PutValue(item.AmountRemain == null ? item.Amount : ((double)item.AmountRemain));
+
+                        ws.Cells["N" + RowIndex].PutValue(item.Price == null ? 0 : ((double)item.Price));
+
+                        ws.Cells["O" + RowIndex].PutValue(item.PricePay == null ? 0 : ((double)item.PricePay));
+
                         double item_price_remain = 0;
                         if (item.PriceRemain == null)
                         {
@@ -343,49 +378,42 @@ namespace Repositories.Repositories
                             item_price_remain = (double)item.PriceRemain;
 
                         }
-                        ws.Cells["K" + RowIndex].PutValue(item_price_remain);
+                        ws.Cells["P" + RowIndex].PutValue(item.AmountPayNCC == null ? 0 : ((double)item.AmountPayNCC));
+                        ws.Cells["Q" + RowIndex].PutValue(item_price_remain);
 
-                        ws.Cells["L" + RowIndex].PutValue(item.Comission == null ? 0 : ((double)item.Comission));
-                        ws.Cells["M" + RowIndex].PutValue(item.Profit == null ? 0 : ((double)item.Profit));
+                        ws.Cells["R" + RowIndex].PutValue(item.Amount - (item.Price == null ? 0 : (double)item.Price));
+                        ws.Cells["S" + RowIndex].PutValue(item.Comission == null ? 0 : ((double)item.Comission));
+                        ws.Cells["T" + RowIndex].PutValue(item.Profit == null ? 0 : ((double)item.Profit));
 
-                        ws.Cells["N" + RowIndex].PutValue(item.OrderStatusName != null ? item.OrderStatusName : "");
-                        ws.Cells["O" + RowIndex].PutValue(item.InvoiceNo != null ? item.InvoiceNo : "");
-                        ws.Cells["P" + RowIndex].PutValue(item.ExportDate == null ? "" : ((DateTime)item.ExportDate).ToString("dd/MM/yyyy HH:mm"));
 
-                        ws.Cells["Q" + RowIndex].PutValue(item.FullName != null ? item.FullName : "");
-                        ws.Cells["R" + RowIndex].PutValue(item.OperatorName != null ? item.OperatorName : "");
-                        ws.Cells["S" + RowIndex].PutValue(item.BankId != null ? item.BankId.Replace(",", " ") + " - " + item.AccountNumber : "");
-                        ws.Cells["T" + RowIndex].PutValue(item.ClientCode ?? "");
-                        ws.Cells["U" + RowIndex].PutValue(item.Label != null ? item.Label : "");
-                        ws.Cells["V" + RowIndex].PutValue(item.BranchName != null ? item.BranchName : "");
-                        ws.Cells["W" + RowIndex].PutValue(item.ClientName ?? "");
+                        ws.Cells["U" + RowIndex].PutValue(item.OrderStatusName != null ? item.OrderStatusName : "");
+                        ws.Cells["V" + RowIndex].PutValue(item.InvoiceNo != null ? item.InvoiceNo : "");
+                        ws.Cells["W" + RowIndex].PutValue(item.ExportDate == null ? "" : ((DateTime)item.ExportDate).ToString("dd/MM/yyyy HH:mm"));
 
-                        ws.Cells["F" + RowIndex].SetStyle(numberStyle);
-                        ws.Cells["G" + RowIndex].SetStyle(numberStyle);
-                        ws.Cells["H" + RowIndex].SetStyle(numberStyle);
-                        ws.Cells["I" + RowIndex].SetStyle(numberStyle);
-                        ws.Cells["J" + RowIndex].SetStyle(numberStyle);
+                        ws.Cells["X" + RowIndex].PutValue(item.FullName != null ? item.FullName : "");
+                        ws.Cells["Y" + RowIndex].PutValue(item.OperatorName != null ? item.OperatorName : "");
+                        ws.Cells["Z" + RowIndex].PutValue(item.BankId != null ? item.BankId.Replace(",", " ") + " - " + item.AccountNumber : "");
+                        ws.Cells["AA" + RowIndex].PutValue(((double)item.Discount));
+                
+
+
                         ws.Cells["K" + RowIndex].SetStyle(numberStyle);
                         ws.Cells["L" + RowIndex].SetStyle(numberStyle);
                         ws.Cells["M" + RowIndex].SetStyle(numberStyle);
-
+                        ws.Cells["N" + RowIndex].SetStyle(numberStyle);
+                        ws.Cells["O" + RowIndex].SetStyle(numberStyle);
+                        ws.Cells["P" + RowIndex].SetStyle(numberStyle);
+                        ws.Cells["Q" + RowIndex].SetStyle(numberStyle);
+                        ws.Cells["R" + RowIndex].SetStyle(numberStyle);
+                        ws.Cells["S" + RowIndex].SetStyle(numberStyle);
+                        ws.Cells["AA" + RowIndex].SetStyle(numberStyle);
+                        ws.Cells["T" + RowIndex].SetStyle(numberStyle);
+         
                     }
-                    // ws.AutoFitColumns();
-                    ws.Cells.InsertColumn(2);
-                    ws.Cells.CopyColumn(ws.Cells, ws.Cells.Columns[22].Index, ws.Cells.Columns[2].Index);
-                    ws.Cells.DeleteColumn(22);
-
-                    ws.Cells.InsertColumn(3);
-                    ws.Cells.CopyColumn(ws.Cells, ws.Cells.Columns[22].Index, ws.Cells.Columns[3].Index);
-                    ws.Cells.DeleteColumn(22);
-
-                    ws.Cells.InsertColumn(4);
-                    ws.Cells.CopyColumn(ws.Cells, ws.Cells.Columns[22].Index, ws.Cells.Columns[4].Index);
-                    ws.Cells.DeleteColumn(22);
-
-                    ws.Cells.InsertColumn(5);
-                    ws.Cells.CopyColumn(ws.Cells, ws.Cells.Columns[23].Index, ws.Cells.Columns[5].Index);
-                    ws.Cells.DeleteColumn(23);
+                    ws.Cells.InsertColumn(20);
+                    ws.Cells.CopyColumn(ws.Cells, ws.Cells.Columns[27].Index, ws.Cells.Columns[20].Index);
+                    ws.Cells.DeleteColumn(27);
+                 
                     #endregion
                     wb.Save(full_path);
                 }
@@ -897,6 +925,7 @@ namespace Repositories.Repositories
                     cell.SetColumnWidth(15, 25);
                     cell.SetColumnWidth(16, 25);
                     cell.SetColumnWidth(17, 25);
+
                     // Set header value
 
                     ws.Cells["A1"].PutValue("Mã khách hàng");
@@ -916,6 +945,7 @@ namespace Repositories.Repositories
                     ws.Cells["O1"].PutValue("Tên khách hàng");
                     ws.Cells["P1"].PutValue("khách hàng sử dụng");
                     ws.Cells["Q1"].PutValue("Mã đơn hàng");
+
                     #endregion
 
                     #region Body
@@ -968,18 +998,17 @@ namespace Repositories.Repositories
                         ws.Cells["H" + RowIndex].PutValue(item.ProductName);
 
                         ws.Cells["I" + RowIndex].PutValue(item.Quantity.ToString("N0"));
-                        ws.Cells["J" + RowIndex].PutValue(item.BasePrice.ToString("N0"));
+                        ws.Cells["J" + RowIndex].PutValue(item.SalePrice.ToString("N0"));
                         ws.Cells["K" + RowIndex].PutValue(item.Amount.ToString("N0"));
 
                         ws.Cells["L" + RowIndex].PutValue((item.AmountVat).ToString("N0"));
                         ws.Cells["M" + RowIndex].PutValue((item.Commission != null ? (double)item.Commission : 0).ToString("N0"));
 
                         ws.Cells["N" + RowIndex].PutValue(item.Note);
-                      
                         ws.Cells["O" + RowIndex].PutValue(item.ClientName);
                         if (List_Passenger != null && List_Passenger.Count > 0)
                         {
-                            ws.Cells["P" + RowIndex].PutValue(List_Passenger.Select(s => s.Name).ToString());
+                            ws.Cells["P" + RowIndex].PutValue(string.Join(',', List_Passenger.Select(s => s.Name)));
                         }
                         else
                         {
@@ -1003,6 +1032,7 @@ namespace Repositories.Repositories
                     ws.Cells.InsertColumn(3);
                     ws.Cells.CopyColumn(ws.Cells, ws.Cells.Columns[17].Index, ws.Cells.Columns[3].Index);
                     ws.Cells.DeleteColumn(17);
+
 
                     wb.Save(full_path);
                 }

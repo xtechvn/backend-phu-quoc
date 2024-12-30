@@ -214,7 +214,7 @@
                             </div>
                             <div class="text-right" id="summit-button-div" style="margin-top: 10px;">
                                 <div class="btn btn-default btn btn-default cancel" onclick="_order_detail_hotel.Close()">Hủy</div>
-                                @if (is_order_manual && is_allow_to_edit)
+                                @if (is_order_manual && is_allow_to_edit && ViewBag.IsLock == false)
                                 {
                                     <div class="btn btn-default btn_summit_service_hotel" id="btn_summit_service_hotel" onclick="_order_detail_hotel.Summit()">Sửa</div>
 

@@ -52,8 +52,8 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.WaterSport
             _configuration = configuration;
             _orderRepository = orderRepository;
             _contactClientRepository = contactClientRepository;
-            _orderESRepository = new OrderESRepository(_configuration["DataBaseConfig:Elastic:Host"]);
-            _flyBookingESRepository = new FlyBookingESRepository(_configuration["DataBaseConfig:Elastic:Host"]);
+            _orderESRepository = new OrderESRepository(_configuration["DataBaseConfig:Elastic:Host"], configuration);
+            _flyBookingESRepository = new FlyBookingESRepository(_configuration["DataBaseConfig:Elastic:Host"], configuration);
             _allCodeRepository = allcodeRepository;
             _userESRepository = new UserESRepository(_configuration["DataBaseConfig:Elastic:Host"]);
             _indentiferService = new IndentiferService(configuration);
@@ -240,6 +240,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.WaterSport
                 ViewBag.JETSKI = _allCodeRepository.GetListByType(AllCodeType.WATER_SPORT_JETSKI);
                 ViewBag.PARASAILING = _allCodeRepository.GetListByType(AllCodeType.WATER_SPORT_PARASAILING);
                 ViewBag.KAYAK = _allCodeRepository.GetListByType(AllCodeType.WATER_SPORT_KAYAK);
+                ViewBag.FLYCAM = _allCodeRepository.GetListByType(AllCodeType.WATER_SPORT_BAY_FLYCAM);
 
                 var allcode_list = _allCodeRepository.GetListByType(AllCodeType.SERVICE_TYPE_OTHER);
                 ViewBag.ServiceType = _allCodeRepository.GetListByType(AllCodeType.WATER_SPORT_TYPE);
@@ -361,7 +362,13 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.WaterSport
         {
             try
             {
-                string _FileName = "Danh sách đặt dịch vụ khác.xlsx";
+                int _UserId = 0;
+                if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
+                {
+                    _UserId = Convert.ToInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                }
+
+                string _FileName = StringHelpers.GenFileName("Danh sách đặt dịch vụ khác", _UserId, "xlsx"); 
                 string _UploadFolder = @"Template\Export";
                 string _UploadDirectory = Path.Combine(_WebHostEnvironment.WebRootPath, _UploadFolder);
 

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using APP_CHECKOUT.RabitMQ;
 using Caching.Elasticsearch;
 using Entities.Models;
 using Entities.ViewModels;
@@ -34,6 +35,7 @@ namespace WEB.Adavigo.CMS.Controllers
         private readonly IContractRepository _contractRepository;
         private UserESRepository _userESRepository;
         private ContractESRepository _contractESRepository;
+        private ClientESRepository _clientESRepository;
 
         private IClientRepository _clientRepository;
         private IUserAgentRepository _userAgentRepository;
@@ -41,6 +43,7 @@ namespace WEB.Adavigo.CMS.Controllers
         private IIdentifierServiceRepository _identifierServiceRepository;
         private ManagementUser _ManagementUser;
         private IUserRepository _userRepository;
+        private WorkQueueClient _workQueueClient;
         private APIService apiService;
 
         public ContractController(IConfiguration configuration, IAllCodeRepository allCodeRepository, IContractRepository contractRepository, ManagementUser ManagementUser, IUserRepository userRepository,
@@ -52,6 +55,7 @@ namespace WEB.Adavigo.CMS.Controllers
             _contractRepository = contractRepository;
             _userESRepository = new UserESRepository(_configuration["DataBaseConfig:Elastic:Host"]);
             _contractESRepository = new ContractESRepository(_configuration["DataBaseConfig:Elastic:Host"]);
+            _clientESRepository = new ClientESRepository(_configuration["DataBaseConfig:Elastic:Host"]);
             _clientRepository = clientRepository;
             _userAgentRepository = userAgentRepository;
             _identifierServiceRepository = identifierServiceRepository;
@@ -59,6 +63,7 @@ namespace WEB.Adavigo.CMS.Controllers
             _ManagementUser = ManagementUser;
             _userRepository = userRepository;
             apiService = new APIService(configuration, userRepository);
+            _workQueueClient = new WorkQueueClient(configuration);
 
         }
         public async Task<IActionResult> Index()
@@ -250,69 +255,69 @@ namespace WEB.Adavigo.CMS.Controllers
             try
             {
 
-                if (string.IsNullOrEmpty(txt_search))
-                {
-                    return Ok(new
-                    {
-                        status = (int)ResponseType.EMPTY
-                    });
-                }
-                else
-                {
-                    bool isUnicode = Encoding.ASCII.GetByteCount(txt_search) != Encoding.UTF8.GetByteCount(txt_search);
-
-
-                    byte[] utfBytes = Encoding.UTF8.GetBytes(txt_search.Trim());
-                    txt_search = Encoding.UTF8.GetString(utfBytes);
-                }
-
-                var es_service = new esService(_configuration);
-                var data_hotel = await es_service.search(txt_search, "searchClient.json");
-                if (data_hotel != "{}")
-                {
-                    //var es_result =// ((RestSharp.RestResponseBase)find_hotel).Content;                       
-
-                    JObject jsonObject = JObject.Parse(data_hotel);
-                    var hits = (JArray)jsonObject["hits"]["hits"];
-                    var hotel_result = new List<earchClientESViewModel>();
-                    foreach (var hit in hits)
-                    {
-                        var source = JsonConvert.DeserializeObject<earchClientESViewModel>(hit["_source"].ToString());
-                        if(type == AgencyType.NGUOI_DD)
-                        {
-                           if( source.agencytype == AgencyType.NGUOI_DD){
-                                hotel_result.Add(source);
-                            }
-                        }
-                        else
-                        {
-                            hotel_result.Add(source);
-                        }
-                       
-                    }
-
-                    return Ok(new
-                    {
-                        status = (int)ResponseType.SUCCESS,
-                        data = hotel_result,
-                    });
-                    //var data = await _clientESRepository.GetClientSuggesstion2(txt_search);
-
-                }
-                else
-                {
-                    return Ok(new
-                    {
-                        status = (int)ResponseType.EMPTY,
-                        msg = "Không có dữ liệu nào thỏa mãn từ khóa " + txt_search
-                    });
-                }
-                //var data = await _clientESRepository.GetClientSuggesstion(txt_search);
-                //return Ok(new
+                //if (string.IsNullOrEmpty(txt_search))
                 //{
-                //    status = (int)ResponseType.SUCCESS,
-                //    data = data,
-                //});
+                //    return Ok(new
+                //    {
+                //        status = (int)ResponseType.EMPTY
+                //    });
+                //}
+                //else
+                //{
+                //    bool isUnicode = Encoding.ASCII.GetByteCount(txt_search) != Encoding.UTF8.GetByteCount(txt_search);
+
+
+                //    byte[] utfBytes = Encoding.UTF8.GetBytes(txt_search.Trim());
+                //    txt_search = Encoding.UTF8.GetString(utfBytes);
+                //}
+
+                //var es_service = new esService(_configuration);
+                //var data_hotel = await es_service.search(txt_search, "searchClient.json");
+                //if (data_hotel != "{}")
+                //{
+                //    //var es_result =// ((RestSharp.RestResponseBase)find_hotel).Content;                       
+
+                //    JObject jsonObject = JObject.Parse(data_hotel);
+                //    var hits = (JArray)jsonObject["hits"]["hits"];
+                //    var hotel_result = new List<earchClientESViewModel>();
+                //    foreach (var hit in hits)
+                //    {
+                //        var source = JsonConvert.DeserializeObject<earchClientESViewModel>(hit["_source"].ToString());
+                //        if(type == AgencyType.NGUOI_DD)
+                //        {
+                //           if( source.agencytype == AgencyType.NGUOI_DD){
+                //                hotel_result.Add(source);
+                //            }
+                //        }
+                //        else
+                //        {
+                //            hotel_result.Add(source);
+                //        }
+
+                //    }
+
+                //    return Ok(new
+                //    {
+                //        status = (int)ResponseType.SUCCESS,
+                //        data = hotel_result,
+                //    });
+                //    //var data = await _clientESRepository.GetClientSuggesstion2(txt_search);
+
+                //}
+                //else
+                //{
+                //    return Ok(new
+                //    {
+                //        status = (int)ResponseType.EMPTY,
+                //        msg = "Không có dữ liệu nào thỏa mãn từ khóa " + txt_search
+                //    });
+                //}
+                var data = await _clientESRepository.GetClientSuggesstion(txt_search);
+                return Ok(new
+                {
+                    status = (int)ResponseType.SUCCESS,
+                    data = data,
+                });
 
             }
             catch (Exception ex)
@@ -381,65 +386,73 @@ namespace WEB.Adavigo.CMS.Controllers
         {
             try
             {
-                if (string.IsNullOrEmpty(txt_search))
-                {
-                    return Ok(new
-                    {
-                        status = (int)ResponseType.EMPTY
-                    });
-                }
-                else
-                {
-                    bool isUnicode = Encoding.ASCII.GetByteCount(txt_search) != Encoding.UTF8.GetByteCount(txt_search);
-                    byte[] utfBytes = Encoding.UTF8.GetBytes(txt_search.Trim());
-                    txt_search = Encoding.UTF8.GetString(utfBytes);
-                }
-                string saleid = Convert.ToString(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                //if (string.IsNullOrEmpty(txt_search))
+                //{
+                //    return Ok(new
+                //    {
+                //        status = (int)ResponseType.EMPTY
+                //    });
+                //}
+                //else
+                //{
+                //    bool isUnicode = Encoding.ASCII.GetByteCount(txt_search) != Encoding.UTF8.GetByteCount(txt_search);
+                //    byte[] utfBytes = Encoding.UTF8.GetBytes(txt_search.Trim());
+                //    txt_search = Encoding.UTF8.GetString(utfBytes);
+                //}
+                //string saleid = Convert.ToString(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                //var current_user = _ManagementUser.GetCurrentUser();
+                //var es_service = new esService(_configuration);
+                //var data_client = await es_service.search(txt_search, "searchClient.json");
+                //if (data_client != "{}")
+                //{
+                //    JObject jsonObject = JObject.Parse(data_client);
+                //    var hits = (JArray)jsonObject["hits"]["hits"];
+                //    var client_result = new List<earchClientESViewModel>();
+                //    if (current_user.Role.Contains(((int)RoleType.Admin).ToString()))
+                //    {
+                //        foreach (var hit in hits)
+                //        {
+                //            var source = JsonConvert.DeserializeObject<earchClientESViewModel>(hit["_source"].ToString());
+                //            client_result.Add(source);
+                //        }
+                //    }
+                //    else
+                //    {
+                //        foreach (var hit in hits)
+                //        {
+                //            var source = JsonConvert.DeserializeObject<earchClientESViewModel>(hit["_source"].ToString());
+
+                //            if ((current_user == null ? saleid : current_user.UserUnderList).Contains(source.userid))
+                //            {
+                //                client_result.Add(source);
+                //            }
+                //        }
+                //    }
+
+
+                //    return Ok(new
+                //    {
+                //        status = (int)ResponseType.SUCCESS,
+                //        data = client_result,
+
+                //    });
+                //}
+                //else
+                //{
+                //    return Ok(new
+                //    {
+                //        status = (int)ResponseType.EMPTY,
+                //        msg = "Không có dữ liệu nào thỏa mãn từ khóa " + txt_search
+                //    });
+                //}
                 var current_user = _ManagementUser.GetCurrentUser();
-                var es_service = new esService(_configuration);
-                var data_client = await es_service.search(txt_search, "searchClient.json");
-                if (data_client != "{}")
+                var data = await _clientESRepository.GetClientSuggesstion(txt_search);
+               if(data != null) data = data.Where(s => current_user.UserUnderList.Contains(s.userid.ToString())).ToList();
+                return Ok(new
                 {
-                    JObject jsonObject = JObject.Parse(data_client);
-                    var hits = (JArray)jsonObject["hits"]["hits"];
-                    var client_result = new List<earchClientESViewModel>();
-                    if (current_user.Role.Contains(((int)RoleType.Admin).ToString()))
-                    {
-                        foreach (var hit in hits)
-                        {
-                            var source = JsonConvert.DeserializeObject<earchClientESViewModel>(hit["_source"].ToString());
-                            client_result.Add(source);
-                        }
-                    }
-                    else
-                    {
-                        foreach (var hit in hits)
-                        {
-                            var source = JsonConvert.DeserializeObject<earchClientESViewModel>(hit["_source"].ToString());
-
-                            if ((current_user == null ? saleid : current_user.UserUnderList).Contains(source.userid))
-                            {
-                                client_result.Add(source);
-                            }
-                        }
-                    }
-
-
-                    return Ok(new
-                    {
-                        status = (int)ResponseType.SUCCESS,
-                        data = client_result,
-
-                    });
-                }
-                else
-                {
-                    return Ok(new
-                    {
-                        status = (int)ResponseType.EMPTY,
-                        msg = "Không có dữ liệu nào thỏa mãn từ khóa " + txt_search
-                    });
-                }
+                    status = (int)ResponseType.SUCCESS,
+                    data = data,
+                });
             }
             catch (Exception ex)
             {
@@ -488,6 +501,9 @@ namespace WEB.Adavigo.CMS.Controllers
                     var data = await _contractRepository.CreateContact(model);
                     if (data != 0)
                     {
+                        _workQueueClient.SyncES(data, _configuration["DataBaseConfig:Elastic:SP:Sp_GetContract"], _configuration["DataBaseConfig:Elastic:Index:contract"], ProjectType.ADAVIGO_CMS_PQ, "Setup ContractController");
+
+
                         //var SendMessage = apiService.SendMessage(userId, ModuleType.HOP_DONG.ToString(), ActionType.TAO_MOI.ToString(), model.ContractNo);
                         stt_code = (int)ResponseType.SUCCESS;
                         msg = "Gửi thành công";

@@ -55,8 +55,8 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Fly
             _orderRepository = orderRepository;
             _flyBookingDetailRepository = flyBookingDetailRepository;
             _contactClientRepository = contactClientRepository;
-            _orderESRepository = new OrderESRepository(_configuration["DataBaseConfig:Elastic:Host"]);
-            _flyBookingESRepository = new FlyBookingESRepository(_configuration["DataBaseConfig:Elastic:Host"]);
+            _orderESRepository = new OrderESRepository(_configuration["DataBaseConfig:Elastic:Host"], configuration);
+            _flyBookingESRepository = new FlyBookingESRepository(_configuration["DataBaseConfig:Elastic:Host"], configuration);
             _allCodeRepository = allcodeRepository;
             _userESRepository = new UserESRepository(_configuration["DataBaseConfig:Elastic:Host"]);
             _indentiferService = new IndentiferService(configuration);
@@ -583,34 +583,28 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Fly
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> OrderSuggestion(string txt_search)
+        public async Task<IActionResult> OrderNoSuggestion(string txt_search)
         {
 
             try
             {
+
                 long _UserId = 0;
+
                 if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
                 {
                     _UserId = Convert.ToInt64(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 }
                 if (txt_search != null)
                 {
-                    var dataEs = await _orderESRepository.GetOrderNoSuggesstion(txt_search);
-                    var data = new List<SearchOrderElasticsearchViewModel>();
-                    if (dataEs != null)
-                    {
-                        foreach (var item in dataEs)
-                        {
-                            var dataitem = new SearchOrderElasticsearchViewModel();
-                            dataitem.orderno = item.orderno;
-                            dataitem.id = item.orderid.ToString();
-                            data.Add(dataitem);
-                        }
-                    }
+                    var data_order = new List<OrderSelectViewModel>();
+
+                    var data = await _orderESRepository.GetOrderNoSuggesstion(txt_search);
+                    data_order.AddRange(data.Select(s => new OrderSelectViewModel { orderid = s.id, orderno = s.orderno }));
                     return Ok(new
                     {
                         status = (int)ResponseType.SUCCESS,
-                        data = data,
+                        data = data_order,
                         selected = _UserId
                     });
                 }
@@ -619,17 +613,17 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Fly
                     return Ok(new
                     {
                         status = (int)ResponseType.SUCCESS,
-                        data = new List<OrderElasticsearchViewModel>()
+                        data = new List<OrderSelectViewModel>()
                     });
                 }
             }
             catch (Exception ex)
             {
-                LogHelper.InsertLogTelegram("OrderNoSuggestion - SetServiceFlyBookingController: " + ex.ToString());
+                LogHelper.InsertLogTelegram("OrderNoSuggestion - OrderController: " + ex.ToString());
                 return Ok(new
                 {
-                    status = (int)ResponseType.ERROR,
-                    data = new List<OrderElasticsearchViewModel>()
+                    status = (int)ResponseType.SUCCESS,
+                    data = new List<OrderSelectViewModel>()
                 });
             }
 
@@ -1050,6 +1044,48 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Fly
                 });
             }
         }
-       
+        [HttpPost]
+        public async Task<IActionResult> OrderSuggestion(string txt_search)
+        {
+
+            try
+            {
+                long _UserId = 0;
+                if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
+                {
+                    _UserId = Convert.ToInt64(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                }
+                if (txt_search != null)
+                {
+                    var data_order = new List<OrderSelectViewModel>();
+                    var data = await _orderESRepository.GetOrderNoSuggesstion(txt_search);
+                    data_order.AddRange(data.Select(s => new OrderSelectViewModel { orderid = s.id, orderno = s.orderno }));
+                    return Ok(new
+                    {
+                        status = (int)ResponseType.SUCCESS,
+                        data = data_order,
+                        selected = _UserId
+                    });
+                }
+                else
+                {
+                    return Ok(new
+                    {
+                        status = (int)ResponseType.SUCCESS,
+                        data = new List<OrderSelectViewModel>()
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("OrderNoSuggestion - SetServiceFlyBookingController: " + ex.ToString());
+                return Ok(new
+                {
+                    status = (int)ResponseType.ERROR,
+                    data = new List<OrderSelectViewModel>()
+                });
+            }
+
+        }
     }
 }

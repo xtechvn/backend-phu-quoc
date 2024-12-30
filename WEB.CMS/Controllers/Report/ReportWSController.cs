@@ -4,6 +4,8 @@ using Entities.ViewModels.Report;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Repositories.IRepositories;
+using Repositories.Repositories;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,10 +29,11 @@ namespace WEB.Adavigo.CMS.PQ.Controllers.Report
         private readonly IReportRepository _reportRepository;
         private ManagementUser _ManagementUser;
         private readonly IAllCodeRepository _allCodeRepository;
+        private readonly IPassengerRepository _passengerRepository;
 
         public ReportWSController(IOrderRepository orderRepository, IDepartmentRepository departmentRepository,
             IWebHostEnvironment WebHostEnvironment, 
-             IReportRepository reportRepository, ManagementUser managementUser, IAllCodeRepository allcodeRepository, IOtherBookingRepository otherBookingRepository)
+             IReportRepository reportRepository, ManagementUser managementUser, IAllCodeRepository allcodeRepository, IOtherBookingRepository otherBookingRepository, IPassengerRepository passengerRepository)
         {
             _orderRepository = orderRepository;
             _DepartmentRepository = departmentRepository;
@@ -39,7 +42,7 @@ namespace WEB.Adavigo.CMS.PQ.Controllers.Report
             _ManagementUser = managementUser;
             _allCodeRepository = allcodeRepository;
             _otherBookingRepository = otherBookingRepository;
-
+            _passengerRepository = passengerRepository;
 
         }
         public async Task<IActionResult> Index()
@@ -201,6 +204,15 @@ namespace WEB.Adavigo.CMS.PQ.Controllers.Report
                 if (searchModel.FromDate == DateTime.MinValue) searchModel.FromDate = new DateTime(DateTime.Now.Year, 1, 1, 1, 0, 0, 0);
                 if (searchModel.ToDate == DateTime.MinValue) searchModel.ToDate = DateTime.Now;
                 var model = await _reportRepository.GetWSOperatorReport(searchModel);
+                if(model!=null && model.ListData != null)
+                {
+                    foreach(var item in model.ListData)
+                    {
+                        var List_Passenger = await _passengerRepository.GetPassengerByOrderId(item.OrderId);
+                        item.PassengerName= List_Passenger!=null && List_Passenger.Count > 0 ? List_Passenger[0].Name : null;
+                    }
+                   
+                }
                 ViewBag.Model = model;
                
 

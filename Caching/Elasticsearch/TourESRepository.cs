@@ -1,6 +1,7 @@
 ﻿using Elasticsearch.Net;
 using Entities.ViewModels;
 using Entities.ViewModels.ElasticSearch;
+using Microsoft.Extensions.Configuration;
 using Nest;
 using System;
 using System.Collections.Generic;
@@ -11,8 +12,14 @@ namespace Caching.Elasticsearch
 {
    public class TourESRepository : ESRepository<HotelESViewModel>
     {
-        private string index_name = "tour_store";
-        public TourESRepository(string Host) : base(Host) { }
+        private readonly IConfiguration _configuration;
+        private readonly string index_name = "adavigo_phuquoc_sp_gettour";
+        public TourESRepository(string Host, IConfiguration configuration) : base(Host)
+        {
+
+            _configuration = configuration;
+            index_name = configuration["DataBaseConfig:Elastic:Index:TourBooking"];
+        }
         public async Task<List<TourESViewModel>> GetListProduct(string txt_search)
         {
             List<TourESViewModel> result = new List<TourESViewModel>();
@@ -25,7 +32,7 @@ namespace Caching.Elasticsearch
                 var elasticClient = new ElasticClient(connectionSettings);
                 if (txt_search == null) txt_search = "";
                 var search_response = elasticClient.Search<TourESViewModel>(s => s
-                         .Index(index_name + (_company_type.Trim() == "0" ? "" : "_" + _company_type.Trim()))
+                         .Index(index_name)
                           .Size(top)
                           .Query(q => q
                            .QueryString(qs => qs

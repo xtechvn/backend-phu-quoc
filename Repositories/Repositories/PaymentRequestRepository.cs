@@ -119,6 +119,8 @@ namespace Repositories.Repositories
                             countStatus.ServiceType = (int)ServiceType.BOOK_HOTEL_ROOM;
                         if (serviceCode.Contains("OTHER"))
                             countStatus.ServiceType = (int)ServiceType.Other;
+                        if (serviceCode.Contains("WS"))
+                            countStatus.ServiceType = (int)ServiceType.Ws;
                         item.ListServiceCodeAndType.Add(countStatus);
                         index++;
                     }
@@ -517,6 +519,8 @@ namespace Repositories.Repositories
                             countStatus.ServiceType = (int)ServiceType.BOOK_HOTEL_ROOM;
                         if (serviceCode.Contains("OTHER"))
                             countStatus.ServiceType = (int)ServiceType.Other;
+                        if (serviceCode.Contains("WS"))
+                            countStatus.ServiceType = (int)ServiceType.Ws;
                         item.ListServiceCodeAndType.Add(countStatus);
                         index++;
                     }

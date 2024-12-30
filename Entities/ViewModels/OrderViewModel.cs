@@ -214,6 +214,7 @@ namespace Entities.ViewModels
         public double Price { get; set; }
         public double Profit { get; set; }
         public double Discount { get; set; }
+        public double DiscountDV { get; set; }
         public double OrderAmount { get; set; }
         public string Type { get; set; }
         public string FullName { get; set; }
@@ -227,7 +228,6 @@ namespace Entities.ViewModels
         public Bookingdetail Flight { get; set; }
         public List<OtherBookingViewModel> OtherBooking { get; set; }
         public List<VinWonderDetailViewModel> VinWonderBooking { get; set; }
-
     }
     public class FieldOrder
     {

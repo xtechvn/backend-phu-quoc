@@ -661,6 +661,53 @@ var _orderDetail = {
             }
         });
     },
+    GetLog(id, orderNo) {
+
+        let title = 'Lịch sử đơn hàng ' + orderNo;
+        let url = '/Order/getLog';
+        let param = {
+            orderid: id,
+        };
+        _magnific.OpenSmallPopup(title, url, param);
+    },
+    GetLogOrderIsLock(id, orderNo) {
+
+        let title = 'Lịch sử khóa sổ ';
+        let url = '/Order/GetLogOrderIsLock';
+        let param = {
+            orderid: id,
+        };
+        _magnific.OpenSmallPopup(title, url, param);
+    },
+    IsLockOrder: function (orderid, OrderNo, IsLock) {
+        var title = 'Xác nhận mở sổ';
+        var description = 'Bạn xác nhận mở sổ đơn hàng ' + OrderNo + ' này?';
+        if (IsLock == 1) {
+            description = 'Bạn xác nhận Khóa sổ đơn hàng ' + OrderNo + ' này?';
+            title = 'Xác nhận khóa sổ';
+        }
+        _msgconfirm.openDialog(title, description, function () {
+
+            $.ajax({
+                url: "/Order/UpdateOrderIsLock",
+                type: "Post",
+                data: { OrderId: orderid, IsLock: IsLock },
+                success: function (result) {
+                    if (result.status > 0) {
+                        _msgalert.error(result.smg);
+                    }
+                    else {
+                        _msgalert.success(result.smg);
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 300);
+                    }
+                }
+            });
+        }
+
+        );
+    },
 }
 var _OrderDetail_Sendemail = {
     loadformSenmail: function () {

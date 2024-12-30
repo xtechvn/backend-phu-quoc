@@ -61,14 +61,14 @@
                         <td class="label">@item.Label</td>
                         <td class="label">@item.OrderNo</td>
                         <td class="used_date">@item.StartDate.ToString("dd/MM/yyyy")</td>
-                        <td class="client_name">@item.ClientName</td>
+                        <td class="client_name">@(item.PassengerName != null ? item.PassengerName: item.ClientName)</td>
                         <td class="conf_no">@item.ConfNo</td>
                         <td class="room_no">@item.RoomNo</td>
                         <td class="serial_no">@item.SerialNo</td>
 
                         <td class="product_name">@item.ProductName</td>
                         <td class="quanity">@item.Quantity</td>
-                        <td class="base_price">@item.BasePrice</td>
+                        <td class="base_price">@item.SalePrice</td>
                         <td class="amount">@item.Amount.ToString("N0")</td>
                         <td class="amount_before_vat">@((item.AmountVat).ToString("N0"))</td>
                         <td class="vat_value">@((item.Commission!=null? (double)item.Commission:0).ToString("N0"))</td>

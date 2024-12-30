@@ -164,6 +164,7 @@ var _water_sport = {
         var conf_no = $('.service-watersport-conf-no').val()
         var room_no = $('.service-watersport-room-no').val()
         var serial_no = $('.service-watersport-serial-no').val()
+        var amount_discount = $('.servicemanual-watersport-discount').val()
         var object_summit = {
             order_id: pathname[pathname.length - 1],
             id: $('#add-service-watersport-form-select').attr('data-id'),
@@ -177,6 +178,7 @@ var _water_sport = {
             conf_no: conf_no,
             room_no: room_no,
             serial_no: serial_no,
+            discount: amount_discount,
         }
         var passenger = []
         var validate_failed = false
@@ -192,7 +194,8 @@ var _water_sport = {
                 quantity: _global_function.GetAmountFromCurrencyInput(extra_package_element.find('.service-watersport-packages-quantity')),
                 amount: _global_function.GetAmountFromCurrencyInput(extra_package_element.find('.service-watersport-packages-amount')),
                 note: extra_package_element.find('.service-watersport-packages-note').val(),
-                commission: _global_function.GetAmountFromCurrencyInput(extra_package_element.find('.service-watersport-packages-commission'))
+                commission: _global_function.GetAmountFromCurrencyInput(extra_package_element.find('.service-watersport-packages-commission')),
+                discount: _global_function.GetAmountFromCurrencyInput(extra_package_element.find('.service-watersport-packages-discount'))
             }
             object_summit.packages.push(extra_package);
         });
@@ -276,7 +279,7 @@ var _water_sport = {
         });
         var price = 0;
         if (check == true) {
-          
+            if (parseFloat(type) == 0) { type = 1; }
 
             var table_element = $('.service-watersport-packages-tbody')
             var new_position = _order_detail_watersport.GetLastestPackagesNo() + 1;

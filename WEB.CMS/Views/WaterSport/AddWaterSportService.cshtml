@@ -74,6 +74,11 @@
                                 <input id="servicemanual-watersport-commission" class="form-control currency text-right servicemanual-watersport-commission" type="text" name="servicemanual-watersport-commission" placeholder="Nhập chiết khấu" value="@(booking!=null && booking.Id>0&& booking.Commission!=null?((double)booking.Commission).ToString("N0"):"0")">
 
                             </div>
+                            <div class="col-xl-2 col-lg-3 col-md-6 mb15">
+                                <label class="lbl mb5">Chiết khấu </label>
+                                <input id="servicemanual-watersport-commission" class="form-control currency text-right servicemanual-watersport-discount" type="text" name="servicemanual-watersport-discount" placeholder="Nhập chiết khấu" value="@(booking!=null && booking.Id>0&& booking.Discount!=null?((double)booking.Discount).ToString("N0"):"0")">
+
+                            </div>
                         </div>
 
                         <div>

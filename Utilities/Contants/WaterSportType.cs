@@ -15,5 +15,6 @@ namespace Utilities.Contants
         public const int WATER_SPORT_JETSKI2 = 5;
         public const int WATER_SPORT_BANANA_BOAT = 6;
         public const int WATER_SPORT_KAYAK = 7;
+        public const int WATER_SPORT_BAY_FLYCAM = 8;
     }
 }

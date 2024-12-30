@@ -19,7 +19,7 @@ namespace Caching.Elasticsearch
         public ClientESRepository(string Host) : base(Host) { }
 
 
-        public async Task<List<CustomerESViewModel>> GetClientSuggesstion(string txt_search, string index_name = "customer")
+        public async Task<List<CustomerESViewModel>> GetClientSuggesstion(string txt_search, string index_name = "adavigo_phuquoc_sp_getclient")
         {
             List<CustomerESViewModel> result = new List<CustomerESViewModel>();
             try
@@ -32,7 +32,7 @@ namespace Caching.Elasticsearch
                 if (txt_search == null)
                 {
                     var result_all = elasticClient.Search<CustomerESViewModel>(s => s
-                          .Index(index_name + (_company_type.Trim() == "0" ? "" : "_" + _company_type.Trim()))
+                          .Index(index_name)
                           .Size(30)
                           .Query(q => q.MatchAll()
 
@@ -41,23 +41,26 @@ namespace Caching.Elasticsearch
                     return result;
                 }
                 var search_response = elasticClient.Search<CustomerESViewModel>(s => s
-                          .Index(index_name)
-                          .Size(top)
-                          .Query(q =>
-                            q.Bool(
-                                qb => qb.Should(
-                                    sh => sh.QueryString(m => m
-                                    .DefaultField(f => f.phone)
-                                    .Query("*" + txt_search + "*")),
-                                    sh => sh.QueryString(m => m
-                                    .DefaultField(f => f.email)
-                                    .Query("*" + txt_search + "*")),
-                                    sh => sh.QueryString(m => m
-                                    .DefaultField(f => f.clientname)
-                                    .Query("*" + txt_search + "*"))
+                              .Index(index_name)
+                              .Size(top)
+                              .Query(q =>
+                                q.Bool(
+                                    qb => qb.Should(
+                                        sh => sh.QueryString(m => m
+                                        .DefaultField(f => f.phone)
+                                        .Query("*" + txt_search + "*")),
+                                        sh => sh.Match(m => m
+                                        .Field(f => f.email)
+                                        .Query("*" + txt_search + "*")),
+                                        sh => sh.QueryString(m => m
+                                        .DefaultField(f => f.clientname)
+                                        .Query("*" + txt_search + "*")),
+                                          sh => sh.QueryString(m => m
+                                        .DefaultField(f => f.clientcode)
+                                        .Query("*" + txt_search + "*"))
 
-                                ))
-                           ));
+                                    ))
+                               ));
 
                 if (!search_response.IsValid)
                 {
@@ -71,12 +74,13 @@ namespace Caching.Elasticsearch
             }
             catch (Exception ex)
             {
+                LogHelper.InsertLogTelegram(" ClientESRepository - GetClientSuggesstion: " + ex.ToString());
                 return null;
             }
 
         }
     
-        public int UpSert(CustomerESViewModel entity, string index_name = "customer")
+        public int UpSert(ClientESViewModel entity, string index_name = "adavigo_phuquoc_sp_getclient")
         {
             try
             {
@@ -84,15 +88,7 @@ namespace Caching.Elasticsearch
                 var connectionPool = new StaticConnectionPool(nodes);
                 var connectionSettings = new ConnectionSettings(connectionPool).DisableDirectStreaming().DefaultIndex(index_name);
                 var elasticClient = new ElasticClient(connectionSettings);
-                var indexResponse = elasticClient.Index(new IndexRequest<object>(new
-                {
-                    id = entity.id,
-                    userid = 0,
-                    clientname = entity.clientname,
-                    clienttype = (int)entity.clienttype,
-                    email = entity.email,
-                    phone = entity.phone
-                }, index_name + (_company_type.Trim() == "0" ? "" : "_" + _company_type.Trim())));
+                var indexResponse = elasticClient.Index(new IndexRequest<ClientESViewModel>(entity, index_name ));
 
                 if (!indexResponse.IsValid)
                 {
@@ -145,7 +141,7 @@ namespace Caching.Elasticsearch
                 var query = workingDirectory + @"\QueryEs\" + file_name;
 
                 var body_raw_input = File.ReadAllText(query);
-                body_raw_input = body_raw_input.Replace("{index_name}", "customer" + ( (_company_type.Trim() == "0" ? "" : "_" + _company_type.Trim())));
+                body_raw_input = body_raw_input.Replace("{index_name}", "adavigo_phuquoc_sp_getclient" );
 
                 var j_input = JObject.Parse(body_raw_input);
                 endpoint = j_input["endpoint"].ToString();

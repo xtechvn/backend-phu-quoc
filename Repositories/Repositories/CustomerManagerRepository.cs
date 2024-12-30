@@ -135,14 +135,14 @@ namespace Repositories.Repositories
                           
                             if (CreateAccountClient == 1 && CreateUserAgent == 1)
                             {
-                                return 1;
+                                return CreateClient;
                             }
                             else
                             {
                                 return 0;
                             }
                         }
-                        return 1;
+                        return CreateClient;
                     }
                     else
                     {

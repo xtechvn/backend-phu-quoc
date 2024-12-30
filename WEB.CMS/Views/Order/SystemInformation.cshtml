@@ -24,10 +24,13 @@
         </li>
     </ul>
 </div> }
-            else
-            {
+else
+{
 <div class="pd10">
     N/A
 </div>}
-
+    <div class="lb-form pd10">
+        @*<a href="javascript:;" style="color: #056BD3;" onclick="_orderDetail.GetLog(@ViewBag.orderId ,'@ViewBag.OrderNo')">Lịch sử đơn hàng</a><br />*@
+        <a href="javascript:;" style="color: #056BD3;" onclick="_orderDetail.GetLogOrderIsLock(@ViewBag.orderId ,'@ViewBag.OrderNo')">Lịch sử khóa sổ</a>
+    </div>
 </div>

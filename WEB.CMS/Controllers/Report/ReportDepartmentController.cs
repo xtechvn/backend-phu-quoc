@@ -1099,6 +1099,8 @@ namespace WEB.Adavigo.CMS.Controllers.Report
                         PricePay = model.ListData.Sum(x => x.PricePay != null ? (double)x.PricePay : 0),
                         PriceRemain = model.ListData.Sum(x => x.PriceRemain != null ? (double)x.PriceRemain : (x.Price != null ? (double)x.Price : 0)),
                         Profit = model.ListData.Sum(x => x.Profit != null ? (double)x.Profit : 0),
+                        Discount = model.ListData.Sum(x => x.Discount != null ? (double)x.Discount : 0),
+                        AmountPayNCC = model.ListData.Sum(x => x.AmountPayNCC != null ? (double)x.AmountPayNCC : 0),
                     };
                 }
                 else

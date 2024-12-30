@@ -73,7 +73,8 @@ namespace DAL
                                     SalePrice=item.SalePrice,
                                     Note=item.Note,
                                     ServiceType=item.ServiceType,
-                                    Commission=item.Commission
+                                    Commission=item.Commission,
+                                    Discount=item.Discount,
                                 };
                                 _DbContext.OtherBookingPackages.Add(item_summit);
                                 await _DbContext.SaveChangesAsync();
@@ -102,6 +103,7 @@ namespace DAL
                             exists_booking.RoomNo = model.booking.RoomNo;
                             exists_booking.SerialNo = model.booking.SerialNo;
                             exists_booking.ConfNo = model.booking.ConfNo;
+                            exists_booking.Discount = model.booking.Discount;
                             _DbContext.OtherBooking.Update(exists_booking);
                             await _DbContext.SaveChangesAsync();
                             model.booking.Id = exists_booking.Id;
@@ -134,6 +136,7 @@ namespace DAL
                                             exists_package.ServiceType = item.ServiceType;
                                             exists_package.Commission = item.Commission;
                                             exists_package.DurationType = item.DurationType;
+                                            exists_package.Discount = item.Discount;
 
                                             _DbContext.OtherBookingPackages.Update(exists_package);
                                             await _DbContext.SaveChangesAsync();

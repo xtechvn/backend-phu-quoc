@@ -51,7 +51,7 @@ namespace Caching.Elasticsearch
                 var elasticClient = new ElasticClient(connectionSettings);
 
                 var searchResponse = elasticClient.Search<object>(s => s
-                    .Index(indexName+ (_company_type.Trim() == "0" ? "" : "_" + _company_type.Trim()))
+                    .Index(indexName)
                     .Query(q => q.Term(field_name, value))
                 );
 
@@ -81,7 +81,7 @@ namespace Caching.Elasticsearch
                 var connectionPool = new StaticConnectionPool(nodes);
                 var connectionSettings = new ConnectionSettings(connectionPool).DisableDirectStreaming().DefaultIndex(Type);
                 var elasticClient = new ElasticClient(connectionSettings);
-                var indexResponse = elasticClient.Index(new IndexRequest<TEntity>(entity, indexName + (_company_type.Trim() == "0" ? "" : "_" + _company_type.Trim())));
+                var indexResponse = elasticClient.Index(new IndexRequest<TEntity>(entity, indexName ));
 
                 if (!indexResponse.IsValid)
                 {
@@ -106,7 +106,7 @@ namespace Caching.Elasticsearch
                 var connectionSettings = new ConnectionSettings(connectionPool).DisableDirectStreaming().DefaultIndex(Type);
                 var elasticClient = new ElasticClient(connectionSettings);
 
-                var indexResponse = elasticClient.Index(entity, i => i.Index(indexName + (_company_type.Trim() == "0" ? "" : "_" + _company_type.Trim())));
+                var indexResponse = elasticClient.Index(entity, i => i.Index(indexName ));
                 if (!indexResponse.IsValid)
                 {
                     // If the request isn't valid, we can take action here
@@ -133,7 +133,7 @@ namespace Caching.Elasticsearch
                 var elasticClient = new ElasticClient(connectionSettings);
 
                 var search_response = elasticClient.Search<HotelESViewModel>(s => s
-                          .Index(index_name + (_company_type.Trim() == "0" ? "" : "_" + _company_type.Trim()))
+                          .Index(index_name )
                           .Size(top)
                           .Query(q => q
                            .QueryString(qs => qs
@@ -172,7 +172,7 @@ namespace Caching.Elasticsearch
                 var elasticClient = new ElasticClient(connectionSettings);
                 city = CommonHelper.RemoveUnicode(city);
                 var search_response = elasticClient.Search<HotelESViewModel>(s => s
-                          .Index(index_name + (_company_type.Trim() == "0" ? "" : "_" + _company_type.Trim()))
+                          .Index(index_name )
                           .Size(top)
                           .Query(q => q
                            .QueryString(qs => qs
@@ -210,7 +210,7 @@ namespace Caching.Elasticsearch
                 var elasticClient = new ElasticClient(connectionSettings);
 
                 var search_response = elasticClient.Search<HotelESViewModel>(s => s
-                          .Index(index_name + (_company_type.Trim() == "0" ? "" : "_" + _company_type.Trim()))
+                          .Index(index_name )
                           .Size(top)
                           .Query(q => q
                            .Match(qs => qs
@@ -246,7 +246,7 @@ namespace Caching.Elasticsearch
                 var connectionSettings = new ConnectionSettings(connectionPool).DisableDirectStreaming().DefaultIndex(Type);
                 var elasticClient = new ElasticClient(connectionSettings);
                 var result = elasticClient.DeleteByQuery<object>(sd => sd
-                              .Index(index_name + (_company_type.Trim() == "0" ? "" : "_" + _company_type.Trim()))
+                              .Index(index_name )
                               .Query(q => q
                                   .Match(m => m.Field("hotelid").Query(hotel_id)
                                   )));
@@ -268,7 +268,7 @@ namespace Caching.Elasticsearch
                 var connectionSettings = new ConnectionSettings(connectionPool).DisableDirectStreaming().DefaultIndex(Type);
                 var elasticClient = new ElasticClient(connectionSettings);
                 var result = elasticClient.DeleteByQuery<object>(sd => sd
-                              .Index(index_name + (_company_type.Trim() == "0" ? "" : "_" + _company_type.Trim()))
+                              .Index(index_name )
                               .Query(q => q
                                   .Match(m => m.Field("orderId").Query(hotel_id)
                                   )));
@@ -290,7 +290,7 @@ namespace Caching.Elasticsearch
                 var connectionSettings = new ConnectionSettings(connectionPool).DisableDirectStreaming().DefaultIndex(Type);
                 var elasticClient = new ElasticClient(connectionSettings);
                 var result = elasticClient.DeleteByQuery<object>(sd => sd
-                              .Index(index_name + (_company_type.Trim() == "0" ? "" : "_" + _company_type.Trim()))
+                              .Index(index_name )
                               .Query(q => q
                                   .Match(m => m.Field("id").Query(hotel_id)
                                   )));

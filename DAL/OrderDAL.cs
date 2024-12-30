@@ -570,6 +570,24 @@ namespace DAL
                         _DbContext.Order.Update(data);
                         await _DbContext.SaveChangesAsync();
                         UpdateOrderOperator(OrderId);
+                        var ListOrderBookClosing = await GetListOrderBookClosingByOrderId(OrderId);
+                        DataTable dt = ListOrderBookClosing;
+                        if (dt != null && dt.Rows.Count > 0)
+                        {
+
+                            var dataOrderBookClosing = dt.ToList<OrderBookClosingRequestViewModel>();
+
+                            var OrderBookClosingModel = new OrderBookClosingViewModel
+                            {
+                                FromDateStr = dataOrderBookClosing[0].FromDate.ToString("dd/MM/yyyy"),
+                                ToDateStr = dataOrderBookClosing[0].ToDate.ToString("dd/MM/yyyy"),
+                                UserFinalize = (long)data.UserUpdateId,
+                            };
+                            var date = DateUtil.StringToDate(OrderBookClosingModel.ToDateStr);
+                            OrderBookClosingModel.ToDate = ((DateTime)date).AddHours(23).AddMinutes(59).AddSeconds(59);
+                            await OrderBookClosing(OrderBookClosingModel);
+                            await UpdateBookClosingByOrderId(OrderId, 0, (long)data.UserUpdateId);
+                        }
                         return amount;
                     }
                     else return -1;
@@ -986,5 +1004,108 @@ namespace DAL
                 return new List<long>();
             }
         }
+        public async Task<DataTable> GetListOrderBookClosingByOrderId(long OrderId)
+        {
+            try
+            {
+                SqlParameter[] objParam = new SqlParameter[1];
+                objParam[0] = new SqlParameter("@OrderId", OrderId);
+
+                return _DbWorker.GetDataTable(StoreProcedureConstant.SP_GetListOrderBookClosingByOrderId, objParam);
+
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("CheckBookClosingByDate - OrderDal. " + ex);
+            }
+            return null;
+        }
+        public async Task<long> CheckBookClosingByDate(DateTime FromDate, DateTime ToDate)
+        {
+            try
+            {
+                SqlParameter[] objParam = new SqlParameter[2];
+                objParam[0] = new SqlParameter("@FromDate ", FromDate);
+                objParam[1] = new SqlParameter("@ToDate ", ToDate);
+                DataTable dt = _DbWorker.GetDataTable(StoreProcedureConstant.sp_CheckBookClosingByDate, objParam);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+
+                    var RESULT = dt.Rows[0]["RESULT"].Equals(DBNull.Value) ? 0 : Convert.ToInt32(dt.Rows[0]["RESULT"]);
+
+                    return RESULT;
+                }
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("CheckBookClosingByDate - OrderDal. " + ex);
+            }
+            return 0;
+        }
+        public async Task<long> UpdateBookClosingByOrderId(long OrderId, long IsLock, long UpdateBy)
+        {
+            try
+            {
+                SqlParameter[] objParam = new SqlParameter[3];
+                objParam[0] = new SqlParameter("@OrderId", OrderId);
+                objParam[1] = new SqlParameter("@IsLock", IsLock);
+                objParam[2] = new SqlParameter("@UpdateBy", UpdateBy);
+                return _DbWorker.ExecuteNonQuery(StoreProcedureConstant.sp_UpdateBookClosingByOrderId, objParam);
+
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("CheckBookClosingByDate - OrderDal. " + ex);
+            }
+            return 0;
+        }
+        public async Task<long> OrderBookClosing(OrderBookClosingViewModel model)
+        {
+            try
+            {
+                SqlParameter[] objParam = new SqlParameter[3];
+                objParam[0] = new SqlParameter("@FromDate ", ((DateTime)model.FromDate).ToString("yyyy/MM/dd hh:mm:ss") + " AM");
+                objParam[1] = new SqlParameter("@ToDate ", model.ToDate.ToString("yyyy/MM/dd hh:mm:ss") + " PM");
+                objParam[2] = new SqlParameter("@UserFinalize ", model.UserFinalize);
+                DataTable dt = _DbWorker.GetDataTable(StoreProcedureConstant.SP_OrderBookClosing, objParam);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+
+                    var TotalRow = dt.Rows[0]["TotalRow"].Equals(DBNull.Value) ? 0 : Convert.ToInt32(dt.Rows[0]["TotalRow"]);
+
+                    return TotalRow;
+                }
+                return -1;
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("OrderBookClosing - OrderDal. " + ex);
+            }
+            return -1;
+        }
+        public async Task<TotalCustomerCareFundViewModel> GetTotalCustomerCareFund(string SalerIds, long ClientId)
+        {
+            try
+            {
+
+                SqlParameter[] objParam = new SqlParameter[2];
+                objParam[0] = new SqlParameter("@SalerIds ", SalerIds);
+                objParam[1] = ClientId != null && ClientId > 0 ? new SqlParameter("@ClientId ", ClientId) : new SqlParameter("@ClientId ", DBNull.Value);
+
+                DataTable dt = _DbWorker.GetDataTable(StoreProcedureConstant.sp_GetTotalCustomerCareFund, objParam);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    var data = dt.ToList<TotalCustomerCareFundViewModel>();
+                    return data[0];
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("GetTotalCustomerCareFund - OrderDal. " + ex);
+            }
+            return null;
+        }
+        
     }
 }

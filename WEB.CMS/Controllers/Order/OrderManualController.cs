@@ -1,4 +1,5 @@
-﻿using Caching.Elasticsearch;
+﻿using APP_CHECKOUT.RabitMQ;
+using Caching.Elasticsearch;
 using Entities.Models;
 using Entities.ViewModels;
 using Entities.ViewModels.ElasticSearch;
@@ -67,6 +68,8 @@ namespace WEB.Adavigo.CMS.Controllers.Order
         private readonly TourESRepository _tourESRepository;
         private readonly IHotelBookingCodeRepository _hotelBookingCodeRepository;
         private readonly ISportWaterGuestsRepository _sportWaterGuestsRepository;
+        private readonly WorkQueueClient workQueueClient;
+
         public OrderController(IConfiguration configuration, IOrderRepository orderRepository, IClientRepository clientRepository, IAllCodeRepository allcodeRepository, IUserRepository userRepository, IIdentifierServiceRepository identifierServiceRepository
                 , IAccountClientRepository accountClientRepository, IHotelBookingRepositories hotelBookingRepository, IHotelBookingRoomRepository hotelBookingRoomRepository, IHotelBookingRoomRatesRepository hotelBookingRoomRatesRepository,
                 IHotelBookingRoomExtraPackageRepository hotelBookingRoomExtraPackageRepository, IHotelBookingGuestRepository hotelBookingGuestRepository, IFlyBookingDetailRepository flyBookingDetailRepository, IAirlinesRepository airlinesRepository,
@@ -82,7 +85,7 @@ namespace WEB.Adavigo.CMS.Controllers.Order
             _identifierServiceRepository = identifierServiceRepository;
             _clientESRepository = new ClientESRepository(_configuration["DataBaseConfig:Elastic:Host"]);
             _userESRepository = new UserESRepository(_configuration["DataBaseConfig:Elastic:Host"]);
-            _hotelESRepository = new HotelESRepository(_configuration["DataBaseConfig:Elastic:Host"]);
+            _hotelESRepository = new HotelESRepository(_configuration["DataBaseConfig:Elastic:Host"], configuration);
             _nationalESRepository = new NationalESRepository(_configuration["DataBaseConfig:Elastic:Host"]);
             _accountClientRepository = accountClientRepository;
             _provinceRedisService = new ProvinceRedisService(_configuration);
@@ -106,9 +109,10 @@ namespace WEB.Adavigo.CMS.Controllers.Order
             apiService = new APIService(configuration,userRepository);
             _vinWonderBookingRepository = vinWonderBookingRepository;
             _groupProductRepository = groupProductRepository;
-            _tourESRepository = new TourESRepository(_configuration["DataBaseConfig:Elastic:Host"]);
+            _tourESRepository = new TourESRepository(_configuration["DataBaseConfig:Elastic:Host"], configuration);
             _hotelBookingCodeRepository = hotelBookingCodeRepository;
             _sportWaterGuestsRepository = sportWaterGuestsRepository;
+            workQueueClient = new WorkQueueClient(configuration);
 
         }
 
@@ -149,6 +153,7 @@ namespace WEB.Adavigo.CMS.Controllers.Order
                 if (booking != null && booking.Id > 0)
                 {
                     var order = await _orderRepository.GetOrderByID(booking.OrderId);
+                    ViewBag.IsLock = order != null && order.IsLock != null ? order.IsLock : false;
                     ViewBag.IsOrderManual = false;
                     ViewBag.HotelBooking = booking;
                     var hotel = await _hotelESRepository.GetHotelByID(booking.PropertyId);
@@ -401,7 +406,7 @@ namespace WEB.Adavigo.CMS.Controllers.Order
 
             try
             {
-                HotelESRepository _ESRepository = new HotelESRepository(_configuration["DataBaseConfig:Elastic:Host"]);
+                HotelESRepository _ESRepository = new HotelESRepository(_configuration["DataBaseConfig:Elastic:Host"],_configuration);
                 HotelESViewModel hotel_detail = await _hotelESRepository.GetHotelByID(data.hotel.hotel_id);
                 if (hotel_detail.checkintime <= DateTime.Now.AddDays(-30)) hotel_detail.checkintime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 10, 0, 0);
                 if (hotel_detail.checkouttime <= DateTime.Now.AddDays(-30)) hotel_detail.checkouttime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 13, 0, 0);
@@ -548,6 +553,8 @@ namespace WEB.Adavigo.CMS.Controllers.Order
                 id = await _hotelBookingRepository.UpdateHotelBooking(data, hotel_detail, user_id, is_debt_able);
                 if (id <= 0)
                 {
+                    workQueueClient.SyncES(id, _configuration["DataBaseConfig:Elastic:SP:sp_GetHotelBooking"], _configuration["DataBaseConfig:Elastic:Index:HotelBooking"], ProjectType.ADAVIGO_CMS_PQ, "SummitHotelServiceData OrderManualController");
+
                     return Ok(new
                     {
                         status = (int)ResponseType.FAILED,
@@ -644,6 +651,7 @@ namespace WEB.Adavigo.CMS.Controllers.Order
                     var order = await _orderRepository.GetOrderByID(order_id);
                     if (order != null)
                     {
+                        ViewBag.IsLock = order != null && order.IsLock != null ? order.IsLock : false;
                         ViewBag.IsOrderManual = true;
                     }
                     bool is_allow_to_edit = false;
@@ -1018,6 +1026,8 @@ namespace WEB.Adavigo.CMS.Controllers.Order
                             };
                             await _hotelBookingCodeRepository.InsertHotelBookingCode(hotel_code_view_model);
                         }
+                        workQueueClient.SyncES(route.Id, _configuration["DataBaseConfig:Elastic:SP:SP_GetDetailFlyBookingDetail"], _configuration["DataBaseConfig:Elastic:Index:FlyBookingDetail"], ProjectType.ADAVIGO_CMS_PQ, "SummitFlyBookingServiceData OrderManualController");
+
                     }
                     if (detail.Count < 2)
                     {
@@ -1111,6 +1121,8 @@ namespace WEB.Adavigo.CMS.Controllers.Order
                
                 string link = "/Order/" + result.OrderId;
                 var SendMessage = apiService.SendMessage( _UserId.ToString(),((int) ModuleType.DON_HANG).ToString(), ((int)ActionType.TAO_MOI).ToString(), order.OrderNo, link, current_user==null? "0": current_user.Role);
+                workQueueClient.SyncES(result.OrderId, _configuration["DataBaseConfig:Elastic:SP:sp_GetOrder"], _configuration["DataBaseConfig:Elastic:Index:Order"], ProjectType.ADAVIGO_CMS_PQ, "CreateManualOrder OrderManualController");
+
                 //-- Bo sung tao contact client:
                 //-- Get Contract va bo sung contractID
                 return Ok(new
@@ -1144,6 +1156,7 @@ namespace WEB.Adavigo.CMS.Controllers.Order
             ViewBag.IsOrderManual = false;
             ViewBag.IsSelfDesigned = false;
             ViewBag.AllowToEdit = true;
+            ViewBag.IsLock = false;
             try
             {
                 if (order_id > 0)
@@ -1196,6 +1209,7 @@ namespace WEB.Adavigo.CMS.Controllers.Order
                     var order = await _orderRepository.GetOrderByID(order_id);
                     if (order != null)
                     {
+                        ViewBag.IsLock = order != null && order.IsLock != null ? order.IsLock : false;
                         ViewBag.IsOrderManual = true;
 
                     }
@@ -1418,10 +1432,11 @@ namespace WEB.Adavigo.CMS.Controllers.Order
                     });
                 }
                 //-- Notify
-               
+
+                workQueueClient.SyncES(id, _configuration["DataBaseConfig:Elastic:SP:sp_GetTour"], _configuration["DataBaseConfig:Elastic:Index:TourBooking"], ProjectType.ADAVIGO_CMS_PQ, "SummitTourServiceData OrderManualController");
 
                 #region Update Order Amount:
-               
+
                 await _orderRepository.UpdateOrderDetail(data.order_id, _UserId);
                 await _orderRepository.ReCheckandUpdateOrderPayment(data.order_id);
 
@@ -1916,6 +1931,7 @@ namespace WEB.Adavigo.CMS.Controllers.Order
                     var order = await _orderRepository.GetOrderByID(order_id);
                     if (order != null )
                     {
+                        ViewBag.IsLock = order != null && order.IsLock != null ? order.IsLock : false;
                         ViewBag.IsOrderManual = true;
                     }
                     var other_booking = await _otherBookingRepository.GetOtherBookingById(other_booking_id);
@@ -2093,6 +2109,7 @@ namespace WEB.Adavigo.CMS.Controllers.Order
                     var order = await _orderRepository.GetOrderByID(order_id);
                     if (order != null)
                     {
+                        ViewBag.IsLock = order != null && order.IsLock != null ? order.IsLock : false;
                         ViewBag.IsOrderManual = true;
                     }
                     var vinwonder_booking =  _vinWonderBookingRepository.GetVinWonderBookingById(booking_id);
@@ -2315,6 +2332,7 @@ namespace WEB.Adavigo.CMS.Controllers.Order
                     var order = await _orderRepository.GetOrderByID(order_id);
                     if (order != null)
                     {
+                        ViewBag.IsLock = order != null && order.IsLock != null ? order.IsLock : false;
                         ViewBag.IsOrderManual = true;
                     }
                     if (booking_id > 0)

@@ -1681,7 +1681,7 @@ namespace Entities.Models
                     .HasMaxLength(100);
 
                 entity.HasOne(d => d.Order)
-                    .WithMany(p => p.Passenger)
+                    .WithMany(p => p.Passengers)
                     .HasForeignKey(d => d.OrderId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Passenger_Order");

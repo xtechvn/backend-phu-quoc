@@ -170,7 +170,7 @@
 
                         <div id="service-fly-button-div" class="text-right ">
                             <div class="btn btn-default btn btn-default cancel" onclick="_order_detail_fly.Close()">Bỏ qua</div>
-                            @if (is_order_manual && is_allow_to_edit)
+                            @if (is_order_manual && is_allow_to_edit && (ViewBag.IsLock == null || ViewBag.IsLock == false))
                             {
                                 <div class="btn btn-default btn btn-summit-service-fly" onclick="_order_detail_fly.Summit()">Thêm</div>
 

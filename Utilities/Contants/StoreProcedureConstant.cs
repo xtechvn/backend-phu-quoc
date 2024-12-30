@@ -284,6 +284,13 @@ namespace Utilities.Contants
         public static string Report_TotalRevenueByOrder = "SP_Report_TotalRevenueByOrder";
         public static string Report_SumTotalRevenueByOrder = "SP_Report_SumTotalRevenueByOrder";
         public static string Report_ToTalRevenueOfSeaSports = "SP_Report_ToTalRevenueOfSeaSports";
+
+        public static string SP_GetListOrderBookClosingByOrderId = "SP_GetListOrderBookClosingByOrderId";
+        public static string SP_OrderBookClosing = "SP_OrderBookClosing";
+        public static string sp_UpdateBookClosingByOrderId = "sp_UpdateBookClosingByOrderId";
+        public static string sp_CheckBookClosingByDate = "sp_CheckBookClosingByDate";
+        public static string sp_GetTotalCustomerCareFund = "sp_GetTotalCustomerCareFund";
+
         #endregion
 
         #region Tour product

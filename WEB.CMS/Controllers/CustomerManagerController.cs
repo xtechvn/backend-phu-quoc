@@ -1,4 +1,5 @@
-﻿using Entities.Models;
+﻿using APP_CHECKOUT.RabitMQ;
+using Entities.Models;
 using Entities.ViewModels;
 using Entities.ViewModels.Contract;
 using Entities.ViewModels.CustomerManager;
@@ -40,6 +41,7 @@ namespace WEB.Adavigo.CMS.Controllers
         private readonly IWebHostEnvironment _WebHostEnvironment;
         private ManagementUser _ManagementUser;
         private IBankingAccountRepository _bankingAccountRepository;
+        private readonly WorkQueueClient _workQueueClient;
 
 
         public CustomerManagerController(IConfiguration configuration, ICustomerManagerRepository customerManagerRepositories, IDepositHistoryRepository depositHistoryRepository, ManagementUser ManagementUser, IWebHostEnvironment WebHostEnvironment,
@@ -58,6 +60,7 @@ namespace WEB.Adavigo.CMS.Controllers
             _ManagementUser = ManagementUser;
             _WebHostEnvironment = WebHostEnvironment;
             _bankingAccountRepository = bankingAccountRepository;
+            _workQueueClient = new WorkQueueClient(configuration);
         }
         public async Task<IActionResult> Index()
         {
@@ -279,6 +282,7 @@ namespace WEB.Adavigo.CMS.Controllers
                         var Result =await _customerManagerRepositories.SetUpClientAsync(DataModel);
                         if (Result != 0)
                         {
+                            _workQueueClient.SyncES(Result, _configuration["DataBaseConfig:Elastic:SP:sp_GetClient"], _configuration["DataBaseConfig:Elastic:Index:Client"], ProjectType.ADAVIGO_CMS_PQ, "Setup CustomerManager");
 
                             // var api =await apiService.SendMailResetPassword(DataModel.email); gửi email pass
                             stt_code = (int)ResponseType.SUCCESS;
@@ -299,6 +303,8 @@ namespace WEB.Adavigo.CMS.Controllers
                         var Result = await _customerManagerRepositories.SetUpClientAsync(DataModel);
                         if (Result > 0)
                         {
+                            _workQueueClient.SyncES(Result, _configuration["DataBaseConfig:Elastic:SP:sp_GetClient"], _configuration["DataBaseConfig:Elastic:Index:Client"], ProjectType.ADAVIGO_CMS_PQ, "Setup CustomerManager");
+
                             stt_code = (int)ResponseType.SUCCESS;
                             msg = "Cập nhật thông tin thành công";
                         }
@@ -326,6 +332,8 @@ namespace WEB.Adavigo.CMS.Controllers
                         var Result = await _customerManagerRepositories.SetUpClientAsync(DataModel);
                         if (Result != 0)
                         {
+                            _workQueueClient.SyncES(Result, _configuration["DataBaseConfig:Elastic:SP:sp_GetClient"], _configuration["DataBaseConfig:Elastic:Index:Client"], ProjectType.ADAVIGO_CMS_PQ, "Setup CustomerManager");
+
                             stt_code = (int)ResponseType.SUCCESS;
                             msg = "Thêm mới thông tin thành công";
                         }
@@ -340,6 +348,8 @@ namespace WEB.Adavigo.CMS.Controllers
                         var Result = await _customerManagerRepositories.SetUpClientAsync(DataModel);
                         if (Result > 2)
                         {
+                            _workQueueClient.SyncES(DataModel.Id, _configuration["DataBaseConfig:Elastic:SP:sp_GetClient"], _configuration["DataBaseConfig:Elastic:Index:Client"], ProjectType.ADAVIGO_CMS_PQ, "Setup CustomerManager");
+
                             stt_code = (int)ResponseType.SUCCESS;
                             msg = "Cập nhật thông tin thành công";
                         }

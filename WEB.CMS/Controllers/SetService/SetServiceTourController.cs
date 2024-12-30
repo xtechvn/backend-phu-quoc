@@ -42,7 +42,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Tour
             _orderRepositor = orderRepositor;
             _hotelBookingCodeRepository = hotelBookingCodeRepository;
             _contactClientRepository = contactClientRepository;
-            _tourESRepository = new TourESRepository(_configuration["DataBaseConfig:Elastic:Host"]);
+            _tourESRepository = new TourESRepository(_configuration["DataBaseConfig:Elastic:Host"], configuration);
             _paymentRequestRepository = paymentRequestRepository;
             _tourPackagesOptionalRepository = tourPackagesOptionalRepository;
             _ManagementUser = managementUser;

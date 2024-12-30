@@ -101,7 +101,7 @@
                     <div style="padding-top: 20px; margin-top:10px;">
                         <div id="service-vinwonder-button-div" class="text-right ">
                             <div class="btn btn-default btn btn-default cancel" onclick="_order_detail_vinwonder.Close()">Bỏ qua</div>
-                            @if (is_order_manual && is_allow_to_edit)
+                            @if (is_order_manual && is_allow_to_edit && (ViewBag.IsLock == null || ViewBag.IsLock == false))
                             {
                                 <div class="btn btn-default btn btn-summit-service-vinwonder" onclick="_order_detail_vinwonder.Summit()">@(booking!=null && booking.Id>0?"Sửa":"Thêm")</div>
 

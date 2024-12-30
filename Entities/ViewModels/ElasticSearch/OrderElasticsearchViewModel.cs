@@ -1,13 +1,17 @@
 ﻿using Entities.Models;
+using Nest;
 using System;
 
 namespace ENTITIES.ViewModels.ElasticSearch
 {
    public class OrderElasticsearchViewModel: Order
     {
+        [PropertyName("id")]
+
         public long id { get; set; } // ID ElasticSearch
 
-        public long orderid { get; set; }
+        [PropertyName("orderno")]
+
         public string orderno { get; set; }
       
         public void GenID()
@@ -16,9 +20,9 @@ namespace ENTITIES.ViewModels.ElasticSearch
             id = Convert.ToInt64(datetime);
         }
     }
-    public class SearchOrderElasticsearchViewModel
+    public class OrderSelectViewModel
     {
+        public long orderid { get; set; }
         public string orderno { get; set; }
-        public string id { get; set; }
     }
 }

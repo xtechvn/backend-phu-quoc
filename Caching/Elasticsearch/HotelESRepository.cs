@@ -1,5 +1,6 @@
 ﻿using Elasticsearch.Net;
 using Entities.ViewModels;
+using Microsoft.Extensions.Configuration;
 using Nest;
 using System;
 using System.Collections.Generic;
@@ -10,8 +11,14 @@ namespace Caching.Elasticsearch
 {
     public class HotelESRepository : ESRepository<HotelESViewModel>
     {
-        private string index_name = "hotel_store";
-        public HotelESRepository(string Host) : base(Host) { }
+        private readonly IConfiguration _configuration;
+        private readonly string index_name = "adavigo_phuquoc_sp_gethotel";
+        public HotelESRepository(string Host, IConfiguration configuration) : base(Host)
+        {
+
+            _configuration = configuration;
+            index_name = configuration["DataBaseConfig:Elastic:Index:Hotel"];
+        }
 
         public async Task<List<HotelESViewModel>> GetListProduct(string txtsearch)
         {
@@ -25,7 +32,7 @@ namespace Caching.Elasticsearch
                 var elasticClient = new ElasticClient(connectionSettings);
                 if (txtsearch == null) txtsearch = "";
                 var search_response = elasticClient.Search<HotelESViewModel>(s => s
-                          .Index(index_name + (_company_type.Trim() == "0" ? "" : "_" + _company_type.Trim()))
+                          .Index(index_name)
                           .From(0)
                           .Size(top)
                           .Query(q => 
@@ -72,7 +79,7 @@ namespace Caching.Elasticsearch
                 var elasticClient = new ElasticClient(connectionSettings);
 
                 var search_response = elasticClient.Search<HotelESViewModel>(s => s
-                          .Index(index_name + (_company_type.Trim() == "0" ? "" : "_" + _company_type.Trim()))
+                          .Index(index_name)
                           .Size(top)
                           .Query(q => q
                            .Match(qs => qs
@@ -89,6 +96,43 @@ namespace Caching.Elasticsearch
                 {
                     result = search_response.Documents as List<HotelESViewModel>;
                     return result.Count>0? result[0]: null;
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+
+        }
+        public async Task<HotelESViewModel> GetHotelByID(int hotel_id)
+        {
+            List<HotelESViewModel> result = new List<HotelESViewModel>();
+            try
+            {
+                int top = 4000;
+                var nodes = new Uri[] { new Uri(_ElasticHost) };
+                var connectionPool = new StaticConnectionPool(nodes);
+                var connectionSettings = new ConnectionSettings(connectionPool).DisableDirectStreaming().DefaultIndex(index_name);
+                var elasticClient = new ElasticClient(connectionSettings);
+
+                var search_response = elasticClient.Search<HotelESViewModel>(s => s
+                          .Index(index_name)
+                          .Size(top)
+                          .Query(q => q
+                           .Match(qs => qs
+                               .Field(s => s.id)
+                               .Query(hotel_id.ToString())
+
+                           )
+                          ));
+                if (!search_response.IsValid)
+                {
+                    return null;
+                }
+                else
+                {
+                    result = search_response.Documents as List<HotelESViewModel>;
+                    return result.Count > 0 ? result[0] : null;
                 }
             }
             catch (Exception ex)

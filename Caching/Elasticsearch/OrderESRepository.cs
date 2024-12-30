@@ -1,6 +1,7 @@
 ﻿using Elasticsearch.Net;
 using Entities.ViewModels.ElasticSearch;
 using ENTITIES.ViewModels.ElasticSearch;
+using Microsoft.Extensions.Configuration;
 using Nest;
 using System;
 using System.Collections.Generic;
@@ -12,8 +13,14 @@ namespace Caching.Elasticsearch
 {
    public class OrderESRepository :ESRepository<OrderElasticsearchViewModel>
     {
-        public OrderESRepository(string Host) : base(Host) { }
-        public async Task<List<OrderElasticsearchViewModel>> GetOrderNoSuggesstion(string txt_search, string index_name = "order_store")
+        private readonly IConfiguration _configuration;
+        private readonly string index_name = "adavigo_phuquoc_sp_getorder";
+        public OrderESRepository(string Host, IConfiguration configuration) : base(Host) {
+
+            _configuration = configuration;
+            index_name=configuration["DataBaseConfig:Elastic:Index:Order"];
+        }
+        public async Task<List<OrderElasticsearchViewModel>> GetOrderNoSuggesstion(string txt_search)
         {
             List<OrderElasticsearchViewModel> result = new List<OrderElasticsearchViewModel>();
             try
@@ -25,7 +32,7 @@ namespace Caching.Elasticsearch
                 var elasticClient = new ElasticClient(connectionSettings);
 
                 var search_response = elasticClient.Search<OrderElasticsearchViewModel>(s => s
-                          .Index(index_name + (_company_type.Trim() == "0" ? "" : "_" + _company_type.Trim()))
+                          .Index(index_name)
                           .Size(top)
                           .Query(q =>
                              q.QueryString(qs => qs
@@ -52,7 +59,7 @@ namespace Caching.Elasticsearch
             }
 
         }
-        public async Task<List<OrderElasticsearchViewModel>> GetOrderNoSuggesstion2(string txt_search, int SysTemType, string index_name = "order_store")
+        public async Task<List<OrderElasticsearchViewModel>> GetOrderNoSuggesstion2(string txt_search, int SysTemType)
         {
             List<OrderElasticsearchViewModel> result = new List<OrderElasticsearchViewModel>();
             try
@@ -64,7 +71,7 @@ namespace Caching.Elasticsearch
                 var elasticClient = new ElasticClient(connectionSettings);
 
                 var search_response = elasticClient.Search<OrderElasticsearchViewModel>(s => s
-                          .Index(index_name + (_company_type.Trim() == "0" ? "" : "_" + _company_type.Trim()))
+                          .Index(index_name)
                           .Size(top)
                           .Query(q =>
                            q.Bool(
@@ -96,19 +103,20 @@ namespace Caching.Elasticsearch
             }
 
         }
-        public async Task<List<ESHotelBookingCodeViewModel>> GetHotelBookingCode(string txt_search, int Type, string index_name = "hotel_booking_code_store")
+        public async Task<List<ESHotelBookingCodeViewModel>> GetHotelBookingCode(string txt_search, int Type)
         {
             List<ESHotelBookingCodeViewModel> result = new List<ESHotelBookingCodeViewModel>();
             try
             {
+              var  index_name_es = _configuration["DataBaseConfig:Elastic:Index:HotelBookingCode"];
                 int top = 30;
                 var nodes = new Uri[] { new Uri(_ElasticHost) };
                 var connectionPool = new StaticConnectionPool(nodes);
-                var connectionSettings = new ConnectionSettings(connectionPool).DisableDirectStreaming().DefaultIndex(index_name);
+                var connectionSettings = new ConnectionSettings(connectionPool).DisableDirectStreaming().DefaultIndex(index_name_es);
                 var elasticClient = new ElasticClient(connectionSettings);
 
                 var search_response = elasticClient.Search<ESHotelBookingCodeViewModel>(s => s
-                          .Index(index_name + (_company_type.Trim() == "0" ? "" : "_" + _company_type.Trim()))
+                          .Index(index_name_es)
                           .Size(top)
                           .Query(q =>
                            q.Bool(

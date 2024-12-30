@@ -41,5 +41,12 @@ namespace Repositories.IRepositories
         public List<long> GetAllOrderIDs();
         Task<long> UpdateAllServiceStatusByOrderId(long OrderId, long Status);
         Task<bool> UndoContractPayByOrderId(long order_id, int user_summit);
+        Task<List<OrderBookClosingRequestViewModel>> GetListOrderBookClosingByOrderId(long OrderId);
+        Task<TotalCustomerCareFundViewModel> GetTotalCustomerCareFund(string ids, long ClientId);
+        Task<long> OrderBookClosing(OrderBookClosingViewModel model);
+        Task<long> UpdateBookClosingByOrderId(long OrderId, long IsLock, long UpdateBy);
+        Task<long> CheckBookClosingByDate(DateTime FromDate, DateTime ToDate);
+    
+
     }
 }

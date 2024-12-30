@@ -43,7 +43,7 @@ namespace WEB.Adavigo.CMS.PQ.Controllers.Order
         {
             _sportWaterGuestsRepository = sportWaterGuestsRepository;
             _configuration = configuration;
-            _hotelESRepository = new HotelESRepository(_configuration["DataBaseConfig:Elastic:Host"]);
+            _hotelESRepository = new HotelESRepository(_configuration["DataBaseConfig:Elastic:Host"], configuration);
             _allCodeRepository = allCodeRepository;
             _otherBookingRepository = otherBookingRepository;
             _userRepository = userRepository;
@@ -635,6 +635,11 @@ namespace WEB.Adavigo.CMS.PQ.Controllers.Order
                     case WaterSportType.WATER_SPORT_KAYAK:
                         {
                             txt_search = AllCodeType.WATER_SPORT_KAYAK;
+                        }
+                        break; 
+                    case WaterSportType.WATER_SPORT_BAY_FLYCAM:
+                        {
+                            txt_search = AllCodeType.WATER_SPORT_BAY_FLYCAM;
                         }
                         break;
                 }

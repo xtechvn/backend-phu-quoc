@@ -6,7 +6,9 @@
     List<Entities.Models.AllCode> FLOATING_HOUSE = (List<Entities.Models.AllCode>)ViewBag.FLOATING_HOUSE;
     double profit = list != null && list.Count > 0 ? list.Sum(x => (double)x.Profit) : 0;
     double amount = list != null && list.Count > 0 ? list.Sum(x => (double)x.Amount) : 0;
+    double amount_BasePrice = list != null && list.Count > 0 ? list.Sum(x => (double)x.BasePrice) : 0;
     double commission = list != null && list.Count > 0 ? list.Sum(x => x.Commission != null ? (double)x.Commission : 0) : 0;
+    double discount = list != null && list.Count > 0 ? list.Sum(x => x.Discount != null ? (double)x.Discount : 0) : 0;
     int index = 0;
 }
 <style>
@@ -20,10 +22,14 @@
             <th style="min-width: 70px;">STT</th>
             <th style="min-width: 150px;">Sản phẩm</th>
             <th style="min-width: 170px;">phân loại<sup class="red">*</sup></th>
-            <th class="text-right" style="min-width: 180px;">Đơn giá<sup class="red">*</sup></th>
-            <th class="text-right" style="min-width:150px !important;">Số lượng</th>
-            <th class="text-right" style="min-width: 300px !important;">Thành tiền giá bán</th>
+            <th class="text-right" style="min-width: 100px;">Giá nhập<sup class="red">*</sup></th>
+            <th class="text-right" style="min-width: 100px;">Giá bán<sup class="red">*</sup></th>
+            <th class="text-right" style="min-width: 80px !important;">Số lượng</th>
+            <th class="text-right" style="min-width: 150px !important;">Thành tiền giá nhập</th>
+            <th class="text-right" style="min-width: 150px !important;">Thành tiền giá bán</th>
             <th class="text-right" style="min-width: 150px !important;">Hoa hồng</th>
+            <th class="text-right" style="min-width: 150px !important;">Chiết khấu</th>
+            <th class="text-right" style="min-width: 100px !important;">Lợi nhuận</th>
             <th class="text-center" style="min-width: 300px !important;">Ghi chú</th>
             <th class="text-right"></th>
         </tr>
@@ -69,9 +75,16 @@
                     </td>
 
                     <td> <input class="form-control text-right currency service-watersport-packages-baseprice" type="text" name="service-watersport-packages-baseprice" value="@(((double)item.BasePrice).ToString("N0"))"></td>
+                    <td> <input class="form-control text-right currency service-watersport-packages-saleprice" type="text" name="service-watersport-packages-saleprice" value="@(((double)item.SalePrice).ToString("N0"))"></td>
                     <td> <input class="form-control text-right currency service-watersport-packages-quantity" type="text" name="service-watersport-packages-quantity" value="@(((int)item.Quantity).ToString("N0"))"></td>
+                    @{
+                        double baseprice_amount = (double)item.BasePrice * (double)item.Quantity;
+                    }
+                    <td class="text-right"> <input class="form-control text-right currency service-watersport-packages-baseprice-amount" disabled style="background-color: lightgray;" value="@(baseprice_amount.ToString("N0"))"></td>
                     <td class="text-right"> <input class="form-control text-right currency service-watersport-packages-amount" disabled style="background-color: lightgray;" value="@item.Amount.ToString("N0")"></td>
                     <td class="text-right"> <input class="form-control text-right currency service-watersport-packages-commission" value="@((item.Commission!=null?(double) item.Commission:0).ToString("N0"))"></td>
+                    <td class="text-right"> <input class="form-control text-right currency service-watersport-packages-discount" value="@((item.Discount!=null?(double) item.Discount:0).ToString("N0"))"></td>
+                    <td class="text-right"> <input class="form-control text-right currency service-watersport-packages-profit" value="@((item.Profit!=null?(double) item.Profit:0).ToString("N0"))"></td>
                     <td><textarea class="form-control style-width2 textarea service-watersport-packages-note">@item.Note</textarea></td>
 
                     <td class="text-right">
@@ -107,11 +120,16 @@
                         }
                     </select>
                 </td>
-                <td> <input class="form-control text-right currency service-watersport-packages-baseprice" type="text" name="service-watersport-packages-baseprice" value=" @ViewBag.price.ToString("N0") "></td>
+                <td> <input class="form-control text-right currency service-watersport-packages-baseprice" type="text" name="service-watersport-packages-baseprice" value=""></td>
+                <td> <input class="form-control text-right currency service-watersport-packages-saleprice" type="text" name="service-watersport-packages-saleprice" value=" @ViewBag.price.ToString("N0") "></td>
                 <td> <input class="form-control text-right currency service-watersport-packages-quantity" type="text" name="service-watersport-packages-quantity" value=""></td>
+                <td class="text-right"> <input class="form-control text-right currency service-watersport-packages-baseprice-amount" disabled style="background-color: lightgray;" value=""></td>
 
                 <td class="text-right"> <input class="form-control text-right currency service-watersport-packages-amount" style="background-color: lightgray;" disabled value=""></td>
                 <td class="text-right"> <input class="form-control text-right currency service-watersport-packages-commission" value=""></td>
+                <td class="text-right"> <input class="form-control text-right currency service-watersport-packages-discount" value=""></td>
+                <td class="text-right"> <input class="form-control text-right currency service-watersport-packages-profit" value=""></td>
+
                 <td><textarea class="form-control style-width2 textarea service-watersport-packages-note"></textarea></td>
 
                 <td class="text-right">
@@ -127,9 +145,12 @@
                 <a href="javascript:;" class="blue ml-2 mb10" onclick="_order_detail_watersport.AddwatersportBookingpackages();"><i class="fa fa-plus-circle green"></i> Thêm dịch vụ</a>
             </td>
             <td class="text-right" colspan="2">Tổng cộng</td>
+            <td></td>
+            <td class="text-right font-weight-bold service-watersport-packages-total-baseprice-amount">@(amount_BasePrice.ToString("N0"))</td>
             <td class="text-right font-weight-bold service-watersport-packages-total-amount">@(amount.ToString("N0"))</td>
             <td class="text-right font-weight-bold service-watersport-packages-total-commission">@(commission.ToString("N0"))</td>
-            <td></td>
+            <td class="text-right font-weight-bold service-watersport-packages-total-discount">@(discount.ToString("N0"))</td>
+            <td class="text-right font-weight-bold service-watersport-packages-total-profit">@(profit.ToString("N0"))</td>
             <td></td>
         </tr>
 

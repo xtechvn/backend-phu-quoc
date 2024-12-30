@@ -35,7 +35,10 @@ namespace Entities.ViewModels.Report
         public string BranchName { get; set; }
         public string ClientCode { get; set; }
         public string ClientName { get; set; }
-
+        public double? Discount { get; set; }
+        public double? Refund { get; set; }
+        public double? AmountPayNCC { get; set; }
+        public string ServiceName { get; set; }
     }
     public class SumOperatorReportViewModel
     {
@@ -48,6 +51,8 @@ namespace Entities.ViewModels.Report
         public double? PriceRemain { get; set; }
         public double? Comission { get; set; }
         public double? Profit { get; set; }
-
+        public double? Discount { get; set; }
+        public double? Refund { get; set; }
+        public double? AmountPayNCC { get; set; }
     }
 }

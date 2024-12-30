@@ -1053,5 +1053,84 @@ namespace Repositories.Repositories
             }
 
         }
+        public async Task<long> CheckBookClosingByDate(DateTime FromDate, DateTime ToDate)
+        {
+            try
+            {
+                return await _OrderDal.CheckBookClosingByDate(FromDate, ToDate);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("CheckBookClosingByDate in OrderRepository: " + ex);
+            }
+            return 0;
+        }
+        public async Task<long> UpdateBookClosingByOrderId(long OrderId, long IsLock, long UpdateBy)
+        {
+            try
+            {
+                return await _OrderDal.UpdateBookClosingByOrderId(OrderId, IsLock, UpdateBy);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("UpdateBookClosingByOrderId in OrderRepository: " + ex);
+            }
+            return 0;
+        }
+        public async Task<List<OrderBookClosingRequestViewModel>> GetListOrderBookClosingByOrderId(long OrderId)
+        {
+
+            try
+            {
+                DataTable dt = await _OrderDal.GetListOrderBookClosingByOrderId(OrderId);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+
+                    var data = dt.ToList<OrderBookClosingRequestViewModel>();
+
+                    return data;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("GetTotalCountSumOrder in OrderRepository: " + ex);
+            }
+            return null;
+        }
+        public async Task<TotalCustomerCareFundViewModel> GetTotalCustomerCareFund(string ids, long ClientId)
+        {
+            try
+            {
+                return await _OrderDal.GetTotalCustomerCareFund(ids, ClientId);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("GetTotalCustomerCareFund in OrderRepository: " + ex);
+            }
+            return null;
+        }
+          public async Task<long> OrderBookClosing(OrderBookClosingViewModel model)
+        {
+            try
+            {
+                //var CheckBookClosing =await CheckBookClosingByDate((DateTime)model.FromDate,model.ToDate);
+                //if (CheckBookClosing > 0)
+                //{
+                //    return 0;
+                //}
+                //else
+                //{
+                //    return await _OrderDal.OrderBookClosing(model);
+
+                //}
+                return await _OrderDal.OrderBookClosing(model);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("OrderBookClosing in OrderRepository: " + ex);
+            }
+            return 0;
+        }
+      
     }
 }

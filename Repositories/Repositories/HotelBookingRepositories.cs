@@ -45,7 +45,7 @@ namespace Repositories.Repositories
             _orderDAL = new OrderDAL(dataBaseConfig.Value.SqlServer.ConnectionString);
             _clientDAL = new ClientDAL(dataBaseConfig.Value.SqlServer.ConnectionString);
             _hotelBookingRoomDAL = new HotelBookingRoomDAL(dataBaseConfig.Value.SqlServer.ConnectionString);
-            _hotelESRepository = new HotelESRepository(_configuration["DataBaseConfig:Elastic:Host"]);
+            _hotelESRepository = new HotelESRepository(_configuration["DataBaseConfig:Elastic:Host"], configuration);
            _ESRepository = new ESRepository<HotelESViewModel>(_configuration["DataBaseConfig:Elastic:Host"]);
 
         }

@@ -151,12 +151,16 @@
  
                 </select>
             </td>
-            <td> <input class="form-control text-right currency service-watersport-packages-baseprice service-watersport-packages-baseprice-newadd price-name-{price-name}" type="text" name="service-watersport-packages-baseprice" value=""></td>
+            <td> <input class="form-control text-right currency service-watersport-packages-baseprice" type="text" name="service-watersport-packages-baseprice" value=""></td>
+            <td> <input class="form-control text-right currency service-watersport-packages-saleprice service-watersport-packages-baseprice-newadd price-name-{price-name}" type="text" name="service-watersport-packages-saleprice" value=""></td>
+
             <td> <input class="form-control text-right currency service-watersport-packages-quantity" type="text" name="service-watersport-packages-quantity" value=""></td>
 
-
+            <td class="text-right"> <input class="form-control text-right currency service-watersport-packages-baseprice-amount" style="background-color: lightgray;" disabled value=""></td>
             <td class="text-right"> <input class="form-control text-right currency service-watersport-packages-amount" style="background-color: lightgray;" disabled value=""></td>
            <td class="text-right"> <input class="form-control text-right currency service-watersport-packages-commission"  value=""></td>
+           <td class="text-right"> <input class="form-control text-right currency service-watersport-packages-discount"  value=""></td>
+           <td class="text-right"> <input class="form-control text-right currency service-watersport-packages-profit" value=""></td>
             <td><textarea class="form-control style-width2 textarea service-watersport-packages-note"></textarea></td>
             <td class="text-right">
                 <a class="fa fa-trash-o" href="javascript:;" onclick="_order_detail_watersport.DeletewatersportBookingpackages($(this));"></a>

@@ -1,5 +1,6 @@
 ﻿using Elasticsearch.Net;
 using Entities.ViewModels.ElasticSearch;
+using Microsoft.Extensions.Configuration;
 using Nest;
 using Newtonsoft.Json;
 using System;
@@ -11,9 +12,16 @@ namespace Caching.Elasticsearch
 {
     public class FlyBookingESRepository : ESRepository<FlyBookingESViewModel>
     {
-        public FlyBookingESRepository(string Host) : base(Host) { }
+        private readonly IConfiguration _configuration;
+        private readonly string index_name = "adavigo_phuquoc_sp_getdetailflybookingdetail";
+        public FlyBookingESRepository(string Host, IConfiguration configuration) : base(Host)
+        {
 
-        public async Task<List<FlyBookingESViewModel>> GetFlyBookingSuggesstion(string txt_search, string index_name = "fly_booking_detail_store")
+            _configuration = configuration;
+            index_name = configuration["DataBaseConfig:Elastic:Index:FlyBookingDetail"];
+        }
+
+        public async Task<List<FlyBookingESViewModel>> GetFlyBookingSuggesstion(string txt_search, string index_name = "adavigo_phuquoc_sp_getdetailflybookingdetail")
         {
             List<FlyBookingESViewModel> result = new List<FlyBookingESViewModel>();
             try
@@ -24,7 +32,7 @@ namespace Caching.Elasticsearch
                 var connectionSettings = new ConnectionSettings(connectionPool).DisableDirectStreaming().DefaultIndex(index_name);
                 var elasticClient = new ElasticClient(connectionSettings);
                 var search_response = elasticClient.Search<object>(s => s
-                           .Index(index_name + (_company_type.Trim() == "0" ? "" : "_" + _company_type.Trim()))
+                           .Index(index_name)
                            .Size(top)
                            .Query(q =>
                               q.QueryString(qs => qs

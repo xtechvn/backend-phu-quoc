@@ -77,12 +77,14 @@ var _set_service_other = {
 
     },
     Search: function (input) {
+        _global_function.AddLoading()
         window.scrollTo(0, 0);
         $.ajax({
             url: "/SetService/OtherSearch",
             type: "Post",
             data: input,
             success: function (result) {
+                _global_function.RemoveLoading()
                 $('#search_data_grid').html(result);
                 _common_function_other.OrderNoSuggesstion($('.set-service-other-search-orderno'))
                 _common_function_other.ServiceCodeSuggesstion($('.set-service-other-search-servicecode'))

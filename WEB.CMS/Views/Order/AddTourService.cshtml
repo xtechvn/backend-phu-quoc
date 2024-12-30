@@ -174,7 +174,7 @@
                 </div>
                 <div class="text-right" id="service-tour-button-div" style="margin-top: 10px;">
                     <div type="submit" class="btn btn-default btn btn-default cancel" onclick="_order_detail_tour.Close()">Bỏ qua</div>
-                    @if (is_order_manual && is_allow_to_edit)
+                    @if (is_order_manual && is_allow_to_edit && (ViewBag.IsLock == null || ViewBag.IsLock == false))
                     {
                         <div type="submit" class="btn btn-default btn-summit-service-tour" onclick="_order_detail_tour.Summit()">@(tour!=null&&tour.Id>0?"Sửa":"Thêm")</div>
 

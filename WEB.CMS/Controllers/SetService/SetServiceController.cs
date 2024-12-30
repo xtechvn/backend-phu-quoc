@@ -77,7 +77,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService
             _hotelBookingRoomExtraPackageRepository = hotelBookingRoomExtraPackageRepository;
             _contactClientRepository = contactClientRepository;
             _orderRepository = orderRepository;
-            _HotelBookingESRepository = new HotelBookingESRepository(_configuration["DataBaseConfig:Elastic:Host"]);
+            _HotelBookingESRepository = new HotelBookingESRepository(_configuration["DataBaseConfig:Elastic:Host"], configuration);
             _allCodeRepository = allCodeRepository;
             _hotelBookingCodeRepository = hotelBookingCodeRepository;
             _userRepository = userRepository;
@@ -92,7 +92,7 @@ namespace WEB.Adavigo.CMS.Controllers.SetService
             _WebHostEnvironment = WebHostEnvironment;
             _vinWonderBookingRepository = vinWonderBookingRepository;
             _otherBookingRepository = otherBookingRepository;
-            _orderESRepository = new OrderESRepository(_configuration["DataBaseConfig:Elastic:Host"]);
+            _orderESRepository = new OrderESRepository(_configuration["DataBaseConfig:Elastic:Host"], configuration );
             _clientRepository = clientRepository;
         }
 

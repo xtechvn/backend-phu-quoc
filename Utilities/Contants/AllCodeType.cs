@@ -46,6 +46,7 @@ namespace Utilities.Contants
         public static string WATER_SPORT_JETSKI = "WATER_SPORT_JETSKI";
         public static string WATER_SPORT_FLOATING_HOUSE = "WATER_SPORT_FLOATING_HOUSE";
         public static string WATER_SPORT_FLY_FISH = "WATER_SPORT_FLY_FISH";
+        public static string WATER_SPORT_BAY_FLYCAM = "WATER_SPORT_BAY_FLYCAM";
 
 
     }

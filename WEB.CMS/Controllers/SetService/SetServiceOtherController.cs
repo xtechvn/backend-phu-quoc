@@ -53,8 +53,8 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.Other
             _configuration = configuration;
             _orderRepository = orderRepository;
             _contactClientRepository = contactClientRepository;
-            _orderESRepository = new OrderESRepository(_configuration["DataBaseConfig:Elastic:Host"]);
-            _flyBookingESRepository = new FlyBookingESRepository(_configuration["DataBaseConfig:Elastic:Host"]);
+            _orderESRepository = new OrderESRepository(_configuration["DataBaseConfig:Elastic:Host"], configuration);
+            _flyBookingESRepository = new FlyBookingESRepository(_configuration["DataBaseConfig:Elastic:Host"], configuration);
             _allCodeRepository = allcodeRepository;
             _userESRepository = new UserESRepository(_configuration["DataBaseConfig:Elastic:Host"]);
             _indentiferService = new IndentiferService(configuration);

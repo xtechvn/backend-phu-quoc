@@ -454,13 +454,15 @@ namespace Repositories.Repositories
                     summit.booking.StatusOld = 1;
                 }
                 double amount = data.packages.Sum(x => x.amount);
+                double discount = data.packages.Sum(x => x.discount);
                 double price = amount;
                 summit.booking.OrderId = data.order_id;
                 summit.booking.Amount = amount;
                 summit.booking.ConfNo = data.conf_no;
                 summit.booking.RoomNo = data.room_no;
                 summit.booking.SerialNo = data.serial_no;
-                summit.booking.Profit = amount - data.commission - data.others_amount;
+                //summit.booking.Profit = amount - data.commission - data.others_amount;
+                summit.booking.Profit = data.packages.Sum(x => x.profit); ;
                 summit.booking.Price = price;
                 summit.booking.StartDate = data.used_date;
                 summit.booking.EndDate = data.used_date;
@@ -473,6 +475,7 @@ namespace Repositories.Repositories
                 summit.booking.Commission = data.commission;
                 summit.booking.OthersAmount = data.others_amount;
                 summit.booking.ServiceCode = data.service_code;
+                summit.booking.Discount = discount;
                 var allcode_ws_type = await AllCodeDAL.GetIfDescriptionExists(AllCodeType.SERVICE_TYPE_OTHER_MAIN, AllCodeDescription.WATER_SPORT);
                 if(allcode_ws_type!=null && allcode_ws_type.Id > 0)
                 {
@@ -495,11 +498,12 @@ namespace Repositories.Repositories
                             Quantity = item.quantity,
                             UpdatedBy = user_summit,
                             UpdatedDate = DateTime.Now,
-                            Profit = item.amount,
+                            Profit = item.profit,
                             Name = "",
-                            SalePrice = item.amount,
+                            SalePrice = item.sale_price,
                             Note=item.note,
-                            Commission= Convert.ToDecimal(item.commission)
+                            Commission= Convert.ToDecimal(item.commission),
+                            Discount = item.discount,
                         });
                     }
                 }

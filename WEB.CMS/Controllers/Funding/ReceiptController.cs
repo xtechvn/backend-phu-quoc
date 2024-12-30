@@ -395,6 +395,10 @@ namespace WEB.Adavigo.CMS.Controllers
                     }
                     model.AttatchmentFile = "/" + _UploadFolder + "/" + _FileName;
                 }
+                if (model.ClientId == null && model.Type != (int)DepositHistoryConstant.CONTRACT_PAY_TYPE.THU_TIEN_NCC_HOAN_TRA)
+                {
+                    model.ContractPayDetails = new List<ContractPayDetailViewModel>();
+                }
                 var result = _contractPayRepository.UpdateContractPay(model);
                 if (result < 1)
                     return Ok(new
