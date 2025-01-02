@@ -1,4 +1,4 @@
-﻿let listid = []
+let listid = []
 $(document).ready(function () {
     _water_sport.Init();
     $("#ClientId").select2({
@@ -303,6 +303,7 @@ var _water_sport = {
             _water_sport.WaterSportTypeSuggesstionadd($('.service-watersport-type-new-' + id), id)
             $('.service-watersport-service-type-new').removeClass('service-watersport-service-type-new')
             $('.service-watersport-type-new-add').removeClass('service-watersport-type-new-add')
+            $('.service-watersport-packages-baseprice-newadd').removeClass('service-watersport-packages-baseprice-newadd')
         } else {
             $('.Row-packages-' + id).remove()
         }
