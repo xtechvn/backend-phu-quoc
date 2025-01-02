@@ -1,4 +1,4 @@
-﻿var _order_detail_watersport = {
+var _order_detail_watersport = {
     ServiceType: 33,
     ServiceTypeList: [],
     WSTypeList: [],
@@ -453,6 +453,15 @@
             }
         });
 
+
+    },
+    OnchangeTypeWS: function (element) {
+     
+        var Type = element.val()
+        var row_element = element.closest('.service-watersport-packages-row')
+
+        _order_detail_watersport.WaterSportTypeSuggesstionadd(row_element.find('.service-watersport-type'), parseFloat(Type))
+        _order_detail_watersport.OnchangePrice(element)
 
     },
     WaterSportTypeSuggesstionadd: function (element, id) {
