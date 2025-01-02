@@ -195,7 +195,8 @@ var _water_sport = {
                 amount: _global_function.GetAmountFromCurrencyInput(extra_package_element.find('.service-watersport-packages-amount')),
                 note: extra_package_element.find('.service-watersport-packages-note').val(),
                 commission: _global_function.GetAmountFromCurrencyInput(extra_package_element.find('.service-watersport-packages-commission')),
-                discount: _global_function.GetAmountFromCurrencyInput(extra_package_element.find('.service-watersport-packages-discount'))
+                discount: _global_function.GetAmountFromCurrencyInput(extra_package_element.find('.service-watersport-packages-discount')),
+                sale_price: _global_function.GetAmountFromCurrencyInput(extra_package_element.find('.service-watersport-packages-saleprice'))
             }
             object_summit.packages.push(extra_package);
         });
@@ -301,6 +302,7 @@ var _water_sport = {
             });
             _water_sport.WaterSportTypeSuggesstionadd($('.service-watersport-type-new-' + id), id)
             $('.service-watersport-service-type-new').removeClass('service-watersport-service-type-new')
+            $('.service-watersport-type-new-add').removeClass('service-watersport-type-new-add')
         } else {
             $('.Row-packages-' + id).remove()
         }
