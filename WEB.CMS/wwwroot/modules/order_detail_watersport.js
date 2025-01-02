@@ -58,7 +58,7 @@
             _order_detail_watersport.CalucateTotalServiceAmount()
             _order_detail_watersport.CalucateTotalServiceProfit()
         });
-        $('body').on('change', '.service-watersport-service-type', function () {
+        $('body').on('onchange', '.service-watersport-service-type', function () {
             var element = $(this)
             var Type = element.val()
             var row_element = element.closest('.service-watersport-packages-row')

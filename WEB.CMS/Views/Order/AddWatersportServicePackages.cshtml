@@ -190,7 +190,7 @@
                         </select>
                     </td>
                     <td> <input class="form-control text-right currency service-watersport-packages-baseprice" type="text" name="service-watersport-packages-baseprice" value="@(((double)item.BasePrice).ToString("N0"))"></td>
-                    <td> <input class="form-control text-right currency service-watersport-packages-saleprice" type="text" name="service-watersport-packages-saleprice" value=" @ViewBag.price.ToString("N0") "></td>
+                    <td> <input class="form-control text-right currency service-watersport-packages-saleprice" type="text" name="service-watersport-packages-saleprice" value=" @(item.SalePrice!=null ?((double)item.SalePrice).ToString("N0"):ViewBag.price.ToString("N0") )"></td>
                     <td> <input class="form-control text-right currency service-watersport-packages-quantity" type="text" name="service-watersport-packages-quantity" value="@(((int)item.Quantity).ToString("N0"))"></td>
                     <td class="text-right"> <input class="form-control text-right currency service-watersport-packages-baseprice-amount" disabled style="background-color: lightgray;" value="@(((int)item.BasePrice*(int)item.Quantity).ToString("N0"))"></td>
                     <td class="text-right"> <input class="form-control text-right currency service-watersport-packages-amount" disabled style="background-color: lightgray;" value="@item.Amount.ToString("N0")"></td>
