@@ -1,4 +1,4 @@
-﻿var _order_detail_html = {
+var _order_detail_html = {
     html_user_option: '<option class="select2-results__option" value="{user_id}">{user_name} - {user_email}{user_phone}</option>',
     html_tour_option: '<option class="" value="{tour_product_id}" {selected}>{tour_name}</option>',
     html_airport_option: '<option class="select2-results__option" value="{code}">{description} - ({code})</option>',
@@ -140,7 +140,7 @@
 <tr class="service-watersport-packages-row @(classname)" data-extra-package-id="0">
             <td class="service-watersport-packages-order">@(++index)</td>
             <td>
-                <select  class="select select2 service-watersport-service-type service-watersport-service-type-new" name="service-watersport-service-type" style="width: 100%;">
+                <select  class="select select2 service-watersport-service-type service-watersport-service-type-new"onchange="_order_detail_watersport.OnchangeTypeWS($(this))" name="service-watersport-service-type" style="width: 100%;">
             {option}
 
 
