@@ -362,6 +362,19 @@ namespace WEB.Adavigo.CMS.Controllers.SetService.WaterSport
         {
             try
             {
+                if (searchModel.StatusBooking == null || searchModel.StatusBooking.Trim() == "")
+                {
+                    var s = _allCodeRepository.GetListByType(AllCodeType.BOOKING_HOTEL_ROOM_STATUS).Where(x => x.CodeValue != (int)ServiceStatus.New).Select(x => x.CodeValue);
+                    searchModel.StatusBooking = string.Join(",", s);
+                }
+                if (searchModel.StartDateFrom != null && (searchModel.StartDateTo == null || searchModel.StartDateTo < searchModel.StartDateFrom)) searchModel.StartDateTo = searchModel.StartDateFrom;
+                if (searchModel.EndDateFrom != null && (searchModel.EndDateTo == null || searchModel.EndDateTo < searchModel.EndDateFrom)) searchModel.EndDateTo = searchModel.EndDateFrom;
+                if (searchModel.StartDateTo < searchModel.EndDateFrom && searchModel.StartDateTo < searchModel.EndDateTo)
+                {
+                    searchModel.StartDateTo = null;
+                    searchModel.EndDateFrom = null;
+                }
+
                 int _UserId = 0;
                 if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) != null)
                 {
