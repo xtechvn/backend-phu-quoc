@@ -158,6 +158,10 @@ namespace WEB.Adavigo.CMS.Controllers.Funding
                 var current_user = _ManagementUser.GetCurrentUser();
                 if (!string.IsNullOrEmpty(current_user.UserUnderList))
                     searchModel.CreateByIds = current_user.UserUnderList.Split(',').Select(n => int.Parse(n)).ToList();
+                if (current_user.Role.Contains(((int)RoleType.Admin).ToString()) || current_user.Role.Contains(((int)RoleType.PhoTPKeToan).ToString()) || current_user.Role.Contains(((int)RoleType.KeToanTruong).ToString()))
+                {
+                    searchModel.CreateByIds = null;
+                }
                 var countStatus = _paymentRequestRepository.GetCountStatus(searchModel);
                 var countStatusAll = new CountStatus();
                 countStatusAll.Status = -1;
