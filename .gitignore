@@ -5,3 +5,15 @@
 /.vs
 /Caching/obj
 /Caching/obj
+/DAL/obj
+/Entities/obj
+/Utilities/obj
+/Utilities/bin
+/Utilities/bin
+/Repositories/obj
+/WEB.CMS/obj
+/DAL/bin
+/Caching/bin
+/Repositories/bin
+/Entities/bin
+/WEB.CMS/bin
