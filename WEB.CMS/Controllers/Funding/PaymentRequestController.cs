@@ -101,6 +101,12 @@ namespace WEB.Adavigo.CMS.Controllers.Funding
                     if (!string.IsNullOrEmpty(current_user.UserUnderList))
                         searchModel.CreateByIds = current_user.UserUnderList.Split(',').Select(n => int.Parse(n)).ToList();
                 }
+
+                if (current_user.Role.Contains(((int)RoleType.Admin).ToString()) || current_user.Role.Contains(((int)RoleType.PhoTPKeToan).ToString()) || current_user.Role.Contains(((int)RoleType.KeToanTruong).ToString()))
+                {
+                    searchModel.CreateByIds = null;
+                }
+
                 var listPaymentRequest = _paymentRequestRepository.GetPaymentRequests(searchModel, out long total, currentPage, pageSize);
                 model.CurrentPage = currentPage;
                 model.ListData = listPaymentRequest;

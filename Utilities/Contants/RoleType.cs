@@ -26,5 +26,6 @@
         DHPQ = 26,//Điều hành phú quốc
         KeToanTruong = 21,//Quản lý phòng kế toán
         TRUONG_DIEU_HANH_PHU_QUOC = 26,//Kiểm soát tất cả các dịch vụ
+        PhoTPKeToan = 32,//Phó trưởng phòng Kế toán
     }
 }
