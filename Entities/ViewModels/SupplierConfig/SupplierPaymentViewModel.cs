@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Entities.ViewModels.SupplierConfig
 {
-    public class SupplierPaymentViewModel : BankingAccount
+    public class SupplierPaymentViewModel : Entities.Models.BankingAccount
     {
         public string UserCreate { get; set; }
         public string UserUpdate { get; set; }

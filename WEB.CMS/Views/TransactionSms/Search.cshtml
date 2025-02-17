@@ -1,10 +1,10 @@
 ﻿@{
     Layout = null;
 }
-@using Utilities
+@using Entities.ViewModels.TransferSms;
 @using Entities.ViewModels
 @using Entities.Models
-@model GenericViewModel<TransactionSMS>
+@model GenericViewModel<TransactionSMSViewModel>
 @{
 
 }
@@ -14,12 +14,12 @@
             <tr class="bg-main2">
                 <th class="mfp-hide">STT</th>
                 <th class="mfp-hide" style="width:200px">Nội dung CK</th>
-                <th class="mfp-hide">Tên ngân hàng</th>
+                <th class="mfp-hide">Tài khoản</th>
                 <th class="mfp-hide text-right">Số tiền chuyển</th>
                 <th class="mfp-hide">Mã đơn hàng</th>
                 <th class="mfp-hide">Ngày nhận CK</th>
                 <th class="mfp-hide">Ngày update đơn hàng</th>
-                <th class="mfp-hide">Trạng thái</th>
+                @*<th class="mfp-hide">Trạng thái</th>*@
             </tr>
         </thead>
         <tbody>
@@ -31,16 +31,16 @@
                     counter++;
                     <tr>
                         <td class="center mfp-hide">@counter</td>
-                        <td class="mfp-hide text-break"  style="width:200px">@item.MessageContent</td>
-                        <td class="mfp-hide text-break">@item.BankName</td>
+                        <td class="mfp-hide text-break" style="width:200px">@item.MessageContent</td>
+                        <td class="mfp-hide text-break">@item.BankName - @item.AccountNumber</td>
                         <td class="mfp-hide text-right">@String.Format("{0:n0}", item.Amount).Replace(',', '.')</td>
                         <td class="mfp-hide text-break">@item.OrderNo</td>
                         <td class="mfp-hide">@(item.ReceiveTimeStr) </td>
                         <td class="mfp-hide">@(item.CreatedTimeStr)</td>
-                        <td class="@(item.StatusPush == false ? "red mfp-hide" : "mfp-hide")">
+                        @*<td class="@(item.StatusPush == false ? "red mfp-hide" : "mfp-hide")">
                             @item.StatusName
 
-                        </td>
+                        </td>*@
                     </tr>
                 }
             }

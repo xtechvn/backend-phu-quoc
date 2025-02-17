@@ -200,7 +200,7 @@ namespace WEB.Adavigo.CMS.Controllers.Funding
             var listPaymentRequestByService = _paymentRequestRepository.GetByServiceId(serviceId, serviceType).Where(n => (n.IsDelete == null || n.IsDelete.Value == false)
                     && n.Status != (int)PAYMENT_REQUEST_STATUS.TU_CHOI).ToList();
             ViewBag.totalPayment = listPaymentRequestByService.Sum(n => n.Amount);
-            ViewBag.listPayment = new List<BankingAccount>();
+            ViewBag.listPayment = new List<Entities.Models.BankingAccount>();
             if (clientId > 0)
             {
                 listPaymentRequestByService = _paymentRequestRepository.GetRequestByClientId(clientId).Where(n => (n.IsDelete == null || n.IsDelete.Value == false)
@@ -273,7 +273,7 @@ namespace WEB.Adavigo.CMS.Controllers.Funding
                     ViewBag.isEditAmountReject = true;
                 }
             }
-            ViewBag.listPayment = new List<BankingAccount>();
+            ViewBag.listPayment = new List<Entities.Models.BankingAccount>();
             if (clientId > 0)
             {
                 ViewBag.listPayment = _bankingAccountRepository.GetBankAccountByClientId(clientId);

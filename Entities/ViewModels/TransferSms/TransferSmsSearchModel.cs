@@ -9,6 +9,8 @@ namespace Entities.ViewModels.TransferSms
     public class TransferSmsSearchModel : TransactionSMS
     {
         public string FromDateStr { get; set; }
+        public int type { get; set; }
+        public string AccountNumber { get; set; }
         public DateTime? FromDate
         {
             get
@@ -44,5 +46,15 @@ namespace Entities.ViewModels.TransferSms
         }
         public bool StatusSuccess { get; set; }
         public bool StatusFail { get; set; }
+        public bool AmountSuccess { get; set; }
+        public bool AmountFail { get; set; }
+    }
+    public class TransferSmsTotalModel
+    {
+        public Double Amount { get; set; }
+        public Double AmountTransaction { get; set; }
+        public Double Balance { get; set; }
+        public Double Total { get; set; }
+        public int Month { get; set; }   
     }
 }

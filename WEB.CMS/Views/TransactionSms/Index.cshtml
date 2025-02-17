@@ -43,6 +43,19 @@
             </div>
         </div>
         <div class="wrap_bg wrap_bg2">
+            <h3 class="title-margin">Loại chuyển khoản</h3>         
+            <label class="check-list mb10">
+                <input type="checkbox" class="input" id="amountSuccess" onclick="_log_transfer_money.OnPaging(1)">
+                <span class="checkmark"></span>
+                    Tiền vào
+            </label>
+            <label class="check-list mb10">
+                <input type="checkbox" id="amountFail" class="input" onclick="_log_transfer_money.OnPaging(1)">
+                <span class="checkmark"></span>
+                    Tiền ra
+            </label>
+        </div>
+        @*<div class="wrap_bg wrap_bg2">
             <h3 class="title-margin">Trạng thái</h3>
             <label class="check-list mb10">
                 <input type="checkbox" class="input" id="successStatus" onclick="_log_transfer_money.OnPaging(1)">
@@ -54,67 +67,74 @@
                 <span class="checkmark"></span>
                 Thất bại
             </label>
-        </div>
+        </div>*@
     </div>
     <div class="row-main_col800">
         <a class="btn_show" href="javascrip:;">Hiển thị danh mục <i class="fa fa-caret-right"></i></a>
         <div class="flex row-main-head">
             <h2 class="title_page">Giao dịch tin nhắn chuyển khoản</h2>
+            
             <div class="btn-right text-right">
+                <button class="btn btn-default" type="button" onclick="_log_transfer_money.Export()" id="btnExport">
+                    <i class="fa fa-file-excel-o" id="icon-export" title="Xuất excel">
+                    </i>
+                </button>
                 <div class="down-up right">
                     <a class="btn btn-default onclick" href="javascript:;">
                         <i class="fa fa-bars"></i>
                         <i class="fa fa-caret-down"></i>
                     </a>
-                    <div class="form-down text-nowrap">
-                        <label class="check-list mb10 mr25">
-                            <input type="checkbox" id="sttDisplay" onclick="_log_transfer_money.changeSetting(1)"
-                                   class="checkbox-tb-column" data-id="1">
-                            <span class="checkmark"></span>
-                            STT
-                        </label>
-                        <label class="check-list mb10 mr25">
-                            <input type="checkbox" id="messageContentDisplay" onclick="_log_transfer_money.changeSetting(2)"
-                                   class="checkbox-tb-column" data-id="2">
-                            <span class="checkmark"></span>
-                            Nội dung CK
-                        </label>
-                        <label class="check-list mb10 mr25">
-                            <input type="checkbox" id="bankNameDisplay" onclick="_log_transfer_money.changeSetting(3)"
-                                   class="checkbox-tb-column" data-id="3">
-                            <span class="checkmark"></span>
-                            Tên ngân hàng
-                        </label>
-                        <label class="check-list mb10 mr25">
-                            <input type="checkbox" id="amountDisplay" onclick="_log_transfer_money.changeSetting(4)"
-                                   class="checkbox-tb-column" data-id="4">
-                            <span class="checkmark"></span>
-                            Số tiền chuyển
-                        </label>
-                        <label class="check-list mb10 mr25">
-                            <input type="checkbox" id="orderCodeDisplay" onclick="_log_transfer_money.changeSetting(5)"
-                                   class="checkbox-tb-column" data-id="5">
-                            <span class="checkmark"></span>
-                            Mã đơn hàng
-                        </label>
-                        <label class="check-list mb10 mr25">
-                            <input type="checkbox" id="receiveDateDisplay" onclick="_log_transfer_money.changeSetting(6)"
-                                   class="checkbox-tb-column" data-id="6">
-                            <span class="checkmark"></span>
-                            Ngày nhận CK
-                        </label>
-                        <label class="check-list mb10 mr25">
-                            <input type="checkbox" id="updateDateDisplay" onclick="_log_transfer_money.changeSetting(7)"
-                                   class="checkbox-tb-column" data-id="7">
-                            <span class="checkmark"></span>
-                            Ngày update đơn hàng
-                        </label>
-                        <label class="check-list mb10 mr25">
-                            <input type="checkbox" id="statusDisplay" onclick="_log_transfer_money.changeSetting(8)"
-                                   class="checkbox-tb-column" data-id="8">
-                            <span class="checkmark"></span>
-                            Trạng thái
-                        </label>
+                    <div class="form-down text-nowrap ">
+                        <div class="grid-slide" style="display:grid;">
+                            <label class="check-list mb10 mr25">
+                                <input type="checkbox" id="sttDisplay" onclick="_log_transfer_money.changeSetting(1)"
+                                       class="checkbox-tb-column" data-id="1">
+                                <span class="checkmark"></span>
+                                STT
+                            </label>
+                            <label class="check-list mb10 mr25">
+                                <input type="checkbox" id="messageContentDisplay" onclick="_log_transfer_money.changeSetting(2)"
+                                       class="checkbox-tb-column" data-id="2">
+                                <span class="checkmark"></span>
+                                Nội dung CK
+                            </label>
+                            <label class="check-list mb10 mr25">
+                                <input type="checkbox" id="bankNameDisplay" onclick="_log_transfer_money.changeSetting(3)"
+                                       class="checkbox-tb-column" data-id="3">
+                                <span class="checkmark"></span>
+                                Tên ngân hàng
+                            </label>
+                            <label class="check-list mb10 mr25">
+                                <input type="checkbox" id="amountDisplay" onclick="_log_transfer_money.changeSetting(4)"
+                                       class="checkbox-tb-column" data-id="4">
+                                <span class="checkmark"></span>
+                                Số tiền chuyển
+                            </label>
+                            <label class="check-list mb10 mr25">
+                                <input type="checkbox" id="orderCodeDisplay" onclick="_log_transfer_money.changeSetting(5)"
+                                       class="checkbox-tb-column" data-id="5">
+                                <span class="checkmark"></span>
+                                Mã đơn hàng
+                            </label>
+                            <label class="check-list mb10 mr25">
+                                <input type="checkbox" id="receiveDateDisplay" onclick="_log_transfer_money.changeSetting(6)"
+                                       class="checkbox-tb-column" data-id="6">
+                                <span class="checkmark"></span>
+                                Ngày nhận CK
+                            </label>
+                            <label class="check-list mb10 mr25">
+                                <input type="checkbox" id="updateDateDisplay" onclick="_log_transfer_money.changeSetting(7)"
+                                       class="checkbox-tb-column" data-id="7">
+                                <span class="checkmark"></span>
+                                Ngày update đơn hàng
+                            </label>
+                            @*<label class="check-list mb10 mr25">
+                        <input type="checkbox" id="statusDisplay" onclick="_log_transfer_money.changeSetting(8)"
+                               class="checkbox-tb-column" data-id="8">
+                        <span class="checkmark"></span>
+                        Trạng thái
+                    </label>*@
+                        </div>
                     </div>
                 </div>
             </div>
