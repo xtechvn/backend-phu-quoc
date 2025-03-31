@@ -894,7 +894,7 @@ var _Contract = {
             data: { client },
             success: function (data) {
                 
-                if (data.stt_code == 0) {
+                if (data.stt_code == 0 || data.stt_code == 2) {
                     $("#ClienType_Name option").remove();
                     $("#PermisionType_Name option").remove();
                     var x = document.getElementById("ClienType_Name").options.length;
