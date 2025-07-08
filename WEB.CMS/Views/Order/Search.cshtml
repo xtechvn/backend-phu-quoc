@@ -40,7 +40,7 @@
     <div class="flex">
         <div class="mb10 mr-4">Tổng giá trị: <strong>@Total.TotalAmmount</strong></div>
         <div class="mb10 mr-4">Đã thanh toán: <strong>@Total.TotalProductService</strong></div>
-        <div class="mb10 mr-4">Chưa thanh toán: <strong>@Total.TotalAmmount</strong></div>
+        <div class="mb10 mr-4">Chưa thanh toán: <strong>@((Convert.ToDouble(Total.TotalAmmount) - Convert.ToDouble(Total.TotalProductService)).ToString("N0"))</strong></div>
         <div id="totalProfit" class="mb10 mr-4 hide-element">Lợi nhuận: <strong>@Total.TotalProfit</strong></div>
     </div>
 </div>
