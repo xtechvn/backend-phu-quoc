@@ -270,4 +270,11 @@ namespace Entities.ViewModels
         public List<OtherBookingViewModel> ListOther { get; set; }
         public List<VinWonderDetailViewModel> ListVin { get; set; }
     }
+    public class TotalCountSumOrder
+    {
+        public double Amount { get; set; }
+        public double Profit { get; set; }
+        public double Price { get; set; }
+
+    }
 }

@@ -1131,6 +1131,26 @@ namespace Repositories.Repositories
             }
             return 0;
         }
-      
+        public async Task<TotalCountSumOrder> GetTotalCountSumOrder(OrderViewSearchModel searchModel, int currentPage, int pageSize)
+        {
+            var model = new TotalCountSumOrder();
+            try
+            {
+                DataTable dt = await _OrderDal.GetPagingList(searchModel, currentPage, pageSize, StoreProcedureConstant.GET_TOTALCOUNT_ORDER);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+
+
+                    model.Profit = dt.Rows[0]["Profit"].Equals(DBNull.Value) ? 0 : Convert.ToDouble(dt.Rows[0]["Profit"]);
+                    model.Amount = dt.Rows[0]["Amount"].Equals(DBNull.Value) ? 0 : Convert.ToDouble(dt.Rows[0]["Amount"]);
+                    model.Price = dt.Rows[0]["Price"].Equals(DBNull.Value) ? 0 : Convert.ToDouble(dt.Rows[0]["Price"]);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.InsertLogTelegram("GetTotalCountSumOrder in OrderRepository: " + ex);
+            }
+            return model;
+        }
     }
 }

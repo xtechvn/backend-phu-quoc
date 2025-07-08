@@ -46,7 +46,7 @@ namespace Repositories.IRepositories
         Task<long> OrderBookClosing(OrderBookClosingViewModel model);
         Task<long> UpdateBookClosingByOrderId(long OrderId, long IsLock, long UpdateBy);
         Task<long> CheckBookClosingByDate(DateTime FromDate, DateTime ToDate);
-    
 
+        Task<TotalCountSumOrder> GetTotalCountSumOrder(OrderViewSearchModel searchModel, int currentPage, int pageSize);
     }
 }

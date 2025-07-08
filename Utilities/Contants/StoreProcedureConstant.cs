@@ -263,7 +263,7 @@ namespace Utilities.Contants
         public static string SP_GetListSportWaterGuestsByIds = "SP_GetListSportWaterGuestsByIds";
         public static string sp_InsertPassenger = "sp_InsertPassenger";
         public static string SP_GetListSportWaterPackages = "SP_GetListSportWaterPackages";
-
+        public const string GET_TOTALCOUNT_ORDER = "SP_CountTotalOrderHeader";
 
         #region vin wonder
         public static string sp_InsertCampaign = "sp_InsertCampaign";
