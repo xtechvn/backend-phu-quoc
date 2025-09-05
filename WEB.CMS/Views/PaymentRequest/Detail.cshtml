@@ -323,6 +323,11 @@ Model.Status == (int)(PAYMENT_REQUEST_STATUS.CHO_TBP_DUYET))
                     Chỉnh sửa
                 </button>
             }
+            @if ((isAdmin || KTT_DUYET_YEU_CAU_CHI == 1 || KTV_DUYET_YEU_CAU_CHI == 1) && Model.Status == (int)(PAYMENT_REQUEST_STATUS.CHO_CHI))
+            {
+                <button type="submit" class="btn btn-default  ml-1" style="background:#0066ff !important;" onclick="_payment_request_service.AddNewPaymentVoucher(@Model.Id)">Tạo phiếu chi nhanh</button>
+
+            }
             @if (isAdmin)
             {
                 <button type="button" class="btn btn-default ml-1" style="background: #5cb566 !important;"
@@ -371,7 +376,7 @@ Model.Status == (int)(PAYMENT_REQUEST_STATUS.CHO_TBP_DUYET))
                 </button>
             }
             @if ((Model.Status == (int)PAYMENT_REQUEST_STATUS.CHO_KTT_DUYET || Model.Status == (int)PAYMENT_REQUEST_STATUS.CHO_TBP_DUYET)
-         && (KTT_DUYET_YEU_CAU_CHI == 1 || isAdmin || TBP_DUYET_YEU_CAU_CHI == 1))
+        && (KTT_DUYET_YEU_CAU_CHI == 1 || isAdmin || TBP_DUYET_YEU_CAU_CHI == 1))
             {
                 <button type="button" class="btn btn-danger ml-1"
                         onclick="_payment_request_service.Reject()">

@@ -1363,6 +1363,31 @@ namespace WEB.Adavigo.CMS.Controllers.Funding
             }
             return status;
         }
+        public async Task<IActionResult> AddPaymentVoucher(int paymentRequestId)
+        {
+            ViewBag.allCode_PAY_TYPE = _allCodeRepository.GetListByType(AllCodeType.PAY_TYPE);
+            ViewBag.allCode_PAYMENT_VOUCHER_TYPE = _allCodeRepository.GetListByType(AllCodeType.PAYMENT_VOUCHER_TYPE);
+            ViewBag.listBankingAccount = _allCodeRepository.GetBankingAccounts();
+            ViewBag.listBankingAccountAdavigo = _allCodeRepository.GetBankingAccounts().Where(n => n.SupplierId == (long)config.SUPPLIERID_ADAVIGO).ToList();
+            ViewBag.ClientId = 0;
+            ViewBag.SupplierId = 0;
 
+            var model = _paymentRequestRepository.GetById(paymentRequestId);
+            if (model.RelateData == null) model.RelateData = new List<PaymentRequestDetailViewModel>();
+
+            ViewBag.ClientId = model.ClientId == null ? 0 : model.ClientId;
+
+            ViewBag.SupplierId = model.SupplierId == null ? 0 : model.SupplierId;
+
+            ViewBag.type = model.Type;
+            ViewBag.PaymentType = model.PaymentType;
+            ViewBag.Note = model.Note;
+            ViewBag.code = model.PaymentCode;
+            ViewBag.id = paymentRequestId;
+            ViewBag.ClientName = model.ClientName;
+            ViewBag.SupplierName = model.SupplierName;
+
+            return PartialView(model);
+        }
     }
 }

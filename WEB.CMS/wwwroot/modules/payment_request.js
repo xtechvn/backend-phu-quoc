@@ -30,7 +30,8 @@ let fields = {
     paymentDateToStr: null,
     verifyDateFromStr: null,
     verifyDateToStr: null,
-    isSupplierDebt: null
+    isSupplierDebt: null,
+    isPaymentBefore: null,
 }
 let cookieFilterPaymentRequestName = 'payment_request_search_cache'
 let cookiePaymentRequest_filter_Client = 'cookiePaymentRequest_filter_Client';
@@ -168,8 +169,11 @@ $(document).ready(function () {
         });
     })
     //end multi select
-    var SearchParam = _payment_request_service.GetParam()
-    _payment_request_service.Init(SearchParam);
+    if (window.location.href.indexOf("PaymentRequest/Index") != -1) {
+        var SearchParam = _payment_request_service.GetParam()
+        _payment_request_service.Init(SearchParam);
+    }
+
     $(".input").on('keyup', function (e) {
         if (e.key === 'Enter' || e.keyCode === 13) {
             _payment_request_service.OnPaging(1)
@@ -300,8 +304,10 @@ var _payment_request_service = {
     Init: function (objSearch) {
         $('#divClient').show()
         $('#divSupplier').show()
-        this.SearchParam = objSearch;
-        this.Search(objSearch);
+        if (window.location.href.indexOf("PaymentRequest/Index") != -1) {
+            this.SearchParam = objSearch;
+            this.Search(objSearch);
+        }
     },
     ActionSearch: function (typeSearch) {
         isResetTab = true
@@ -332,6 +338,7 @@ var _payment_request_service = {
         } else {
             window.localStorage.removeItem(cookiePaymentRequest_filter_Supplier)
         }
+
         if (createdBy != null) {
             let cookiename = {
                 id: createdBy[0],
@@ -401,6 +408,13 @@ var _payment_request_service = {
             objSearch.isSupplierDebt = false
         if (parseInt(isSupplierDebt) == 1)
             objSearch.isSupplierDebt = true
+        var isPaymentBefore = $('#isPaymentBefore').val()
+        if (parseInt(isPaymentBefore) == -1)
+            objSearch.isPaymentBefore = null
+        if (parseInt(isPaymentBefore) == 0)
+            objSearch.isPaymentBefore = false
+        if (parseInt(isPaymentBefore) == 1)
+            objSearch.isPaymentBefore = true
         return objSearch
     },
     SetCacheFilter: function (objSearch) {
@@ -426,6 +440,7 @@ var _payment_request_service = {
         fields.verifyDateFromStr = objSearch.verifyDateFromStr
         fields.verifyDateToStr = objSearch.verifyDateToStr
         fields.isSupplierDebt = objSearch.isSupplierDebt
+        fields.isPaymentBefore = objSearch.isPaymentBefore
         _global_function.setCookie(cookieFilterPaymentRequestName, JSON.stringify(fields), 100)
     },
     GetCacheFilter: function () {
@@ -530,6 +545,14 @@ var _payment_request_service = {
             $("#isSupplierDebt").val(0).prop('selected', true);
             $("#select2-isSupplierDebt-container").html(' Không công nợ với NCC ')
         }
+        if (fields.isPaymentBefore) {
+            $("#isPaymentBefore").val(0).prop('selected', true);
+            $("#select2-isPaymentBefore-container").html(' Đã thanh toán trước ')
+        }
+        if (fields.isPaymentBefore === false) {
+            $("#isPaymentBefore").val(0).prop('selected', true);
+            $("#select2-isPaymentBefore-container").html(' Chưa thanh toán trước ')
+        }
         //_global_function.eraseCookie(cookieFilterPaymentRequestName)
     },
     BackToList: function () {
@@ -615,26 +638,47 @@ var _payment_request_service = {
         this.SearchParam = searchobj;
         this.Search(searchobj);
     },
-    Add: function (serviceId, serviceType, supplierId, amount, orderId, serviceCode, clientId) {
+    Add: function (serviceId, serviceType, supplierId, amount, orderId, serviceCode, clientId, amount_supplier_refund, payment_request_type) {
+        var serviceCodedv = null;
+        switch (parseFloat(serviceType)) {
+            case 6: {
+                serviceCodedv = $('#service-vinwonder-detail-data').attr('data-servicecode')
+            } break;
+            case 5: {
+                serviceCodedv = $('#service-fly-detail-data').attr('data-servicecode')
+            } break;
+            case 9: {
+                serviceCodedv = $('#service-other-detail-data').attr('data-servicecode')
+            } break;
+            case 1: {
+                serviceCodedv = $('#ServiceCode').val()
+            } break;
+            case 3: {
+                serviceCodedv = $('#service-fly-detail-data').attr('data-servicecode')
+            } break;
+        }
         let title = 'Thêm phiếu yêu cầu chi';
         let url = '/PaymentRequest/AddNew';
         var param = {
             'serviceId': serviceId,
             'serviceType': serviceType,
-            'serviceCode': serviceCode,
+            'serviceCode': serviceCodedv,
             'supplierId': supplierId,
+            'amount_supplier_refund': amount_supplier_refund,
             'amount': amount,
             'orderId': orderId,
             'clientId': clientId,
+            'payment_request_type': payment_request_type,
         };
         _magnific.OpenSmallPopup(title, url, param);
     },
-    Edit: function (paymentRequestId, serviceId, serviceType, supplierId, amount, orderId, clientId) {
+    Edit: function (paymentRequestId, serviceId, serviceType, supplierId, amount, orderId, clientId, amount_supplier_refund) {
         let title = 'Chỉnh sửa phiếu yêu cầu chi';
         let url = '/PaymentRequest/Edit?paymentRequestId=' + paymentRequestId + "&service_type=";
         var param = {
             'serviceId': serviceId,
             'serviceType': serviceType,
+            'amount_supplier_refund': amount_supplier_refund,
             'supplierId': supplierId,
             'amount': amount,
             'orderId': orderId,
@@ -642,13 +686,14 @@ var _payment_request_service = {
         };
         _magnific.OpenSmallPopup(title, url, param);
     },
-    EditAdmin: function (paymentRequestId, serviceId, serviceType, supplierId, amount, orderId, clientId) {
+    EditAdmin: function (paymentRequestId, serviceId, serviceType, supplierId, amount, orderId, clientId, amount_supplier_refund) {
         let title = 'Admin chỉnh sửa phiếu yêu cầu chi';
         let url = '/PaymentRequest/EditAdmin?paymentRequestId=' + paymentRequestId + "&service_type=";
         var param = {
             'serviceId': serviceId,
             'serviceType': serviceType,
             'supplierId': supplierId,
+            'amount_supplier_refund': amount_supplier_refund,
             'amount': amount,
             'orderId': orderId,
             'clientId': clientId,
@@ -832,7 +877,7 @@ var _payment_request_service = {
             }
         });
     },
-    Delete: function (paymentRequestNo, isDetail = true, serviceType = 0, clientIdService = 0) {
+    Delete: function (paymentRequestNo, isDetail = true, serviceType = 0, clientIdService = 0, payment_request_type = 1) {
 
         if (paymentRequestNo !== undefined && paymentRequestNo !== null && paymentRequestNo !== '')
             $('#paymentRequestNo').val(paymentRequestNo)
@@ -865,6 +910,9 @@ var _payment_request_service = {
                                 else if (serviceType == 5) { // Tour
                                     _SetService_Tour_Detail.ShowTourPaymentTab();
                                 }
+                                else if (serviceType == 9) { // Tour
+                                    _set_service_other_detail.ShowPaymentTab();
+                                }
                                 else {
                                     window.location.reload()
                                 }
@@ -872,16 +920,36 @@ var _payment_request_service = {
                         }
                         if (clientIdService != 0) {
                             if (serviceType == 3) { // vé máy bay
-                                _set_service_fly_detail.ShowRefundTab()
+                                if (payment_request_type == 1) {
+                                    _set_service_fly_detail.ShowRefundTab()
+                                }
+                                if (payment_request_type == 4) {
+                                    _set_service_fly_detail.MarketingTab()
+                                }
                             }
                             else if (serviceType == 1) { // Khách sạn
-                                _SetService_Detail.loadListHotelBookingRefund()
+                                if (payment_request_type == 1) {
+                                    _SetService_Detail.loadListHotelBookingRefund()
+                                }
+                                if (payment_request_type == 4) {
+                                    _SetService_Detail.LoadingMarketingPaymentRequest()
+                                }
                             }
                             else if (serviceType == 5) { // Tour
-                                _SetService_Tour_Detail.TourServiceRefund(1);
+                                if (payment_request_type == 1) {
+                                    _SetService_Tour_Detail.TourServiceRefund(1);
+                                }
+                                if (payment_request_type == 4) {
+                                    _SetService_Tour_Detail.MarketingPaymentRequest(1);
+                                }
                             }
-                            else if (serviceType == 9) { // Tour
-                                _set_service_ws_detail.ShowPaymentTab();
+                            else if (serviceType == 9) { // Other
+                                if (payment_request_type == 1) {
+                                    _set_service_ws_detail.ShowPaymentTab();
+                                }
+                                if (payment_request_type == 4) {
+                                    _set_service_other_detail.MarketingTab();
+                                }
                             }
                             else {
                                 window.location.reload()
@@ -935,4 +1003,67 @@ var _payment_request_service = {
             }
         });
     },
+    PopupInYCChi: function (id) {
+        let title = 'In yêu cầu chi';
+        let url = '/PaymentRequest/InYCChi'
+        var param = {
+            id: id,
+            type: 0
+        };
+        _magnific.OpenSmallPopup(title, url, param);
+    },
+    ConfirmInYCC: function (id) {
+        $.ajax({
+            url: "/PaymentRequest/InYCChi",
+            type: "Post",
+            data: { id: id, type: 1 },
+            success: function (result) {
+                _global_function.RemoveLoading()
+                $.magnificPopup.close();
+                let text = window.open();
+                text.document.body.innerHTML = result;
+                text.print();
+            }
+        });
+    },
+    AddNewPaymentVoucher: function (id) {
+        let title = 'Thêm phiếu chi';
+        let url = '/PaymentRequest/AddPaymentVoucher';
+        var param = {
+            paymentRequestId: id
+        };
+        _magnific.OpenSmallPopup(title, url, param);
+    },
+    KTNote: function (id, noteid) {
+        let title = 'Ghi chú';
+        let url = '/PaymentRequest/PopupNoteKT';
+        var param = {
+            id: id,
+            noteId: noteid,
+
+        };
+        _magnific.OpenSmallPopup(title, url, param);
+    },
+    SetupNoteKTRequest: function () {
+        var id = $('#Id').val();
+        var noteid = $('#noteId').val();
+        var notekt = $('#notekt').val();
+        $.ajax({
+            url: "/PaymentRequest/SetUpNoteKT",
+            type: "Post",
+            data: { id: id, notekt: notekt, noteid: noteid },
+            success: function (result) {
+                _global_function.RemoveLoading()
+                if (result.isSuccess === true) {
+                    _msgalert.success(result.message);
+                    $.magnificPopup.close();
+                    setTimeout(function () {
+                        window.location.reload()
+                    }, 1000)
+                } else {
+                    _msgalert.error(result.message);
+                }
+            }
+        });
+    }
 }
