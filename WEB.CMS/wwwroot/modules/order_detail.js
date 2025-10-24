@@ -147,7 +147,7 @@
             main_sale_id: $("#main-staff").select2("val"),
             sub_sale_id: $("#sub-staff").select2("val"),
             branch: $('#branch').find(":selected").val(),
-            order_source: $('#UtmSource').find(":selected").val(),
+            order_source: $('#UtmSource').val(),
             note: $('#note').val(),
             label: $('#order_label').val()
         };
