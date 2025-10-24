@@ -19,7 +19,7 @@ var _report_operator_loading = {
     MainLoading: false,
 
 }
-
+let listUtmSourceQT = [];
 var _report_operator = {
     Initialization: function () {
         $("body").off('click', ".list-expand", null);
@@ -184,6 +184,7 @@ var _report_operator = {
         }
         _report_operator.ShowFilterOperator()
         _report_operator.SearchData()
+     
     },
     ShowFilterGeneral: function () {
         $('#filter-sale').show()
@@ -240,7 +241,8 @@ var _report_operator = {
             SalerId: $('#operator-saler').find(':selected').val(),
             DepartmentId: $('#operator-departmentid').find(':selected').val(),
             SalerPermission: null,
-            Branch: $('#operator-branch-code').find(':selected').val()
+            Branch: $('#operator-branch-code').find(':selected').val(),
+            UtmSource: listUtmSourceQT.toString(),
         }
     },
     SearchData: function () {

@@ -36,6 +36,7 @@ let listServiceType = [];
 let listService = [];
 let listStatus = [];
 let listHINHTHUCTT = [];
+let listUtmSource = [];
 let tabActive = 99;
 let PageIndex = 1;
 
@@ -228,6 +229,9 @@ $(document).ready(function () {
     const selectBtnHINHTHUCTT = document.querySelector(".select-btn-HINHTHUCTT");
     const itemsHINHTHUCTT = document.querySelectorAll(".item-HINHTHUCTT");
 
+    const selectBtnUtmSource = document.querySelector(".select-btn-UtmSource");
+    const itemsUtmSource = document.querySelectorAll(".item-UtmSource");
+
     $(document).click(function (event) {
         var $target = $(event.target);
         //if (!$target.closest('#utmSourde').length) {
@@ -258,6 +262,13 @@ $(document).ready(function () {
             }
 
         }
+        if (!$target.closest('#UtmSource').length) {
+            if ($('#list-item-UtmSource').is(":visible") && !$target[0].id.includes('UtmSource_data') && !$target[0].id.includes('checkbox_UtmSource')
+                && !$target[0].id.includes('list-item-UtmSource') && !$target[0].id.includes('UtmSource_text')) {
+                selectBtnUtmSource.classList.toggle("open");
+            }
+
+        }
 
     });
     //selectBtnServiceType.addEventListener("click", (e) => {
@@ -275,6 +286,10 @@ $(document).ready(function () {
     selectBtnHINHTHUCTT.addEventListener("click", (e) => {
         e.preventDefault();
         selectBtnHINHTHUCTT.classList.toggle("open");
+    });
+    selectBtnUtmSource.addEventListener("click", (e) => {
+        e.preventDefault();
+        selectBtnUtmSource.classList.toggle("open");
     });
     //itemsServiceType.forEach(item => {
     //    item.addEventListener("click", () => {
@@ -370,6 +385,29 @@ $(document).ready(function () {
             }
         })
     })
+    itemsUtmSource.forEach(item => {
+        item.addEventListener("click", () => {
+            item.classList.toggle("checked");
+
+            let checked = document.querySelectorAll("#list-item-UtmSource .checked"),
+                btnTextUtmSource = document.querySelector(".btn-text-UtmSource");
+            let checked_list = []
+            listUtmSource = []
+            for (var i = 0; i < checked.length; i++) {
+                id = checked[i].getAttribute('id')
+                if (id.includes('UtmSource_data_')) {
+                    checked_list.push(checked[i]);
+                }
+
+                listUtmSource.push((id.replace('UtmSource_data_', '')))
+            }
+            if (listUtmSource && listUtmSource.length > 0) {
+                btnTextUtmSource.innerText = `${listUtmSource.length} Selected`;
+            } else {
+                btnTextUtmSource.innerText = "Tất cả hình thức thanh toán";
+            }
+        })
+    })
 });
 
 var _ordersCMS = {
@@ -414,7 +452,7 @@ var _ordersCMS = {
             EndDateFrom: null,
             EndDateTo: null,
             Note: null,
-            UtmSource: listServiceType,
+            UtmSource: listUtmSource,
             ServiceType: listService,
             Status: listStatus,
             CreateTime: null,
@@ -584,7 +622,7 @@ var _ordersCMS = {
 
 
         objSearch.searchModel.Note = $('#Note').val().trim();
-        objSearch.searchModel.UtmSource = listServiceType;
+        objSearch.searchModel.UtmSource = listUtmSource;
         objSearch.searchModel.ServiceType = listService;
         objSearch.searchModel.Status = listStatus;
         objSearch.searchModel.CreateName = null;
@@ -670,7 +708,7 @@ var _ordersCMS = {
         $('#ClientId').val(objSearch.searchModel.ClientId);
         $('#toDate').val(objSearch.searchModel.endDate);
         $('#Note').val(objSearch.searchModel.Note);
-        listServiceType = objSearch.searchModel.UtmSource;
+        listUtmSource = objSearch.searchModel.UtmSource;
         listService = objSearch.searchModel.ServiceType;
         listStatus = objSearch.searchModel.Status;
         listHINHTHUCTT = objSearch.searchModel.HINHTHUCTT;

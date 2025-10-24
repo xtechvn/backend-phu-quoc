@@ -6,6 +6,7 @@
     var Type = (List<AllCode>)ViewBag.serviceType;
     var PAYMENT_STATUS = (List<AllCode>)ViewBag.PAYMENT_STATUS;
     var PERMISION_TYPE = (List<AllCode>)ViewBag.PERMISION_TYPE;
+    var Source = (List<AllCode>)ViewBag.Source;
 
     ViewData["Title"] = "Báo cáo Doanh thu theo phòng ban";
 
@@ -163,6 +164,28 @@
                                placeholder="Ngày out" value="" />
                     </div>
                 </div>
+                <div class="form-group mb10 mr-2 UtmSource">
+                    <div class="multiple-select form-group mb10 mr-2" style="width: 250px;">
+                        <div class="select-btn select-btn-UtmSource" id="UtmSource">
+                            <span class="btn-text-UtmSource">Tất cả Nguồn đơn hàng</span>
+                            <span class="arrow-dwn">
+                                <i class="fa fa-angle-down"></i>
+                            </span>
+                        </div>
+
+                        <ul class="list-items list-item-UtmSource" id="list-item-UtmSource">
+                            @foreach (var item in Source)
+                            {
+                                <li class="item item-UtmSource" id="UtmSource_data_@item.CodeValue">
+                                    <span class="checkbox" id="checkbox_UtmSource_@item.CodeValue">
+                                        <i class="fa fa-check"></i>
+                                    </span>
+                                    <span class="item-text" id="UtmSource_text_@item.CodeValue">@item.Description</span>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
                 <div class="form-group mb10 mr-2 ClientId mfp-hide" style="min-width: 220px;">
 
                     <select class="select2 client-select main-staff-select" id="ClientId" multiple style="width:100% !important">
@@ -282,6 +305,28 @@
                         <button type="reset" style="display:none;" class="btn_reset reset_operator_saler">×</button>
                     </div>
 
+                </div>
+                <div class="form-group mb10 mr-2 UtmSource-QT">
+                    <div class="multiple-select form-group mb10 mr-2" style="width: 250px;">
+                        <div class="select-btn select-btn-UtmSource-QT" id="UtmSource-QT">
+                            <span class="btn-text-UtmSource-QT">Tất cả Nguồn đơn hàng</span>
+                            <span class="arrow-dwn">
+                                <i class="fa fa-angle-down"></i>
+                            </span>
+                        </div>
+
+                        <ul class="list-items list-item-UtmSource-QT" id="list-item-UtmSource-QT">
+                            @foreach (var item in Source)
+                            {
+                                <li class="item item-UtmSource-QT" id="UtmSource_QT_data_@item.CodeValue">
+                                    <span class="checkbox" id="checkbox_UtmSource_QT_@item.CodeValue">
+                                        <i class="fa fa-check"></i>
+                                    </span>
+                                    <span class="item-text" id="UtmSource_QT_text_@item.CodeValue">@item.Description</span>
+                                </li>
+                            }
+                        </ul>
+                    </div>
                 </div>
                 <div class="mb10 mr-2" style="min-width: 220px;">
                     <button class="btn btn-default" type="button" onclick="_report_operator.Export()" id="operator-export-btn">

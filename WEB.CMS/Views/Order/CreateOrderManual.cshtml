@@ -4,6 +4,7 @@
 @using Entities.Models
 @{
     var branch = (List<AllCode>)ViewBag.Branch;
+    var UTM_SOURCE = (List<AllCode>)ViewBag.UTM_SOURCE;
 }
 <style>
     .stop-scrolling {
@@ -92,10 +93,13 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="lbl">Nguồn tạo đơn <sup class="red">*</sup></label>
+                                            <label class="lbl">Nguồn tạo đơn </label>
                                             <div class="wrap_input">
-                                                <select class="form-control" disabled="disabled" style="background-color:lightgray">
-                                                    <option selected="selected">Offline </option>
+                                                <select  class="form-control" id="UtmSource">
+                                                    @foreach (var a in UTM_SOURCE)
+                                                    {
+                                                        <option value="@(a.CodeValue)">@(a.Description)</option>
+                                                    }
                                                 </select>
                                             </div>
                                         </div>

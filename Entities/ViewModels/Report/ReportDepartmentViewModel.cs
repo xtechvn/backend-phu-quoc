@@ -59,6 +59,7 @@ namespace Entities.ViewModels.Report
         public string FromDate { get;set;}
         public string ToDate { get;set;}
         public string SalerPermission { get;set;}
+        public string UtmSource { get;set;}
         public int? PageIndex { get; set; } = 0;
         public int? PageSize { get; set; } = -1;
     }

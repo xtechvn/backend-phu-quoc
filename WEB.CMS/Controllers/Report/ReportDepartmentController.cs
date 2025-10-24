@@ -56,9 +56,11 @@ namespace WEB.Adavigo.CMS.Controllers.Report
             var serviceType = _allCodeRepository.GetListByType(AllCodeType.SERVICE_TYPE);
             var PAYMENT_STATUS = _allCodeRepository.GetListByType(AllCodeType.PAYMENT_STATUS);
             var PERMISION_TYPE = _allCodeRepository.GetListByType(AllCodeType.PERMISION_TYPE);
+            var UTM_SOURCE = _allCodeRepository.GetListByType(AllCodeType.UTM_SOURCE);
     
             ViewBag.PAYMENT_STATUS = PAYMENT_STATUS;
             ViewBag.PERMISION_TYPE = PERMISION_TYPE;
+            ViewBag.Source = UTM_SOURCE;
             ViewBag.departments = departments;
             ViewBag.orderStatus = orderStatus;
             ViewBag.Role = 0;

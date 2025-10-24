@@ -176,6 +176,7 @@ var _orderDetail = {
             Label: $('#Label').val(),
             Note: $('#Note').val(),
             ProductService: $('#ProductService').val(),
+            UtmSource: $('#UtmSource').val(),
         }
         $.ajax({
             url: "/Order/UpdateOrder",

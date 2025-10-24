@@ -23,7 +23,7 @@ namespace DAL.Report
         {
             try
             {
-                SqlParameter[] objParam = new SqlParameter[16];
+                SqlParameter[] objParam = new SqlParameter[17];
                 if (searchModel.FromDate != null)
                 {
                     objParam[0] = new SqlParameter("@FromDate", searchModel.FromDate);
@@ -153,6 +153,7 @@ namespace DAL.Report
                 {
                     objParam[15] = new SqlParameter("@Branch", DBNull.Value);
                 }
+                objParam[16] = new SqlParameter("@UtmSource", searchModel.UtmSource);
                 return _DbWorker.GetDataTable(StoreProcedureConstant.Report_TotalRevenueByOrder, objParam);
             }
             catch (Exception ex)

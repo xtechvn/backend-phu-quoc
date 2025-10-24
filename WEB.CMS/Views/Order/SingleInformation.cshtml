@@ -1,6 +1,7 @@
 ﻿@{
     var allcode = (List<Entities.Models.AllCode>)ViewBag.system;
     var BRANCH_CODE = (List<Entities.Models.AllCode>)ViewBag.BRANCH_CODE;
+    var UTM_SOURCE = (List<Entities.Models.AllCode>)ViewBag.UTM_SOURCE;
 }
 @using Utilities.Contants
 <div class="border bg-white mb20">
@@ -113,6 +114,36 @@
                         else
                         {
                             @foreach (var item in allcode)
+                            {
+                                <option value="@item.CodeValue">@item.Description</option>
+
+                            }
+                        }
+
+                    </select>
+                </div>
+            </div     
+            <div class="form-group">
+                <label class="lbl">Nguồn đơn hàng </label>
+                <div class="wrap_input">
+                    <select class="form-control select2" name="UtmSource" id="UtmSource"  >
+                        @if (ViewBag.UtmSource != null)
+                        {
+                            @foreach (var item in UTM_SOURCE)
+                            {
+                                @if (item.CodeValue == ViewBag.UtmSource)
+                                {
+                                    <option selected="selected" value="@item.CodeValue">@item.Description</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.CodeValue">@item.Description</option>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            @foreach (var item in UTM_SOURCE)
                             {
                                 <option value="@item.CodeValue">@item.Description</option>
 

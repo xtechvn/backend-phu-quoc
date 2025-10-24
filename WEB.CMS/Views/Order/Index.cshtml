@@ -177,6 +177,28 @@
                     </ul>
                 </div>
             </div>
+            <div class="form-group mb10 mr-2">
+                <div class="multiple-select form-group mb10 mr-2" style="width: 250px; margin-top: 10px;">
+                    <div class="select-btn select-btn-UtmSource" id="UtmSource">
+                        <span class="btn-text-UtmSource">Tất cả Nguồn đơn hàng</span>
+                        <span class="arrow-dwn">
+                            <i class="fa fa-angle-down"></i>
+                        </span>
+                    </div>
+
+                    <ul class="list-items list-item-UtmSource" id="list-item-UtmSource">
+                        @foreach (var item in Source)
+                        {
+                            <li class="item item-UtmSource" id="UtmSource_data_@item.CodeValue">
+                                <span class="checkbox" id="checkbox_UtmSource_@item.CodeValue">
+                                    <i class="fa fa-check"></i>
+                                </span>
+                                <span class="item-text" id="UtmSource_text_@item.CodeValue">@item.Description</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
             @*<div class="form-group mb10 mr-2">
                     <input type="text" class="form-control" id="CreateName" placeholder="Người tạo">
                 </div>*@

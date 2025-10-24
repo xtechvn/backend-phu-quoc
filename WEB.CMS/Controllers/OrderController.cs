@@ -1000,6 +1000,7 @@ namespace WEB.Adavigo.CMS.Controllers
                 var Order_CODE = _allCodeRepository.GetListByType(AllCodeType.ORDER_STATUS);
                 var PERMISION_TYPE = _allCodeRepository.GetListByType(AllCodeType.PERMISION_TYPE);
                 var PAYMENT_STATUS = _allCodeRepository.GetListByType(AllCodeType.PAYMENT_STATUS);
+                var UTM_SOURCE = _allCodeRepository.GetListByType(AllCodeType.UTM_SOURCE);
                 if (orderId != 0)
                 {
 
@@ -1012,6 +1013,7 @@ namespace WEB.Adavigo.CMS.Controllers
                         ViewBag.Note = dataOrder.Note;
                         ViewBag.orderNo = dataOrder.OrderNo;
                         ViewBag.OrderStatus = dataOrder.OrderStatus;
+                        ViewBag.UtmSource = dataOrder.UtmSource;
                         foreach (var item in dataallcode)
                         {
                             if (dataOrder.SystemType == item.CodeValue)
@@ -1055,6 +1057,7 @@ namespace WEB.Adavigo.CMS.Controllers
                 }
                 ViewBag.system = dataallcode;
                 ViewBag.BRANCH_CODE = BRANCH_CODE;
+                ViewBag.UTM_SOURCE = UTM_SOURCE;
                 return PartialView();
             }
             catch (Exception ex)
@@ -2198,7 +2201,7 @@ namespace WEB.Adavigo.CMS.Controllers
                                     //Passenger = null,
                                     UserUpdateId = _UserLogin,
                                     UserVerify = _UserLogin,
-                                    UtmSource = null,
+                                    UtmSource = 1,
                                     VerifyDate = DateTime.Now,
                                     VoucherId = null
 

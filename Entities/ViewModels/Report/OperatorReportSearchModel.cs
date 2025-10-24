@@ -21,5 +21,6 @@ namespace Entities.ViewModels.Report
         public string DepartmentIdSearch { get; set; }
         public string SalerPermission { get; set; }
         public int? Branch { get; set; }
+        public string UtmSource { get; set; }
     }
 }

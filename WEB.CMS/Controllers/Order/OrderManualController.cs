@@ -120,6 +120,7 @@ namespace WEB.Adavigo.CMS.Controllers.Order
         public IActionResult CreateOrderManual()
         {
             ViewBag.Branch = _allCodeRepository.GetListByType(AllCodeType.BRANCH_CODE);
+            ViewBag.UTM_SOURCE = _allCodeRepository.GetListByType(AllCodeType.UTM_SOURCE);
             return View();
         }
         [HttpPost]
@@ -1091,6 +1092,7 @@ namespace WEB.Adavigo.CMS.Controllers.Order
                     SalerGroupId = string.Join(",", model.sub_sale_id),
                     Note = model.note,
                     BranchCode = model.branch,
+                    UtmSource =Convert.ToInt32(model.order_source),
                     UserUpdateId = _UserId,
                     CreatedBy = _UserId,
                     CreateTime = DateTime.Now,

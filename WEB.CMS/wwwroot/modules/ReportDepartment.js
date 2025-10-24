@@ -1,5 +1,6 @@
 ﻿let listOrderStatus = [];
 let listServiceBC = [];
+let listUtmSource = [];
 let PageSize = 20;
 $(document).ready(function () {
     _ReportDepartment.Init();
@@ -197,6 +198,11 @@ $(document).ready(function () {
     const selectBtnServiceBC = document.querySelector(".select-service-type-BC");
     const itemsServiceBC = document.querySelectorAll(".item-services-BC");
 
+    const selectBtnUtmSource = document.querySelector(".select-btn-UtmSource");
+    const itemsUtmSource = document.querySelectorAll(".item-UtmSource");
+    const selectBtnUtmSourceQT = document.querySelector(".select-btn-UtmSource-QT");
+    const itemsUtmSourceQT = document.querySelectorAll(".item-UtmSource-QT");
+
     $(document).click(function (event) {
 
         var $target = $(event.target);
@@ -218,6 +224,20 @@ $(document).ready(function () {
                 selectBtnServiceBC.classList.toggle("open");
             }
         }
+        if (!$target.closest('#UtmSource').length) {
+            if ($('#list-item-UtmSource').is(":visible") && !$target[0].id.includes('UtmSource_data') && !$target[0].id.includes('checkbox_UtmSource')
+                && !$target[0].id.includes('list-item-UtmSource') && !$target[0].id.includes('UtmSource_text')) {
+                selectBtnUtmSource.classList.toggle("open");
+            }
+
+        }
+        if (!$target.closest('#UtmSource-QT').length) {
+            if ($('#list-item-UtmSource-QT').is(":visible") && !$target[0].id.includes('UtmSource_QT_data') && !$target[0].id.includes('checkbox_UtmSource_QT')
+                && !$target[0].id.includes('list-item-UtmSource-QT') && !$target[0].id.includes('UtmSource_QT_text')) {
+                selectBtnUtmSourceQT.classList.toggle("open");
+            }
+
+        }
     });
     selectBtnOrderStatus.addEventListener("click", (e) => {
         e.preventDefault();
@@ -230,6 +250,14 @@ $(document).ready(function () {
     selectBtnServiceBC.addEventListener("click", (e) => {
         e.preventDefault();
         selectBtnServiceBC.classList.toggle("open");
+    });
+    selectBtnUtmSource.addEventListener("click", (e) => {
+        e.preventDefault();
+        selectBtnUtmSource.classList.toggle("open");
+    });
+    selectBtnUtmSourceQT.addEventListener("click", (e) => {
+        e.preventDefault();
+        selectBtnUtmSourceQT.classList.toggle("open");
     });
     itemsOrderStatus.forEach(item => {
         item.addEventListener("click", () => {
@@ -303,6 +331,52 @@ $(document).ready(function () {
             }
         });
     });
+    itemsUtmSource.forEach(item => {
+        item.addEventListener("click", () => {
+            item.classList.toggle("checked");
+
+            let checked = document.querySelectorAll("#list-item-UtmSource .checked"),
+                btnTextUtmSource = document.querySelector(".btn-text-UtmSource");
+            let checked_list = []
+            listUtmSource = []
+            for (var i = 0; i < checked.length; i++) {
+                id = checked[i].getAttribute('id')
+                if (id.includes('UtmSource_data_')) {
+                    checked_list.push(checked[i]);
+                }
+
+                listUtmSource.push((id.replace('UtmSource_data_', '')))
+            }
+            if (listUtmSource && listUtmSource.length > 0) {
+                btnTextUtmSource.innerText = `${listUtmSource.length} Selected`;
+            } else {
+                btnTextUtmSource.innerText = "Tất cả Tất cả nguồn đơn hàng";
+            }
+        })
+    })
+    itemsUtmSourceQT.forEach(item => {
+        item.addEventListener("click", () => {
+            item.classList.toggle("checked");
+
+            let checked = document.querySelectorAll("#list-item-UtmSource-QT .checked"),
+                btnTextUtmSourceQT = document.querySelector(".btn-text-UtmSource-QT");
+            let checked_list = []
+            listUtmSourceQT = []
+            for (var i = 0; i < checked.length; i++) {
+                id = checked[i].getAttribute('id')
+                if (id.includes('UtmSource_QT_data_')) {
+                    checked_list.push(checked[i]);
+                }
+
+                listUtmSourceQT.push((id.replace('UtmSource_QT_data_', '')))
+            }
+            if (listUtmSourceQT && listUtmSourceQT.length > 0) {
+                btnTextUtmSourceQT.innerText = `${listUtmSourceQT.length} Selected`;
+            } else {
+                btnTextUtmSourceQT.innerText = "Tất cả nguồn đơn hàng";
+            }
+        })
+    })
 });
 let isPickerApprove = false;
 let isPickerApprove2 = false;
@@ -519,6 +593,7 @@ var _ReportDepartment = {
             OrderStatus: listOrderStatus.toString(),
             ToDate: ToDate,
             ServiceType: listServiceBC.toString(),
+            UtmSource: listUtmSource.toString(),
             StartDateFromStr: StartDateFrom,
             StartDateToStr: StartDateTo,
             EndDateFromStr: EndDateFrom,
