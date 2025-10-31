@@ -108,6 +108,9 @@ var _add_payment_request = {
         amount_service = $('#amount_service').val()
         clientId_service = $('#clientId_service').val()
         totalPayment_service = 0
+        if (serviceCode == undefined || serviceCode == '') {
+            serviceCode = $('#service-ws-detail-data').attr('data-servicecode')
+        }
         if ($('#totalPayment_service').val() !== undefined && $('#totalPayment_service').val() !== null && $('#totalPayment_service').val() !== '') {
             totalPayment_service = parseFloat($('#totalPayment_service').val())
         }
